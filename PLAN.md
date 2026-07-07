@@ -11,19 +11,20 @@ Full-stack portfolio tracking system — users add their mutual fund holdings, s
 - [x] Git repo + .gitignore
 - [x] Turborepo monorepo structure (pnpm workspace, turbo.json)
 - [x] Project docs committed (PLAN.md, .kiro/steering)
-- [ ] Scaffold Next.js in apps/web
-- [ ] Scaffold NestJS in apps/server
-- [ ] Create packages/shared
-- [ ] Install Turborepo as dev dependency
-- [ ] Verify turbo dev runs both apps
-- [ ] Set up PostgreSQL + Redis containers (Oracle Cloud)
-- [ ] Set up Drizzle ORM + schema
-- [ ] BullMQ cron job (daily 6 AM)
-- [ ] Web Push notification (server-triggered)
-- [ ] Service Worker on frontend
+- [x] Scaffold Next.js in apps/web
+- [x] Scaffold NestJS in apps/server
+- [x] Create packages/shared
+- [x] Install Turborepo as dev dependency
+- [x] Verify turbo dev runs both apps
+- [ ] Docker Compose — Postgres + Redis (local dev)
+- [ ] Drizzle ORM — schema + migrations
+- [ ] NestJS API — auth, portfolio CRUD, scheme search
+- [ ] BullMQ — cron job, NAV fetch, portfolio compute
+- [ ] Web Push — server sends, frontend SW receives
+- [ ] Test end-to-end locally
 - [ ] Deploy Next.js to Vercel
-- [ ] Deploy backend to Oracle Cloud
-- [ ] Test for 2–3 days
+- [ ] Deploy backend to Oracle Cloud (containerize)
+- [ ] Test for 2–3 days (production)
 
 ---
 
@@ -72,15 +73,22 @@ Redis
 
 **Goal:** End-to-end pipeline running for 1 user (yourself) with static preset data.
 
-- Redis + NestJS + PostgreSQL containers on Oracle Cloud
-- Next.js deployed on Vercel
+**Local Dev Order:**
+1. Docker Compose — Postgres + Redis containers for local development
+2. Drizzle ORM — schema + migrations (connect to local Postgres)
+3. NestJS API — auth, portfolio CRUD, scheme search
+4. BullMQ — cron job (connect to local Redis), NAV fetch + portfolio compute
+5. Web Push — server sends notification, frontend SW receives
+6. Test end-to-end locally for a few days
+7. Oracle Cloud — containerize and deploy
+
+**Pipeline:**
 - BullMQ cron job at 6:00 AM IST:
   - Fetch NAV for preset scheme codes + units
   - Compute portfolio value
   - Write result to PostgreSQL
   - Push notification with daily summary
 - Service Worker on frontend receives and displays notification
-- Test for 2–3 days to validate reliability
 
 **Done when:** You wake up and get a push notification with your portfolio value every morning.
 
@@ -148,3 +156,4 @@ Redis
 | Date | What was done |
 |------|---------------|
 | 2026-07-06 | Project created — GitHub repo (private), .gitignore, Turborepo monorepo structure, PLAN.md, steering docs (decisions, design system) |
+| 2026-07-07 | Scaffolded Next.js 16, NestJS 11, packages/shared. Turbo dev verified. Prettier + Tailwind plugin configured. Local-first dev order decided. |
