@@ -16,7 +16,7 @@ Full-stack portfolio tracking system — users add their mutual fund holdings, s
 - [x] Create packages/shared
 - [x] Install Turborepo as dev dependency
 - [x] Verify turbo dev runs both apps
-- [ ] Docker Compose — Postgres + Redis (local dev)
+- [x] Docker Compose — Postgres + Redis (local dev)
 - [ ] Drizzle ORM — schema + migrations
 - [ ] NestJS API — auth, portfolio CRUD, scheme search
 - [ ] BullMQ — cron job, NAV fetch, portfolio compute
@@ -156,4 +156,4 @@ Redis
 | Date | What was done |
 |------|---------------|
 | 2026-07-06 | Project created — GitHub repo (private), .gitignore, Turborepo monorepo structure, PLAN.md, steering docs (decisions, design system) |
-| 2026-07-07 | Scaffolded Next.js 16, NestJS 11, packages/shared. Turbo dev verified. Prettier + Tailwind plugin configured. Local-first dev order decided. |
+| 2026-07-07 | Scaffolded Next.js 16, NestJS 11, packages/shared. Turbo dev verified. Prettier + Tailwind plugin configured. Local-first dev order decided. Docker Compose with Postgres 18 + Redis 8 running locally. |

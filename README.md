@@ -39,6 +39,7 @@ mintfolio/
 │   └── shared/             — shared types, schemas, constants
 ├── .kiro/
 │   └── steering/           — AI agent config (decisions, design system, nextjs rules)
+├── docker-compose.yml      — local dev containers (Postgres, Redis)
 ├── turbo.json              — Turborepo task config
 ├── pnpm-workspace.yaml     — workspace definition
 ├── .prettierrc             — formatter config (tailwindcss plugin)
@@ -51,7 +52,7 @@ mintfolio/
 - [x] Monorepo setup (Turborepo, pnpm workspaces)
 - [x] Scaffold Next.js + NestJS + shared package
 - [x] Turbo dev running both apps
-- [ ] Docker Compose — Postgres + Redis (local dev)
+- [x] Docker Compose — Postgres + Redis (local dev)
 - [ ] Drizzle ORM — schema + migrations
 - [ ] NestJS API — auth, portfolio CRUD, scheme search
 - [ ] BullMQ — cron job, NAV fetch, portfolio compute
