@@ -17,7 +17,7 @@ Full-stack portfolio tracking system — users add their mutual fund holdings, s
 - [x] Install Turborepo as dev dependency
 - [x] Verify turbo dev runs both apps
 - [x] Docker Compose — Postgres + Redis (local dev)
-- [~] Drizzle ORM — schema + migrations (users table done, 3 tables remaining)
+- [x] Drizzle ORM — schema + migrations
 - [ ] NestJS API — auth, portfolio CRUD, scheme search
 - [ ] BullMQ — cron job, NAV fetch, portfolio compute
 - [ ] Web Push — server sends, frontend SW receives

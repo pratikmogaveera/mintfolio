@@ -58,7 +58,7 @@ mintfolio/
 - [x] Scaffold Next.js + NestJS + shared package
 - [x] Turbo dev running both apps
 - [x] Docker Compose — Postgres + Redis (local dev)
-- [ ] Drizzle ORM — schema + migrations (in progress — users table done)
+- [x] Drizzle ORM — schema + migrations
 - [ ] NestJS API — auth, portfolio CRUD, scheme search
 - [ ] BullMQ — cron job, NAV fetch, portfolio compute
 - [ ] Web Push — server sends, frontend SW receives
