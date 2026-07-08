@@ -35,6 +35,11 @@ mintfolio/
 ├── apps/
 │   ├── web/                — Next.js frontend (Vercel)
 │   └── server/             — NestJS backend (Oracle Cloud)
+│       ├── src/db/
+│       │   ├── schema.ts       — Drizzle table definitions
+│       │   └── migrate.ts      — programmatic migration runner
+│       ├── drizzle/            — generated SQL migration files
+│       └── drizzle.config.ts   — Drizzle Kit config
 ├── packages/
 │   └── shared/             — shared types, schemas, constants
 ├── .kiro/
@@ -53,7 +58,7 @@ mintfolio/
 - [x] Scaffold Next.js + NestJS + shared package
 - [x] Turbo dev running both apps
 - [x] Docker Compose — Postgres + Redis (local dev)
-- [ ] Drizzle ORM — schema + migrations
+- [ ] Drizzle ORM — schema + migrations (in progress — users table done)
 - [ ] NestJS API — auth, portfolio CRUD, scheme search
 - [ ] BullMQ — cron job, NAV fetch, portfolio compute
 - [ ] Web Push — server sends, frontend SW receives
