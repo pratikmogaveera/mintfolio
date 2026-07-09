@@ -35,10 +35,21 @@ mintfolio/
 ├── apps/
 │   ├── web/                — Next.js frontend (Vercel)
 │   └── server/             — NestJS backend (Oracle Cloud)
-│       ├── src/db/
-│       │   ├── schema.ts       — Drizzle table definitions
-│       │   └── migrate.ts      — programmatic migration runner
+│       ├── src/
+│       │   ├── auth/
+│       │   │   ├── auth.module.ts      — auth module wiring
+│       │   │   ├── auth.controller.ts  — register/login endpoints
+│       │   │   ├── auth.service.ts     — auth business logic (hash, verify)
+│       │   │   └── auth.dto.ts         — request validation DTOs
+│       │   ├── db/
+│       │   │   ├── schema.ts           — Drizzle table definitions
+│       │   │   ├── migrate.ts          — programmatic migration runner
+│       │   │   ├── database.module.ts  — database module
+│       │   │   └── database.service.ts — Drizzle instance provider
+│       │   ├── app.module.ts           — root module (ConfigModule, imports)
+│       │   └── main.ts                 — bootstrap + global pipes
 │       ├── drizzle/            — generated SQL migration files
+│       ├── .env                — environment variables (not committed)
 │       └── drizzle.config.ts   — Drizzle Kit config
 ├── packages/
 │   └── shared/             — shared types, schemas, constants

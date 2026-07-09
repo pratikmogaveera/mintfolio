@@ -115,7 +115,7 @@ Redis
   - Push notification to each user's subscribed devices
 
 **Database schema:**
-- `users` — id, username, password_hash
+- `users` — id, username, password_hash, email, created_at
 - `holdings` — id, user_id, scheme_code, scheme_name, units, amount_invested
 - `portfolio_logs` — id, user_id, date, total_invested, current_value
 - `push_subscriptions` — id, user_id, endpoint, keys_p256dh, keys_auth, device_label
@@ -158,3 +158,4 @@ Redis
 | 2026-07-06 | Project created — GitHub repo (private), .gitignore, Turborepo monorepo structure, PLAN.md, steering docs (decisions, design system) |
 | 2026-07-07 | Scaffolded Next.js 16, NestJS 11, packages/shared. Turbo dev verified. Prettier + Tailwind plugin configured. Local-first dev order decided. Docker Compose with Postgres 18 + Redis 8 running locally. |
 | 2026-07-08 | Drizzle ORM setup — installed drizzle-orm, pg, drizzle-kit. Created `users` table schema. Generated first migration. Programmatic migrate script (drizzle-kit migrate has a silent crash bug). `users` table live in local Postgres. |
+| 2026-07-09 | Auth register endpoint — DatabaseModule + DatabaseService (Drizzle provider), ConfigModule for env loading, AuthModule with controller/service/DTO. Bcrypt password hashing, duplicate email/username check with ConflictException, ValidationPipe for request validation. Register tested and working. |
