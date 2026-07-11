@@ -159,3 +159,5 @@ Redis
 | 2026-07-07 | Scaffolded Next.js 16, NestJS 11, packages/shared. Turbo dev verified. Prettier + Tailwind plugin configured. Local-first dev order decided. Docker Compose with Postgres 18 + Redis 8 running locally. |
 | 2026-07-08 | Drizzle ORM setup — installed drizzle-orm, pg, drizzle-kit. Created `users` table schema. Generated first migration. Programmatic migrate script (drizzle-kit migrate has a silent crash bug). `users` table live in local Postgres. |
 | 2026-07-09 | Auth register endpoint — DatabaseModule + DatabaseService (Drizzle provider), ConfigModule for env loading, AuthModule with controller/service/DTO. Bcrypt password hashing, duplicate email/username check with ConflictException, ValidationPipe for request validation. Register tested and working. |
+| 2026-07-10 | Auth login endpoint — single identifier field (email or username), bcrypt compare, returns JWT. Extracted hash/compare into lib/utils. |
+| 2026-07-11 | JWT signing (JwtModule.registerAsync + ConfigService), AuthGuard (Bearer token verification, attaches user to request), GET /auth/me endpoint (returns user from DB). Loggers added to guard and service. Auth module complete. |

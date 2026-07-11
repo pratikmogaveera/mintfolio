@@ -37,17 +37,22 @@ mintfolio/
 │   └── server/             — NestJS backend (Oracle Cloud)
 │       ├── src/
 │       │   ├── auth/
-│       │   │   ├── auth.module.ts      — auth module wiring
-│       │   │   ├── auth.controller.ts  — register/login endpoints
-│       │   │   ├── auth.service.ts     — auth business logic (hash, verify)
+│       │   │   ├── auth.module.ts      — auth module wiring (JwtModule async config)
+│       │   │   ├── auth.controller.ts  — register/login/me endpoints
+│       │   │   ├── auth.service.ts     — auth business logic (hash, verify, JWT)
+│       │   │   ├── auth.guard.ts       — JWT Bearer token guard
 │       │   │   └── auth.dto.ts         — request validation DTOs
 │       │   ├── db/
 │       │   │   ├── schema.ts           — Drizzle table definitions
 │       │   │   ├── migrate.ts          — programmatic migration runner
 │       │   │   ├── database.module.ts  — database module
 │       │   │   └── database.service.ts — Drizzle instance provider
+│       │   ├── types/
+│       │   │   └── types.d.ts          — global types (JwtSign, Express augmentation)
 │       │   ├── app.module.ts           — root module (ConfigModule, imports)
 │       │   └── main.ts                 — bootstrap + global pipes
+│       ├── lib/
+│       │   └── utils.ts            — shared utilities (bcrypt hash/compare)
 │       ├── drizzle/            — generated SQL migration files
 │       ├── .env                — environment variables (not committed)
 │       └── drizzle.config.ts   — Drizzle Kit config
