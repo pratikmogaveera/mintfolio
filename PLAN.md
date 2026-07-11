@@ -19,6 +19,7 @@ Full-stack portfolio tracking system — users add their mutual fund holdings, s
 - [x] Docker Compose — Postgres + Redis (local dev)
 - [x] Drizzle ORM — schema + migrations
 - [ ] NestJS API — auth, portfolio CRUD, scheme search
+- [ ] Uniform response shape — global exception filter + response interceptor
 - [ ] BullMQ — cron job, NAV fetch, portfolio compute
 - [ ] Web Push — server sends, frontend SW receives
 - [ ] Test end-to-end locally
@@ -66,6 +67,27 @@ PostgreSQL
 Redis
 └── BullMQ job state, schedules, queues
 ```
+
+## API Response Shape
+
+All endpoints return a uniform envelope:
+
+```json
+// Success with data
+{ "success": true, "data": <payload> }
+
+// Success without data
+{ "success": true, "message": "Holding deleted successfully." }
+
+// Error
+{ "success": false, "message": "User-friendly error description." }
+```
+
+- Every response has `success: boolean`
+- `data` holds the payload (object or array) on success
+- `message` provides context (error reason, or confirmation on mutations without data)
+- HTTP status codes still used correctly (200, 201, 400, 401, 404, 409, 500)
+- NestJS HttpExceptions should be intercepted to match this shape (use a global response interceptor + exception filter)
 
 ## Phases
 
