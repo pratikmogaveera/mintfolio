@@ -34,6 +34,7 @@ coverage/
 # Temp files
 temp.txt
 *.tmp
+scheme_list.json
 
 # Docker
 docker-compose.override.yml

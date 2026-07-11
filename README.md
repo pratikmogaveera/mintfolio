@@ -42,6 +42,11 @@ mintfolio/
 │       │   │   ├── auth.service.ts     — auth business logic (hash, verify, JWT)
 │       │   │   ├── auth.guard.ts       — JWT Bearer token guard
 │       │   │   └── auth.dto.ts         — request validation DTOs
+│       │   ├── portfolio/
+│       │   │   ├── portfolio.module.ts     — portfolio module wiring
+│       │   │   ├── portfolio.controller.ts — holdings CRUD endpoints
+│       │   │   ├── portfolio.service.ts    — holdings business logic
+│       │   │   └── portfolio.dto.ts        — holdings validation DTOs
 │       │   ├── db/
 │       │   │   ├── schema.ts           — Drizzle table definitions
 │       │   │   ├── migrate.ts          — programmatic migration runner
