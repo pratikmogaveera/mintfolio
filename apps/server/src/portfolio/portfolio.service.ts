@@ -24,7 +24,7 @@ export class PortfolioService {
         })
         .from(holdings)
         .where(eq(holdings.user_id, userId));
-      return { success: true, data: results };
+      return results;
     } catch (error) {
       const errorMessage =
         error instanceof Error ? error.message : `Something went wrong while fetching user's holdings.`;
@@ -36,7 +36,7 @@ export class PortfolioService {
   async createHolding(payload: CreateHoldingDto, userId: string | undefined) {
     if (!userId) throw new BadRequestException();
     try {
-      await this.dbService.db
+      const result = await this.dbService.db
         .insert(holdings)
         .values({
           user_id: userId,
@@ -45,9 +45,15 @@ export class PortfolioService {
           units: payload.units.toString(),
           amount_invested: payload.amount_invested.toString(),
         })
-        .returning({ id: holdings.id });
+        .returning({
+          id: holdings.id,
+          scheme_code: holdings.scheme_code,
+          scheme_name: holdings.scheme_name,
+          units: holdings.units,
+          amount_invested: holdings.amount_invested,
+        });
 
-      return { success: true };
+      return result;
     } catch (error) {
       if (error instanceof Error && error.cause instanceof DatabaseError && error.cause.code === '23505') {
         this.logger.warn('Holding for this scheme already exists.');
@@ -76,7 +82,7 @@ export class PortfolioService {
         .set(values)
         .where(and(eq(holdings.id, holdingId), eq(holdings.user_id, userId)))
         .returning({ id: holdings.id });
-      if (result.length) return { success: true };
+      if (result.length) return result;
       else throw new NotFoundException();
     } catch (error) {
       const errorMessage = error instanceof Error ? error.message : 'Something went wrong while updating holding.';
@@ -93,7 +99,7 @@ export class PortfolioService {
         .delete(holdings)
         .where(and(eq(holdings.id, holdingId), eq(holdings.user_id, userId)))
         .returning({ id: holdings.id });
-      if (result.length) return { success: true };
+      if (result.length) return result;
       else throw new NotFoundException();
     } catch (error) {
       const errorMessage = error instanceof Error ? error.message : 'Something went wrong while deleting holding.';

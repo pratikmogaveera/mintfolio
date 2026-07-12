@@ -41,7 +41,7 @@ export class AuthService {
         .returning({ id: users.id, username: users.username, email: users.email });
 
       this.logger.log(`New user created: ${createdUser[0].username} ${createdUser[0].email}`);
-      return { success: true, data: createdUser[0] };
+      return createdUser[0];
     } catch (error) {
       if (error instanceof HttpException) throw error;
       if (error instanceof Error && error.cause instanceof DatabaseError && error.cause.code === '23505') {
@@ -50,7 +50,7 @@ export class AuthService {
       }
       const errorMessage = error instanceof Error ? error.message : 'Something went wrong while registering user.';
       this.logger.warn(errorMessage);
-      return { success: false, message: 'Something went wrong while registering user' };
+      throw error;
     }
   };
 
@@ -73,15 +73,12 @@ export class AuthService {
 
       this.logger.log(`Login successful: ${payload.identifier}`);
 
-      return {
-        success: true,
-        data: { id, username, email, accessToken: await this.jwtService.signAsync(tokenPayload) },
-      };
+      return { id, username, email, accessToken: await this.jwtService.signAsync(tokenPayload) };
     } catch (error) {
       if (error instanceof HttpException) throw error;
       const errorMessage = error instanceof Error ? error.message : 'Something went wrong while authenticating user.';
       this.logger.warn(errorMessage);
-      return { success: false, message: 'Something went wrong while authenticating user' };
+      throw error;
     }
   };
 
@@ -100,12 +97,12 @@ export class AuthService {
           .from(users)
           .where(eq(users.id, id))
       )?.[0];
-      return { success: true, data: user };
+      return user;
     } catch (error) {
       if (error instanceof HttpException) throw error;
       const errorMessage = error instanceof Error ? error.message : 'Something went wrong while fetching user.';
       this.logger.warn(errorMessage);
-      return { success: false, message: 'Something went wrong while fetching user' };
+      throw error;
     }
   };
 }
