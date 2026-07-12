@@ -47,6 +47,9 @@ mintfolio/
 │       │   │   ├── portfolio.controller.ts — holdings CRUD endpoints
 │       │   │   ├── portfolio.service.ts    — holdings business logic
 │       │   │   └── portfolio.dto.ts        — holdings validation DTOs
+│       │   ├── common/
+│       │   │   ├── http-exception.filter.ts — global exception formatter
+│       │   │   └── response.interceptor.ts  — success response wrapper
 │       │   ├── db/
 │       │   │   ├── schema.ts           — Drizzle table definitions
 │       │   │   ├── migrate.ts          — programmatic migration runner
