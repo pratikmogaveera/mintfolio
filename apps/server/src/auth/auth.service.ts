@@ -4,6 +4,7 @@ import {
   HttpException,
   Injectable,
   Logger,
+  NotFoundException,
   UnauthorizedException,
 } from '@nestjs/common';
 import { eq, or } from 'drizzle-orm';
@@ -23,7 +24,7 @@ export class AuthService {
     private jwtService: JwtService,
   ) {}
 
-  register = async (payload: CreateUserDto) => {
+  async register(payload: CreateUserDto) {
     try {
       if ((await this.dbService.db.select().from(users).where(eq(users.email, payload.email))).length)
         throw new ConflictException('User with the provided email already exists.');
@@ -52,9 +53,9 @@ export class AuthService {
       this.logger.warn(errorMessage);
       throw error;
     }
-  };
+  }
 
-  authenticate = async (payload: LoginUserDto) => {
+  async authenticate(payload: LoginUserDto) {
     this.logger.log(`Login attempt: ${payload.identifier}`);
     try {
       const userExists = await this.dbService.db
@@ -80,9 +81,9 @@ export class AuthService {
       this.logger.warn(errorMessage);
       throw error;
     }
-  };
+  }
 
-  me = async (id: string | undefined) => {
+  async me(id: string | undefined) {
     try {
       if (!id) throw new BadRequestException();
 
@@ -97,6 +98,7 @@ export class AuthService {
           .from(users)
           .where(eq(users.id, id))
       )?.[0];
+      if (!user) throw new NotFoundException('User not found.');
       return user;
     } catch (error) {
       if (error instanceof HttpException) throw error;
@@ -104,5 +106,5 @@ export class AuthService {
       this.logger.warn(errorMessage);
       throw error;
     }
-  };
+  }
 }

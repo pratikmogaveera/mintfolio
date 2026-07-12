@@ -1,12 +1,11 @@
-import { Body, Controller, Get, Logger, Post, Request, UseGuards } from '@nestjs/common';
-import { CreateUserDto, LoginUserDto } from './auth.dto';
-import { AuthService } from './auth.service';
-import { AuthGuard } from './auth.guard';
+import { Body, Controller, Get, Post, Request, UseGuards } from '@nestjs/common';
 import { type Request as ExpressRequest } from 'express';
+import { CreateUserDto, LoginUserDto } from './auth.dto';
+import { AuthGuard } from './auth.guard';
+import { AuthService } from './auth.service';
 
 @Controller('auth')
 export class AuthController {
-  private readonly logger = new Logger('Auth');
   constructor(private authService: AuthService) {}
 
   @UseGuards(AuthGuard)

@@ -1,4 +1,11 @@
-import { BadRequestException, ConflictException, Injectable, Logger, NotFoundException } from '@nestjs/common';
+import {
+  BadRequestException,
+  ConflictException,
+  HttpException,
+  Injectable,
+  Logger,
+  NotFoundException,
+} from '@nestjs/common';
 import { and, eq } from 'drizzle-orm';
 import { DatabaseError } from 'pg';
 import { DatabaseService } from '../db/database.service';
@@ -53,7 +60,7 @@ export class PortfolioService {
           amount_invested: holdings.amount_invested,
         });
 
-      return result;
+      return result[0];
     } catch (error) {
       if (error instanceof Error && error.cause instanceof DatabaseError && error.cause.code === '23505') {
         this.logger.warn('Holding for this scheme already exists.');
@@ -85,6 +92,7 @@ export class PortfolioService {
       if (result.length) return result;
       else throw new NotFoundException();
     } catch (error) {
+      if (error instanceof HttpException) throw error;
       const errorMessage = error instanceof Error ? error.message : 'Something went wrong while updating holding.';
       this.logger.warn(errorMessage);
       throw error;
@@ -99,9 +107,10 @@ export class PortfolioService {
         .delete(holdings)
         .where(and(eq(holdings.id, holdingId), eq(holdings.user_id, userId)))
         .returning({ id: holdings.id });
-      if (result.length) return result;
+      if (result.length) return undefined;
       else throw new NotFoundException();
     } catch (error) {
+      if (error instanceof HttpException) throw error;
       const errorMessage = error instanceof Error ? error.message : 'Something went wrong while deleting holding.';
       this.logger.warn(errorMessage);
       throw error;
