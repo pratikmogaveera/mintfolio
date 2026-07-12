@@ -18,7 +18,9 @@ Full-stack portfolio tracking system — users add their mutual fund holdings, s
 - [x] Verify turbo dev runs both apps
 - [x] Docker Compose — Postgres + Redis (local dev)
 - [x] Drizzle ORM — schema + migrations
-- [ ] NestJS API — auth, portfolio CRUD, scheme search
+- [x] NestJS API — auth (register, login, JWT guard, /me)
+- [x] NestJS API — portfolio CRUD (holdings: create, read, update, delete)
+- [ ] NestJS API — scheme search (proxy to mfapi.in)
 - [x] Uniform response shape — global exception filter + response interceptor
 - [ ] BullMQ — cron job, NAV fetch, portfolio compute
 - [ ] Web Push — server sends, frontend SW receives
