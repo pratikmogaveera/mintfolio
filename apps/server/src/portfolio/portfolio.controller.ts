@@ -1,7 +1,7 @@
-import { Body, Controller, Delete, Get, Param, Post, Request, UseGuards } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Patch, Post, Request, UseGuards } from '@nestjs/common';
 import { type Request as ExpressRequest } from 'express';
 import { AuthGuard } from '../auth/auth.guard';
-import { CreateHoldingDto } from './portfolio.dto';
+import { CreateHoldingDto, UpdateHoldingDto } from './portfolio.dto';
 import { PortfolioService } from './portfolio.service';
 
 @UseGuards(AuthGuard)
@@ -17,6 +17,15 @@ export class PortfolioController {
   @Post('holdings')
   async createHolding(@Body() payload: CreateHoldingDto, @Request() request: ExpressRequest) {
     return await this.portfolioService.createHolding(payload, request.user?.sub);
+  }
+
+  @Patch('holdings/:holdingId')
+  async updateHolding(
+    @Param('holdingId') holdingId: string,
+    @Body() payload: UpdateHoldingDto,
+    @Request() request: ExpressRequest,
+  ) {
+    return await this.portfolioService.updateHolding(holdingId, payload, request.user?.sub);
   }
 
   @Delete('holdings/:holdingId')

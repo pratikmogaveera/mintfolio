@@ -1,8 +1,9 @@
-import { BadRequestException, Injectable, Logger, NotFoundException } from '@nestjs/common';
+import { BadRequestException, ConflictException, Injectable, Logger, NotFoundException } from '@nestjs/common';
 import { and, eq } from 'drizzle-orm';
+import { DatabaseError } from 'pg';
 import { DatabaseService } from '../db/database.service';
 import { holdings } from '../db/schema';
-import { CreateHoldingDto } from './portfolio.dto';
+import { CreateHoldingDto, UpdateHoldingDto } from './portfolio.dto';
 
 @Injectable()
 export class PortfolioService {
@@ -28,7 +29,7 @@ export class PortfolioService {
       const errorMessage =
         error instanceof Error ? error.message : `Something went wrong while fetching user's holdings.`;
       this.logger.warn(errorMessage);
-      return { success: false, message: "Something went wrong while fetching user's holdings." };
+      throw error;
     }
   }
 
@@ -41,16 +42,46 @@ export class PortfolioService {
           user_id: userId,
           scheme_code: payload.scheme_code,
           scheme_name: payload.scheme_name,
-          units: payload.units,
-          amount_invested: payload.amount_invested,
+          units: payload.units.toString(),
+          amount_invested: payload.amount_invested.toString(),
         })
         .returning({ id: holdings.id });
 
       return { success: true };
     } catch (error) {
+      if (error instanceof Error && error.cause instanceof DatabaseError && error.cause.code === '23505') {
+        this.logger.warn('Holding for this scheme already exists.');
+        throw new ConflictException('Holding for this scheme already exists.');
+      }
       const errorMessage = error instanceof Error ? error.message : 'Something went wrong while creating holding.';
       this.logger.warn(errorMessage);
-      return { success: false, message: 'Something went wrong while creating holding.' };
+      throw error;
+    }
+  }
+
+  async updateHolding(holdingId: string | undefined, payload: UpdateHoldingDto, userId: string | undefined) {
+    if (!holdingId || !userId) throw new BadRequestException();
+
+    if (payload.amount_invested === undefined && payload.units === undefined)
+      throw new BadRequestException('Require at least 1 field to update.');
+
+    const values = {
+      ...(payload.units !== undefined && { units: payload.units.toString() }),
+      ...(payload.amount_invested !== undefined && { amount_invested: payload.amount_invested.toString() }),
+    };
+
+    try {
+      const result = await this.dbService.db
+        .update(holdings)
+        .set(values)
+        .where(and(eq(holdings.id, holdingId), eq(holdings.user_id, userId)))
+        .returning({ id: holdings.id });
+      if (result.length) return { success: true };
+      else throw new NotFoundException();
+    } catch (error) {
+      const errorMessage = error instanceof Error ? error.message : 'Something went wrong while updating holding.';
+      this.logger.warn(errorMessage);
+      throw error;
     }
   }
 
