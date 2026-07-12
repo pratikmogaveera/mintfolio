@@ -90,7 +90,7 @@ export class PortfolioService {
         .where(and(eq(holdings.id, holdingId), eq(holdings.user_id, userId)))
         .returning({ id: holdings.id });
       if (result.length) return result;
-      else throw new NotFoundException();
+      else throw new NotFoundException('Holding not found.');
     } catch (error) {
       if (error instanceof HttpException) throw error;
       const errorMessage = error instanceof Error ? error.message : 'Something went wrong while updating holding.';
@@ -108,7 +108,7 @@ export class PortfolioService {
         .where(and(eq(holdings.id, holdingId), eq(holdings.user_id, userId)))
         .returning({ id: holdings.id });
       if (result.length) return undefined;
-      else throw new NotFoundException();
+      else throw new NotFoundException('Holding not found.');
     } catch (error) {
       if (error instanceof HttpException) throw error;
       const errorMessage = error instanceof Error ? error.message : 'Something went wrong while deleting holding.';

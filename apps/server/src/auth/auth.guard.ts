@@ -14,7 +14,7 @@ export class AuthGuard implements CanActivate {
 
     if (!token) {
       this.logger.warn('Request with no token');
-      throw new UnauthorizedException();
+      throw new UnauthorizedException('Authentication token is required.');
     }
 
     try {
@@ -26,7 +26,7 @@ export class AuthGuard implements CanActivate {
     } catch (err) {
       if (err instanceof JsonWebTokenError) this.logger.warn(`Error validating JWT: ${err.message}`);
       else this.logger.warn('Error validating JWT:', err);
-      throw new UnauthorizedException();
+      throw new UnauthorizedException('Invalid or expired token.');
     }
   };
 }
