@@ -7,3 +7,10 @@ declare namespace Express {
     user?: { sub: string };
   }
 }
+
+interface MFScheme {
+  schemeCode: number;
+  schemeName: string;
+  isinGrowth: string | null;
+  isinDivReinvestment: string | null;
+}
