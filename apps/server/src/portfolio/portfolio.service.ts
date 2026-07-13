@@ -14,7 +14,7 @@ import { CreateHoldingDto, UpdateHoldingDto } from './portfolio.dto';
 
 @Injectable()
 export class PortfolioService {
-  private readonly logger = new Logger('Portfolio');
+  private readonly logger = new Logger('PortfolioService');
 
   constructor(private dbService: DatabaseService) {}
 

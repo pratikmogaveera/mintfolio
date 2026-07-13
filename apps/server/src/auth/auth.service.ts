@@ -17,7 +17,7 @@ import { DatabaseError } from 'pg';
 
 @Injectable()
 export class AuthService {
-  private readonly logger = new Logger('Auth');
+  private readonly logger = new Logger('AuthService');
 
   constructor(
     private dbService: DatabaseService,
