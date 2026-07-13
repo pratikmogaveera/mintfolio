@@ -50,6 +50,13 @@ mintfolio/
 │       │   ├── common/
 │       │   │   ├── http-exception.filter.ts — global exception formatter
 │       │   │   └── response.interceptor.ts  — success response wrapper
+│       │   ├── redis/
+│       │   │   ├── redis.module.ts         — Redis module
+│       │   │   └── redis.service.ts        — ioredis wrapper + scheme cache population
+│       │   ├── scheme/
+│       │   │   ├── scheme.module.ts        — scheme module
+│       │   │   ├── scheme.controller.ts    — scheme search endpoint
+│       │   │   └── scheme.service.ts       — search logic (queries Redis cache)
 │       │   ├── db/
 │       │   │   ├── schema.ts           — Drizzle table definitions
 │       │   │   ├── migrate.ts          — programmatic migration runner
@@ -85,7 +92,7 @@ mintfolio/
 - [x] Drizzle ORM — schema + migrations
 - [x] NestJS API — auth (register, login, JWT guard, /me)
 - [x] NestJS API — portfolio CRUD (holdings: create, read, update, delete)
-- [ ] NestJS API — scheme search (proxy to mfapi.in)
+- [x] NestJS API — scheme search (proxy to mfapi.in)
 - [ ] BullMQ — cron job, NAV fetch, portfolio compute
 - [ ] Web Push — server sends, frontend SW receives
 - [ ] Test end-to-end locally

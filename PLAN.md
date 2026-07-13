@@ -20,7 +20,7 @@ Full-stack portfolio tracking system — users add their mutual fund holdings, s
 - [x] Drizzle ORM — schema + migrations
 - [x] NestJS API — auth (register, login, JWT guard, /me)
 - [x] NestJS API — portfolio CRUD (holdings: create, read, update, delete)
-- [ ] NestJS API — scheme search (proxy to mfapi.in)
+- [x] NestJS API — scheme search (proxy to mfapi.in)
 - [x] Uniform response shape — global exception filter + response interceptor
 - [ ] BullMQ — cron job, NAV fetch, portfolio compute
 - [ ] Web Push — server sends, frontend SW receives
@@ -186,3 +186,4 @@ All endpoints return a uniform envelope:
 | 2026-07-10 | Auth login endpoint — single identifier field (email or username), bcrypt compare, returns JWT. Extracted hash/compare into lib/utils. |
 | 2026-07-11 | JWT signing (JwtModule.registerAsync + ConfigService), AuthGuard (Bearer token verification, attaches user to request), GET /auth/me endpoint (returns user from DB). Loggers added to guard and service. Auth module complete. Portfolio CRUD — PortfolioModule with controller/service/DTO. GET/POST/DELETE holdings endpoints, scoped to authenticated user. IDOR protection on delete, NotFoundException for missing holdings. Renamed usersTable → users in schema. |
 | 2026-07-12 | PATCH holdings endpoint (update units/amount_invested). @Min validation, Postgres 23505 unique violation handling via DrizzleQueryError.cause. Global HttpExceptionFilter (@Catch() for all exceptions — HttpException formatted, unknown returns generic 500). ResponseInterceptor wraps all success in { success, data }. Stripped manual wrappers from services. Polished DTO validation messages. Consistent error handling: re-throw HttpExceptions, log + throw unexpected errors. |
+| 2026-07-13 | Scheme search — RedisModule (ioredis, ConfigService for URL), cache scheme list from mfapi on startup with 24h TTL. SchemeModule with GET /scheme/search?q= endpoint, filters cached list, returns top 20 matches. Made ConfigModule global. Response interceptor returns data: null for undefined payloads. |
