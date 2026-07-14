@@ -22,7 +22,7 @@ Full-stack portfolio tracking system — users add their mutual fund holdings, s
 - [x] NestJS API — portfolio CRUD (holdings: create, read, update, delete)
 - [x] NestJS API — scheme search (proxy to mfapi.in)
 - [x] Uniform response shape — global exception filter + response interceptor
-- [ ] BullMQ — cron job, NAV fetch, portfolio compute
+- [x] Cron job — NAV fetch, portfolio compute, write to portfolio_logs
 - [ ] Web Push — server sends, frontend SW receives
 - [ ] Test end-to-end locally
 - [ ] Deploy Next.js to Vercel
@@ -187,3 +187,4 @@ All endpoints return a uniform envelope:
 | 2026-07-11 | JWT signing (JwtModule.registerAsync + ConfigService), AuthGuard (Bearer token verification, attaches user to request), GET /auth/me endpoint (returns user from DB). Loggers added to guard and service. Auth module complete. Portfolio CRUD — PortfolioModule with controller/service/DTO. GET/POST/DELETE holdings endpoints, scoped to authenticated user. IDOR protection on delete, NotFoundException for missing holdings. Renamed usersTable → users in schema. |
 | 2026-07-12 | PATCH holdings endpoint (update units/amount_invested). @Min validation, Postgres 23505 unique violation handling via DrizzleQueryError.cause. Global HttpExceptionFilter (@Catch() for all exceptions — HttpException formatted, unknown returns generic 500). ResponseInterceptor wraps all success in { success, data }. Stripped manual wrappers from services. Polished DTO validation messages. Consistent error handling: re-throw HttpExceptions, log + throw unexpected errors. |
 | 2026-07-13 | Scheme search — RedisModule (ioredis, ConfigService for URL), cache scheme list from mfapi on startup with 24h TTL. SchemeModule with GET /scheme/search?q= endpoint, filters cached list, returns top 20 matches. Made ConfigModule global. Response interceptor returns data: null for undefined payloads. |
+| 2026-07-14 | Daily portfolio pipeline — JobsModule with @nestjs/schedule cron. PortfolioProcessor fetches NAV per unique scheme (parallel, cached 5min), computes per-user portfolio value, upserts to portfolio_logs (handles duplicate daily runs). Improved logs and exception messages across all services. Standardized logger context names. |

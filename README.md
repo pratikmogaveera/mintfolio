@@ -57,6 +57,10 @@ mintfolio/
 │       │   │   ├── scheme.module.ts        — scheme module
 │       │   │   ├── scheme.controller.ts    — scheme search endpoint
 │       │   │   └── scheme.service.ts       — search logic (queries Redis cache)
+│       │   ├── jobs/
+│       │   │   ├── jobs.module.ts          — jobs module (schedule registration)
+│       │   │   ├── jobs.service.ts         — cron scheduler (daily portfolio process)
+│       │   │   └── portfolio.processor.ts  — NAV fetch, compute, write to portfolio_logs
 │       │   ├── db/
 │       │   │   ├── schema.ts           — Drizzle table definitions
 │       │   │   ├── migrate.ts          — programmatic migration runner
@@ -93,7 +97,7 @@ mintfolio/
 - [x] NestJS API — auth (register, login, JWT guard, /me)
 - [x] NestJS API — portfolio CRUD (holdings: create, read, update, delete)
 - [x] NestJS API — scheme search (proxy to mfapi.in)
-- [ ] BullMQ — cron job, NAV fetch, portfolio compute
+- [x] Cron job — NAV fetch, portfolio compute, write to portfolio_logs
 - [ ] Web Push — server sends, frontend SW receives
 - [ ] Test end-to-end locally
 - [ ] Deploy to Vercel + Oracle Cloud
