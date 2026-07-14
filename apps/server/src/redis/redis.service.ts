@@ -14,15 +14,16 @@ export class RedisService implements OnModuleInit {
 
   async onModuleInit() {
     this.redis = new Redis(this.config.get<string>('REDIS_URL') || 'redis://localhost:6379');
+    this.logger.log('Redis connected.');
     await this.populateCachedScheme();
   }
 
   async populateCachedScheme() {
     try {
-      this.logger.log('Populating redis cache.');
+      this.logger.log('Populating scheme list cache...');
       const cacheCheck = await this.get('scheme-list');
       if (cacheCheck?.length) {
-        this.logger.log('Existing cache found.');
+        this.logger.log('Existing scheme cache found, skipping fetch.');
         return;
       }
       const response = await axios.get<MFScheme[]>('https://api.mfapi.in/mf');

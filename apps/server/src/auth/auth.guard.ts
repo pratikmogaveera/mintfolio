@@ -13,7 +13,7 @@ export class AuthGuard implements CanActivate {
     const token = authorization?.split(' ')?.[1];
 
     if (!token) {
-      this.logger.warn('Request with no token');
+      this.logger.warn(`Request with no token: ${request.method} ${request.url}`);
       throw new UnauthorizedException('Authentication token is required.');
     }
 

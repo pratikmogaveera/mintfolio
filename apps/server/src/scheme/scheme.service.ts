@@ -26,6 +26,7 @@ export class SchemeService {
       const matches = schemeData
         .filter((item) => item.schemeName.toLowerCase().includes(query))
         .slice(0, SEARCH_RESULT_LIMIT);
+      this.logger.debug(`Search: "${q}" → ${matches.length} results`);
       return matches;
     } catch (error) {
       if (error instanceof HttpException) throw error;

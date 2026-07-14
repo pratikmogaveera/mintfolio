@@ -46,8 +46,8 @@ export class AuthService {
     } catch (error) {
       if (error instanceof HttpException) throw error;
       if (error instanceof Error && error.cause instanceof DatabaseError && error.cause.code === '23505') {
-        this.logger.warn('User with these credentials already exist.');
-        throw new ConflictException('User with these credentials already exist.');
+        this.logger.warn('User with these credentials already exists.');
+        throw new ConflictException('User with these credentials already exists.');
       }
       const errorMessage = error instanceof Error ? error.message : 'Something went wrong while registering user.';
       this.logger.warn(errorMessage);
@@ -85,7 +85,7 @@ export class AuthService {
 
   async me(id: string | undefined) {
     try {
-      if (!id) throw new BadRequestException();
+      if (!id) throw new BadRequestException('User ID is missing from request.');
 
       const user = (
         await this.dbService.db

@@ -19,7 +19,7 @@ export class PortfolioService {
   constructor(private dbService: DatabaseService) {}
 
   async getHoldings(userId: string | undefined) {
-    if (!userId) throw new BadRequestException();
+    if (!userId) throw new BadRequestException('User ID is missing from request.');
     try {
       const results = await this.dbService.db
         .select({
@@ -41,7 +41,7 @@ export class PortfolioService {
   }
 
   async createHolding(payload: CreateHoldingDto, userId: string | undefined) {
-    if (!userId) throw new BadRequestException();
+    if (!userId) throw new BadRequestException('User ID is missing from request.');
     try {
       const result = await this.dbService.db
         .insert(holdings)
@@ -60,6 +60,7 @@ export class PortfolioService {
           amount_invested: holdings.amount_invested,
         });
 
+      this.logger.log(`Holding created: ${payload.scheme_name} for user ${userId.split('-')[0]}`);
       return result[0];
     } catch (error) {
       if (error instanceof Error && error.cause instanceof DatabaseError && error.cause.code === '23505') {
@@ -73,10 +74,10 @@ export class PortfolioService {
   }
 
   async updateHolding(holdingId: string | undefined, payload: UpdateHoldingDto, userId: string | undefined) {
-    if (!holdingId || !userId) throw new BadRequestException();
+    if (!holdingId || !userId) throw new BadRequestException('User ID is missing from request.');
 
     if (payload.amount_invested === undefined && payload.units === undefined)
-      throw new BadRequestException('Require at least 1 field to update.');
+      throw new BadRequestException('Provide at least one field to update (units or invested amount).');
 
     const values = {
       ...(payload.units !== undefined && { units: payload.units.toString() }),
@@ -89,8 +90,10 @@ export class PortfolioService {
         .set(values)
         .where(and(eq(holdings.id, holdingId), eq(holdings.user_id, userId)))
         .returning({ id: holdings.id });
-      if (result.length) return result;
-      else throw new NotFoundException('Holding not found.');
+      if (result.length) {
+        this.logger.log(`Holding updated: ${holdingId} for user ${userId.split('-')[0]}`);
+        return result;
+      } else throw new NotFoundException('Holding not found.');
     } catch (error) {
       if (error instanceof HttpException) throw error;
       const errorMessage = error instanceof Error ? error.message : 'Something went wrong while updating holding.';
@@ -100,15 +103,17 @@ export class PortfolioService {
   }
 
   async deleteHolding(holdingId: string | undefined, userId: string | undefined) {
-    if (!holdingId || !userId) throw new BadRequestException();
+    if (!holdingId || !userId) throw new BadRequestException('User ID is missing from request.');
 
     try {
       const result = await this.dbService.db
         .delete(holdings)
         .where(and(eq(holdings.id, holdingId), eq(holdings.user_id, userId)))
         .returning({ id: holdings.id });
-      if (result.length) return undefined;
-      else throw new NotFoundException('Holding not found.');
+      if (result.length) {
+        this.logger.log(`Holding deleted: ${holdingId} for user ${userId.split('-')[0]}`);
+        return undefined;
+      } else throw new NotFoundException('Holding not found.');
     } catch (error) {
       if (error instanceof HttpException) throw error;
       const errorMessage = error instanceof Error ? error.message : 'Something went wrong while deleting holding.';

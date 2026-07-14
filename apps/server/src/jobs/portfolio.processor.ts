@@ -26,9 +26,9 @@ export class PortfolioProcessor {
       if (cached) return;
       const response = await axios.get<MFLatestNav>(`https://api.mfapi.in/mf/${code}/latest`);
       await this.redis.setex(code, CACHE_TTL, response.data.data[0].nav);
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      this.logger.debug(`NAV fetched and cached for ${code}`);
     } catch (error) {
-      this.logger.warn(`Failed to fetch NAV for ${code}`);
+      this.logger.warn(`Failed to fetch NAV for ${code}: ${error instanceof Error ? error.message : 'Unknown error'}`);
     }
   }
 
@@ -64,6 +64,8 @@ export class PortfolioProcessor {
         }
       }
 
+      this.logger.log(`Processed ${uniqueSchemeCodes.length} schemes for ${Object.keys(userDetails).length} user(s).`);
+
       for (const [userId, details] of Object.entries(userDetails)) {
         await this.dbService.db
           .insert(portfolioLogs)
@@ -86,7 +88,7 @@ export class PortfolioProcessor {
       }
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
     } catch (error) {
-      this.logger.warn('Something went wrong while processing portfolios.');
+      this.logger.error('Portfolio processing failed', error instanceof Error ? error.stack : error);
     }
   }
 }

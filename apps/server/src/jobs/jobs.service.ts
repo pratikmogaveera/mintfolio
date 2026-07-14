@@ -10,6 +10,7 @@ export class JobsService {
 
   @Cron(CronExpression.EVERY_MINUTE, { name: 'test' })
   async portfolioProcessTest() {
+    this.logger.log('Cron triggered: portfolio process');
     await this.pfProcessor.processPortfolios();
   }
 }
