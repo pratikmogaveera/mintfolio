@@ -93,56 +93,49 @@ All endpoints return a uniform envelope:
 
 ## Phases
 
-### Phase 1 — Single-User Pipeline (Prove it works)
+### Phase 1 — Backend Pipeline (Prove it works)
 
-**Goal:** End-to-end pipeline running for 1 user (yourself) with static preset data.
+**Goal:** End-to-end backend running for 1 user (yourself) — daily portfolio computation + push notification.
 
-**Local Dev Order:**
+**Completed:**
 1. Docker Compose — Postgres + Redis containers for local development
-2. Drizzle ORM — schema + migrations (connect to local Postgres)
-3. NestJS API — auth, portfolio CRUD, scheme search
-4. BullMQ — cron job (connect to local Redis), NAV fetch + portfolio compute
-5. Web Push — server sends notification, frontend SW receives
-6. Test end-to-end locally for a few days
-7. Oracle Cloud — containerize and deploy
+2. Drizzle ORM — schema + migrations
+3. NestJS API — auth (register, login, JWT guard, /me)
+4. NestJS API — portfolio CRUD (holdings: create, read, update, delete)
+5. NestJS API — scheme search (Redis-cached, filtered)
+6. Global exception filter + response interceptor (uniform API shape)
+7. Cron job — NAV fetch (parallel, deduplicated, cached), portfolio compute, upsert to portfolio_logs
+
+**Remaining:**
+1. Web Push — server sends notification after portfolio compute
+2. Minimal frontend page with service worker to receive push
+3. Deploy to Vercel (frontend) + Oracle Cloud (backend)
+4. Test for 2–3 days (production validation)
 
 **Pipeline:**
-- BullMQ cron job at 6:00 AM IST:
-  - Fetch NAV for preset scheme codes + units
-  - Compute portfolio value
-  - Write result to PostgreSQL
+- Cron at 6:00 AM IST:
+  - Fetch latest NAV for all unique scheme codes (deduplicated across users)
+  - Compute per-user portfolio value (units × NAV)
+  - Upsert daily snapshot to portfolio_logs
   - Push notification with daily summary
-- Service Worker on frontend receives and displays notification
 
 **Done when:** You wake up and get a push notification with your portfolio value every morning.
 
-### Phase 2 — Multi-User System
+### Phase 2 — Full-Stack App
 
-**Goal:** Full-stack app with auth, dynamic portfolios, and per-user notifications.
+**Goal:** Complete frontend + backend polish for multi-user usage.
 
-**Frontend:**
-- Login (username + password)
-- Scheme search (via mfapi.in/mf/search endpoint)
-- Add schemes with units to portfolio
-- View portfolio with current value, daily P&L
-- Request notification permission, manage subscriptions
+**Frontend (Next.js):**
+- Login / register UI
+- Scheme search (autocomplete from backend)
+- Add/remove schemes with units to portfolio
+- Portfolio dashboard — current value, daily P&L, holdings list
+- Notification permission + subscription management
 
-**Backend (NestJS):**
-- Auth: register/login, bcrypt + JWT
-- Portfolio CRUD: store user's holdings (scheme code, units, amount invested)
+**Backend:**
+- Migrate from @nestjs/schedule to BullMQ (queues, retries, job visibility, Bull Board)
 - Push subscription storage (multiple devices per user)
-- Daily BullMQ job:
-  - Fetch all users' holdings
-  - Fan-out NAV fetches per scheme (deduplicated across users)
-  - Compute per-user portfolio value
-  - Write daily log to portfolio table
-  - Push notification to each user's subscribed devices
-
-**Database schema:**
-- `users` — id, username, password_hash, email, created_at
-- `holdings` — id, user_id, scheme_code, scheme_name, units, amount_invested
-- `portfolio_logs` — id, user_id, date, total_invested, current_value
-- `push_subscriptions` — id, user_id, endpoint, keys_p256dh, keys_auth, device_label
+- Push notification delivery per user after portfolio compute
 
 ### Phase 3 — Polish & Analytics (Optional)
 
