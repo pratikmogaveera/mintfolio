@@ -20,6 +20,11 @@ export class RedisService implements OnModuleInit {
   async populateCachedScheme() {
     try {
       this.logger.log('Populating redis cache.');
+      const cacheCheck = await this.get('scheme-list');
+      if (cacheCheck?.length) {
+        this.logger.log('Existing cache found.');
+        return;
+      }
       const response = await axios.get<MFScheme[]>('https://api.mfapi.in/mf');
       await this.setex('scheme-list', SCHEME_CACHE_TTL, JSON.stringify(response.data));
       this.logger.log(`Redis cache populated: ${response.data.length} schemes.`);
