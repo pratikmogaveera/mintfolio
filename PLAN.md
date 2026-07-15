@@ -144,6 +144,7 @@ All endpoints return a uniform envelope:
 - Offline portfolio view (Workbox runtime caching)
 - Install prompt (PWA manifest, mobile installable)
 - Graceful SW update flow (show "update available" toast)
+- SEO: robots.txt, sitemap, Twitter card meta, OG image, OG url, structured data
 
 ## Data Source
 
