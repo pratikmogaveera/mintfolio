@@ -1,7 +1,10 @@
 import { Injectable, Logger } from '@nestjs/common';
 import axios from 'axios';
+import dayjs from 'dayjs';
+import { formatINR } from '../../lib/utils';
 import { DatabaseService } from '../db/database.service';
 import { holdings, portfolioLogs } from '../db/schema';
+import { NotificationsService } from '../notifications/notifications.service';
 import { RedisService } from '../redis/redis.service';
 
 const CACHE_TTL = 23.5 * 60 * 60; //23.5 hours.
@@ -18,6 +21,7 @@ export class PortfolioProcessor {
   constructor(
     private dbService: DatabaseService,
     private redis: RedisService,
+    private notificationService: NotificationsService,
   ) {}
 
   async fetchAndCacheNav(code: string) {
@@ -34,6 +38,7 @@ export class PortfolioProcessor {
 
   async processPortfolios() {
     try {
+      const notificationTitle: string = dayjs().format('DD MMM YYYY');
       this.logger.log('Portfolio Process Running.');
       const result = await this.dbService.db.select().from(holdings);
       this.logger.debug('Holdings fetched.');
@@ -85,8 +90,15 @@ export class PortfolioProcessor {
         this.logger.log(
           `[${userId.split('-')[0]}] Invested: ${details.amount_invested.toFixed(2)} Current: ${details.current_value.toFixed(2)}`,
         );
+
+        await this.notificationService.sendNotification({
+          user_id: userId,
+          message: {
+            title: notificationTitle,
+            body: `Current Value: ${formatINR(details.current_value)} / Invested Value: ${formatINR(details.amount_invested)}`,
+          },
+        });
       }
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars
     } catch (error) {
       this.logger.error('Portfolio processing failed', error instanceof Error ? error.stack : error);
     }

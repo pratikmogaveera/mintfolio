@@ -33,3 +33,8 @@ interface MFLatestNav {
   ];
   status: string;
 }
+
+interface NotificationMessage {
+  user_id: string;
+  message: { title: string; body: string };
+}

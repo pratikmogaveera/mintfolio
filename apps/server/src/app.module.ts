@@ -8,6 +8,7 @@ import { DatabaseModule } from './db/database.module';
 import { JobsModule } from './jobs/jobs.module';
 import { PortfolioModule } from './portfolio/portfolio.module';
 import { SchemeModule } from './scheme/scheme.module';
+import { NotificationsModule } from './notifications/notifications.module';
 
 @Module({
   imports: [
@@ -18,6 +19,7 @@ import { SchemeModule } from './scheme/scheme.module';
     PortfolioModule,
     SchemeModule,
     JobsModule,
+    NotificationsModule,
   ],
   controllers: [AppController],
   providers: [AppService],

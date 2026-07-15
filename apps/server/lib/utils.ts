@@ -7,3 +7,7 @@ export const hash = async (text: string) => {
 export const compareHash = async (plainText: string, hashedString: string) => {
   return await bcrypt.compare(plainText, hashedString);
 };
+
+export const formatINR = (amount: number): string => {
+  return amount.toLocaleString('en-IN', { style: 'currency', currency: 'INR', maximumFractionDigits: 2 });
+};
