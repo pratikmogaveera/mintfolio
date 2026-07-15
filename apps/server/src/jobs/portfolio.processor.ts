@@ -4,7 +4,7 @@ import { DatabaseService } from '../db/database.service';
 import { holdings, portfolioLogs } from '../db/schema';
 import { RedisService } from '../redis/redis.service';
 
-const CACHE_TTL = 5 * 60; // 5 Mins for dev.
+const CACHE_TTL = 23.5 * 60 * 60; //23.5 hours.
 
 interface UserDetails {
   amount_invested: number;

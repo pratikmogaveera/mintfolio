@@ -18,13 +18,15 @@ export class RedisService implements OnModuleInit {
     await this.populateCachedScheme();
   }
 
-  async populateCachedScheme() {
+  async populateCachedScheme(force: boolean = false) {
     try {
       this.logger.log('Populating scheme list cache...');
-      const cacheCheck = await this.get('scheme-list');
-      if (cacheCheck?.length) {
-        this.logger.log('Existing scheme cache found, skipping fetch.');
-        return;
+      if (!force) {
+        const cacheCheck = await this.get('scheme-list');
+        if (cacheCheck?.length) {
+          this.logger.log('Existing scheme cache found, skipping fetch.');
+          return;
+        }
       }
       const response = await axios.get<MFScheme[]>('https://api.mfapi.in/mf');
       await this.setex('scheme-list', SCHEME_CACHE_TTL, JSON.stringify(response.data));
