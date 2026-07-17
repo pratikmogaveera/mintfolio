@@ -1,6 +1,12 @@
+import { cn } from '@/lib/utils';
 import type { Metadata, Viewport } from 'next';
-import './globals.css';
+import { Inter, Space_Grotesk } from 'next/font/google';
 import Link from 'next/link';
+import './globals.css';
+
+const spaceGroteskHeading = Space_Grotesk({ subsets: ['latin'], variable: '--font-heading' });
+
+const inter = Inter({ subsets: ['latin'], variable: '--font-sans' });
 
 export const viewport: Viewport = {
   themeColor: '#09090b',
@@ -31,7 +37,18 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={`h-full bg-[#09090b] text-zinc-100 antialiased`}>
+    <html
+      lang="en"
+      className={cn(
+        'dark h-full',
+        'bg-[#09090b]',
+        'text-zinc-100',
+        'antialiased',
+        'font-sans',
+        inter.variable,
+        spaceGroteskHeading.variable,
+      )}
+    >
       <body className="flex min-h-full flex-col">
         <header className="border-b border-gray-600 px-8 py-2">
           <Link href={'/'} title="Mintfolio - home page" className="text-3xl font-semibold text-[#4ade80]">
