@@ -1,6 +1,7 @@
 'use client';
 
-import axios from 'axios';
+import { apiClient } from '@/lib/api-client';
+import { isAxiosError } from 'axios';
 import { useEffect } from 'react';
 
 export default function Home() {
@@ -33,12 +34,12 @@ export default function Home() {
           auth: subscription.keys?.auth,
         };
 
-        const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/notifications/subscribe`, payload, {
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem('access-token')}`,
-            'Content-Type': 'application/json',
-          },
-        });
+        try {
+          await apiClient.post('/notifications/subscribe', payload);
+        } catch (error) {
+          if (isAxiosError(error)) console.error(error.response?.data?.message);
+          else console.error('Something went wrong while subscribing to notifications.');
+        }
       }
     }
     handleNotificationPermission();
@@ -47,7 +48,7 @@ export default function Home() {
   return (
     <div className="h-full w-full">
       <main>
-        <h1 className="text-xl font-semibold">Test Subscribe</h1>
+        <h1 className="text-xl font-semibold">Home Page</h1>
       </main>
     </div>
   );

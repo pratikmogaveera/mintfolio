@@ -1,9 +1,10 @@
+import { Toaster } from '@/components/ui/sonner';
+import QCProvider from '@/lib/QCProvider';
 import { cn } from '@/lib/utils';
 import type { Metadata, Viewport } from 'next';
 import { Inter, Space_Grotesk } from 'next/font/google';
 import Link from 'next/link';
 import './globals.css';
-import { Toaster } from '@/components/ui/sonner';
 
 const spaceGroteskHeading = Space_Grotesk({ subsets: ['latin'], variable: '--font-heading' });
 
@@ -51,13 +52,15 @@ export default function RootLayout({
       )}
     >
       <body className="flex min-h-full flex-col">
-        <header className="border-b border-gray-600 px-8 py-2">
-          <Link href={'/'} title="Mintfolio - home page" className="text-3xl font-semibold text-[#4ade80]">
-            Mintfolio
-          </Link>
-        </header>
-        <main className="container mx-auto px-4 py-8">{children}</main>
-        <Toaster richColors />
+        <QCProvider>
+          <header className="border-b border-gray-600 px-8 py-2">
+            <Link href={'/'} title="Mintfolio - home page" className="text-3xl font-semibold text-[#4ade80]">
+              Mintfolio
+            </Link>
+          </header>
+          <main className="container mx-auto px-4 py-8">{children}</main>
+          <Toaster richColors />
+        </QCProvider>
       </body>
     </html>
   );

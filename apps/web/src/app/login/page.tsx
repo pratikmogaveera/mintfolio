@@ -11,12 +11,28 @@ import {
 } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import { apiClient } from '@/lib/api-client';
 import { zodResolver } from '@hookform/resolvers/zod';
-import axios from 'axios';
+import { useMutation } from '@tanstack/react-query';
+import { isAxiosError } from 'axios';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { toast } from 'sonner';
 import { z } from 'zod';
+
+interface LoginResponse {
+  data: {
+    success: boolean;
+    data: {
+      id: string;
+      username: string;
+      email: string;
+      accessToken: string;
+    };
+  };
+  status: number;
+}
 
 const schema = z.object({
   identifier: z
@@ -32,28 +48,36 @@ const schema = z.object({
 type FormValues = z.infer<typeof schema>;
 
 export default function LoginPage() {
+  const router = useRouter();
+  const { mutate: loginUser, isPending } = useMutation<LoginResponse, Error, FormValues>({
+    mutationFn: async (payload) => {
+      return await apiClient.post('/auth/authenticate', payload);
+    },
+    onSuccess: async (res) => {
+      localStorage.setItem('access-token', res?.data?.data?.accessToken);
+      toast.success('Login successful. Redirecting to home page.');
+      setTimeout(() => router.push('/'), 2000);
+    },
+    onError: (error) => {
+      if (isAxiosError(error)) toast.error(error.response?.data.message);
+      else toast.error('Something went wrong while trying to login.');
+    },
+  });
+
   const {
     register,
     handleSubmit,
-    formState: { errors, isSubmitting },
+    formState: { errors },
   } = useForm<FormValues>({ resolver: zodResolver(schema) });
 
-  const submitForm: SubmitHandler<FormValues> = async (data: FormValues) => {
-    try {
-      await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/auth/authenticate`, data);
-      toast.success('Login successful.');
-    } catch (error) {
-      if (axios.isAxiosError(error)) toast.error(error.response?.data.message);
-      else toast.error('Something went wrong while trying to login.');
-    }
-  };
+  const submitForm: SubmitHandler<FormValues> = (data: FormValues) => loginUser(data);
   return (
     <Card className="mx-auto my-10 w-full max-w-sm md:my-20">
       <CardHeader>
         <CardTitle>Login to your account</CardTitle>
         <CardDescription>Enter your username or email to log in</CardDescription>
         <CardAction>
-          <Link title="Sign Up" href="/sign-up">
+          <Link title="Sign Up" href="/sign-up" className="underline-offset-3 transition-all ease-in hover:underline">
             Sign Up
           </Link>
         </CardAction>
@@ -63,21 +87,34 @@ export default function LoginPage() {
           <div className="flex flex-col gap-6">
             <div className="grid gap-2">
               <Label htmlFor="identifier">Email/Username</Label>
-              <Input id="identifier" type="text" placeholder="Email or username" {...register('identifier')} />
+              <Input
+                id="identifier"
+                type="text"
+                placeholder="Email or username"
+                autoComplete="username"
+                autoFocus
+                {...register('identifier')}
+              />
               {errors.identifier && <span className="text-xs text-red-400">{errors.identifier.message}</span>}
             </div>
             <div className="grid gap-2">
               <div className="flex items-center">
                 <Label htmlFor="password">Password</Label>
               </div>
-              <Input id="password" type="password" placeholder="********" {...register('password')} />
+              <Input
+                id="password"
+                type="password"
+                placeholder="********"
+                autoComplete="current-password"
+                {...register('password')}
+              />
               {errors.password && <span className="text-xs text-red-400">{errors.password.message}</span>}
             </div>
           </div>
         </CardContent>
         <CardFooter className="mt-6">
-          <Button type="submit" className="w-full" disabled={isSubmitting}>
-            {isSubmitting ? 'Logging in...' : 'Login'}
+          <Button type="submit" className="w-full" disabled={isPending}>
+            {isPending ? 'Logging in...' : 'Login'}
           </Button>
         </CardFooter>
       </form>
