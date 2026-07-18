@@ -23,7 +23,9 @@ Full-stack portfolio tracking system — users add their mutual fund holdings, s
 - [x] NestJS API — scheme search (proxy to mfapi.in)
 - [x] Uniform response shape — global exception filter + response interceptor
 - [x] Cron job — NAV fetch, portfolio compute, write to portfolio_logs
-- [ ] Web Push — server sends, frontend SW receives
+- [x] Web Push — server sends, frontend SW receives
+- [x] Frontend — login page, sign-up page, react-query, apiClient
+- [x] Shared types package (@mintfolio/shared)
 - [ ] Test end-to-end locally
 - [ ] Deploy Next.js to Vercel
 - [ ] Deploy backend to Oracle Cloud (containerize)
@@ -182,3 +184,6 @@ All endpoints return a uniform envelope:
 | 2026-07-12 | PATCH holdings endpoint (update units/amount_invested). @Min validation, Postgres 23505 unique violation handling via DrizzleQueryError.cause. Global HttpExceptionFilter (@Catch() for all exceptions — HttpException formatted, unknown returns generic 500). ResponseInterceptor wraps all success in { success, data }. Stripped manual wrappers from services. Polished DTO validation messages. Consistent error handling: re-throw HttpExceptions, log + throw unexpected errors. |
 | 2026-07-13 | Scheme search — RedisModule (ioredis, ConfigService for URL), cache scheme list from mfapi on startup with 24h TTL. SchemeModule with GET /scheme/search?q= endpoint, filters cached list, returns top 20 matches. Made ConfigModule global. Response interceptor returns data: null for undefined payloads. |
 | 2026-07-14 | Daily portfolio pipeline — JobsModule with @nestjs/schedule cron. PortfolioProcessor fetches NAV per unique scheme (parallel, cached 5min), computes per-user portfolio value, upserts to portfolio_logs (handles duplicate daily runs). Improved logs and exception messages across all services. Standardized logger context names. |
+| 2026-07-15 | Web Push notifications — NotificationsModule with subscribe/unsubscribe endpoints, VAPID config, web-push integration. Portfolio processor sends push after compute (▲/▼ indicator, INR formatting, P&L %). Auto-remove expired subscriptions (410/404). Production cron schedule (6 AM IST) + daily scheme refresh (5 AM). |
+| 2026-07-16 | Frontend service worker — sw.js with push event listener, SW registration on homepage, push subscription flow. Minimal login (localStorage token). End-to-end push notification tested successfully on macOS (Safari + Chrome). CORS enabled on server. |
+| 2026-07-18 | Frontend auth pages — login page with react-hook-form + zod + react-query (useMutation, isPending, toast notifications, redirect). Sign-up page with same pattern. Created apiClient (axios instance + auth interceptor). QCProvider for react-query. Shared types package (@mintfolio/shared) — User, AuthResponse, Holding, PortfolioLog, MFScheme, ApiResponse, ApiError. Integrated in both apps. |

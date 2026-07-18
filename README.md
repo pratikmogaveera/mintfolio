@@ -34,6 +34,17 @@ pnpm turbo dev
 mintfolio/
 ├── apps/
 │   ├── web/                — Next.js frontend (Vercel)
+│   │   ├── src/
+│   │   │   ├── app/
+│   │   │   │   ├── login/page.tsx      — login page (react-hook-form + zod)
+│   │   │   │   ├── sign-up/page.tsx    — sign-up page
+│   │   │   │   ├── page.tsx            — homepage (SW registration + push subscribe)
+│   │   │   │   └── layout.tsx          — root layout (fonts, metadata, QCProvider)
+│   │   │   └── lib/
+│   │   │       ├── api-client.ts       — axios instance with auth interceptor
+│   │   │       └── QCProvider.tsx      — react-query provider
+│   │   └── public/
+│   │       └── sw.js               — service worker (push notifications)
 │   └── server/             — NestJS backend (Oracle Cloud)
 │       ├── src/
 │       │   ├── auth/
@@ -98,7 +109,9 @@ mintfolio/
 - [x] NestJS API — portfolio CRUD (holdings: create, read, update, delete)
 - [x] NestJS API — scheme search (proxy to mfapi.in)
 - [x] Cron job — NAV fetch, portfolio compute, write to portfolio_logs
-- [ ] Web Push — server sends, frontend SW receives
+- [x] Web Push — server sends, frontend SW receives
+- [x] Frontend — login page, sign-up page, react-query, apiClient
+- [x] Shared types package (@mintfolio/shared)
 - [ ] Test end-to-end locally
 - [ ] Deploy to Vercel + Oracle Cloud
 - [ ] Production validation (2–3 days)
