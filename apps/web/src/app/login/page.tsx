@@ -13,6 +13,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { apiClient } from '@/lib/api-client';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { type ApiResponse, type AuthResponse } from '@mintfolio/shared';
 import { useMutation } from '@tanstack/react-query';
 import { isAxiosError } from 'axios';
 import Link from 'next/link';
@@ -20,19 +21,6 @@ import { useRouter } from 'next/navigation';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { toast } from 'sonner';
 import { z } from 'zod';
-
-interface LoginResponse {
-  data: {
-    success: boolean;
-    data: {
-      id: string;
-      username: string;
-      email: string;
-      accessToken: string;
-    };
-  };
-  status: number;
-}
 
 const schema = z.object({
   identifier: z
@@ -49,12 +37,18 @@ type FormValues = z.infer<typeof schema>;
 
 export default function LoginPage() {
   const router = useRouter();
-  const { mutate: loginUser, isPending } = useMutation<LoginResponse, Error, FormValues>({
+  const { mutate: loginUser, isPending } = useMutation<
+    { data: ApiResponse<AuthResponse>; status: number },
+    Error,
+    FormValues
+  >({
     mutationFn: async (payload) => {
       return await apiClient.post('/auth/authenticate', payload);
     },
     onSuccess: async (res) => {
-      localStorage.setItem('access-token', res?.data?.data?.accessToken);
+      const token = res.data.data?.accessToken;
+      if (!token) return;
+      localStorage.setItem('access-token', token);
       toast.success('Login successful. Redirecting to home page.');
       setTimeout(() => router.push('/'), 2000);
     },

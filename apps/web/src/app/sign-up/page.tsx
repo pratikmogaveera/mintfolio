@@ -13,6 +13,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { apiClient } from '@/lib/api-client';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { type ApiResponse, type User } from '@mintfolio/shared';
 import { useMutation } from '@tanstack/react-query';
 import { isAxiosError } from 'axios';
 import Link from 'next/link';
@@ -20,18 +21,6 @@ import { useRouter } from 'next/navigation';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { toast } from 'sonner';
 import { z } from 'zod';
-
-interface SignUpResponse {
-  data: {
-    success: true;
-    data: {
-      id: string;
-      username: string;
-      email: string;
-    };
-  };
-  status: number;
-}
 
 const schema = z.object({
   email: z
@@ -53,19 +42,21 @@ type FormValues = z.infer<typeof schema>;
 
 export default function SignUpPage() {
   const router = useRouter();
-  const { mutate: signUpUser, isPending } = useMutation<SignUpResponse, Error, FormValues>({
-    mutationFn: async (payload) => {
-      return await apiClient.post('/auth/register', payload);
+  const { mutate: signUpUser, isPending } = useMutation<{ data: ApiResponse<User>; status: number }, Error, FormValues>(
+    {
+      mutationFn: async (payload) => {
+        return await apiClient.post('/auth/register', payload);
+      },
+      onSuccess: async () => {
+        toast.success('Sign up successful. Redirecting to login page.');
+        setTimeout(() => router.push('/login'), 2000);
+      },
+      onError: (error) => {
+        if (isAxiosError(error)) toast.error(error.response?.data.message);
+        else toast.error('Something went wrong while trying to sign up.');
+      },
     },
-    onSuccess: async () => {
-      toast.success('Sign up successful. Redirecting to login page.');
-      setTimeout(() => router.push('/login'), 2000);
-    },
-    onError: (error) => {
-      if (isAxiosError(error)) toast.error(error.response?.data.message);
-      else toast.error('Something went wrong while trying to sign up.');
-    },
-  });
+  );
 
   const {
     register,

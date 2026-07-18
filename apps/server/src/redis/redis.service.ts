@@ -1,5 +1,6 @@
 import { Injectable, Logger, OnModuleInit } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
+import { type MFScheme } from '@mintfolio/shared';
 import axios from 'axios';
 import Redis from 'ioredis';
 
