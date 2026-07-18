@@ -80,6 +80,11 @@ Patterns, conventions, and mistakes caught during code reviews. Reference this b
 | 4 | Remove `required` HTML attribute when using Zod/react-hook-form — native browser validation conflicts with custom error display. | Login form inputs |
 | 5 | `type="identifier"` is not a valid HTML input type. Use `type="text"`. | Login form identifier field |
 | 6 | Zod v4 (`3.25.x`) is incompatible with `@hookform/resolvers@5`. Use Zod `3.24.x` + resolvers `3.x`. | zodResolver type error |
+| 7 | `redirect()` from `next/navigation` throws internally (for Server Components). Use `router.push()` for client-side navigation. | Login redirect throwing in mutation callback |
+| 8 | `QueryClient` should not be recreated on every render — use `useState` or declare outside the component. | QCProvider |
+| 9 | `localStorage` doesn't exist on the server. Guard with `typeof window !== 'undefined'` in code that may run during SSR. | apiClient interceptor |
+| 10 | `autoComplete="new-password"` for sign-up, `autoComplete="current-password"` for login. Tells password managers the correct action. | Login/sign-up form inputs |
+| 11 | react-hook-form `mode: 'onTouched'` — validates after first blur, then reactively on change. Best UX balance. | Login/sign-up forms |
 
 ---
 
