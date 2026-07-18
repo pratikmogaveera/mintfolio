@@ -3,6 +3,7 @@ import type { Metadata, Viewport } from 'next';
 import { Inter, Space_Grotesk } from 'next/font/google';
 import Link from 'next/link';
 import './globals.css';
+import { Toaster } from '@/components/ui/sonner';
 
 const spaceGroteskHeading = Space_Grotesk({ subsets: ['latin'], variable: '--font-heading' });
 
@@ -56,6 +57,7 @@ export default function RootLayout({
           </Link>
         </header>
         <main className="container mx-auto px-4 py-8">{children}</main>
+        <Toaster richColors />
       </body>
     </html>
   );
