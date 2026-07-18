@@ -2,7 +2,7 @@ import { IsEmail, IsNotEmpty, IsString, Length } from 'class-validator';
 
 export class CreateUserDto {
   @IsEmail({}, { message: 'Please provide a valid email address.' })
-  @Length(3, 254, { message: 'Email can be at most 254 characters.' })
+  @Length(3, 254, { message: 'Please enter a valid email (3-254 characters).' })
   email: string;
 
   @IsString({ message: 'Username must be a string.' })

@@ -21,24 +21,28 @@ import { SubmitHandler, useForm } from 'react-hook-form';
 import { toast } from 'sonner';
 import { z } from 'zod';
 
-interface LoginResponse {
+interface SignUpResponse {
   data: {
-    success: boolean;
+    success: true;
     data: {
       id: string;
       username: string;
       email: string;
-      accessToken: string;
     };
   };
   status: number;
 }
 
 const schema = z.object({
-  identifier: z
+  email: z
     .string()
-    .min(3, 'Identifier must be at least 3 characters long.')
-    .max(254, 'Identifier can be at most 254 characters long.'),
+    .email('Please enter a valid email.')
+    .min(3, 'Email must be at least 3 characters long.')
+    .max(254, 'Email can be at most 254 characters long.'),
+  username: z
+    .string()
+    .min(3, 'Username must be at least 3 characters long.')
+    .max(40, 'Username can be at most 40 characters long.'),
   password: z
     .string()
     .min(8, 'Password must be at least 8 characters long.')
@@ -47,20 +51,19 @@ const schema = z.object({
 
 type FormValues = z.infer<typeof schema>;
 
-export default function LoginPage() {
+export default function SignUpPage() {
   const router = useRouter();
-  const { mutate: loginUser, isPending } = useMutation<LoginResponse, Error, FormValues>({
+  const { mutate: signUpUser, isPending } = useMutation<SignUpResponse, Error, FormValues>({
     mutationFn: async (payload) => {
-      return await apiClient.post('/auth/authenticate', payload);
+      return await apiClient.post('/auth/register', payload);
     },
-    onSuccess: async (res) => {
-      localStorage.setItem('access-token', res?.data?.data?.accessToken);
-      toast.success('Login successful. Redirecting to home page.');
-      setTimeout(() => router.push('/'), 2000);
+    onSuccess: async () => {
+      toast.success('Sign up successful. Redirecting to login page.');
+      setTimeout(() => router.push('/login'), 2000);
     },
     onError: (error) => {
       if (isAxiosError(error)) toast.error(error.response?.data.message);
-      else toast.error('Something went wrong while trying to login.');
+      else toast.error('Something went wrong while trying to sign up.');
     },
   });
 
@@ -70,15 +73,15 @@ export default function LoginPage() {
     formState: { errors },
   } = useForm<FormValues>({ resolver: zodResolver(schema), mode: 'onTouched' });
 
-  const submitForm: SubmitHandler<FormValues> = (data: FormValues) => loginUser(data);
+  const submitForm: SubmitHandler<FormValues> = (data: FormValues) => signUpUser(data);
   return (
     <Card className="mx-auto my-10 w-full max-w-sm md:my-20">
       <CardHeader>
-        <CardTitle>Login to your account</CardTitle>
-        <CardDescription>Enter your username or email to log in</CardDescription>
+        <CardTitle>Create your account</CardTitle>
+        <CardDescription>Enter your details to create an account</CardDescription>
         <CardAction>
-          <Link title="Sign Up" href="/sign-up" className="underline-offset-3 transition-all ease-in hover:underline">
-            Sign Up
+          <Link title="Login" href="/login" className="underline-offset-3 transition-all ease-in hover:underline">
+            Login
           </Link>
         </CardAction>
       </CardHeader>
@@ -86,16 +89,27 @@ export default function LoginPage() {
         <CardContent>
           <div className="flex flex-col gap-6">
             <div className="grid gap-2">
-              <Label htmlFor="identifier">Email/Username</Label>
+              <Label htmlFor="email">Email</Label>
               <Input
-                id="identifier"
-                type="text"
-                placeholder="Email or username"
-                autoComplete="username"
+                id="email"
+                type="email"
+                placeholder="joe@example.com"
+                autoComplete="email"
                 autoFocus
-                {...register('identifier')}
+                {...register('email')}
               />
-              {errors.identifier && <span className="text-xs text-red-400">{errors.identifier.message}</span>}
+              {errors.email && <span className="text-xs text-red-400">{errors.email.message}</span>}
+            </div>
+            <div className="grid gap-2">
+              <Label htmlFor="username">Username</Label>
+              <Input
+                id="username"
+                type="text"
+                placeholder="johndoe"
+                autoComplete="username"
+                {...register('username')}
+              />
+              {errors.username && <span className="text-xs text-red-400">{errors.username.message}</span>}
             </div>
             <div className="grid gap-2">
               <div className="flex items-center">
@@ -105,7 +119,7 @@ export default function LoginPage() {
                 id="password"
                 type="password"
                 placeholder="********"
-                autoComplete="current-password"
+                autoComplete="new-password"
                 {...register('password')}
               />
               {errors.password && <span className="text-xs text-red-400">{errors.password.message}</span>}
@@ -114,7 +128,7 @@ export default function LoginPage() {
         </CardContent>
         <CardFooter className="mt-6">
           <Button type="submit" className="w-full" disabled={isPending}>
-            {isPending ? 'Logging in...' : 'Login'}
+            {isPending ? 'Signing up...' : 'Sign Up'}
           </Button>
         </CardFooter>
       </form>
