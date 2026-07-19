@@ -42,6 +42,7 @@ export default function SignUpPage() {
   } = useForm<SignUpUserPayload>({ resolver: zodResolver(signUpUserSchema), mode: 'onTouched' });
 
   const submitForm: SubmitHandler<SignUpUserPayload> = (data: SignUpUserPayload) => mutate(data);
+
   return (
     <Card className="mx-auto my-10 w-full max-w-sm md:my-20">
       <CardHeader>
