@@ -45,10 +45,7 @@ export default function LoginPage() {
     mutationFn: async (payload) => {
       return await apiClient.post('/auth/authenticate', payload);
     },
-    onSuccess: async (res) => {
-      const token = res.data.data?.accessToken;
-      if (!token) return;
-      localStorage.setItem('access-token', token);
+    onSuccess: async () => {
       toast.success('Login successful. Redirecting to home page.');
       setTimeout(() => router.push('/'), 2000);
     },

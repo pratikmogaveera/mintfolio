@@ -96,6 +96,7 @@ Patterns, conventions, and mistakes caught during code reviews. Reference this b
 | 2 | CORS `origin` should come from env, not hardcoded. Will break when deploying to production. | `app.enableCors({ origin: 'http://localhost:3000' })` |
 | 3 | Always verify resource ownership on mutations — check `user_id` matches the JWT subject. Not just the resource ID (IDOR prevention). | Holdings delete/update |
 | 4 | `ConfigService.getOrThrow()` fails fast at startup if env var is missing — better than silent `undefined`. | VAPID keys config |
+| 5 | Cookie `sameSite: 'lax'` works for same-site (localhost or same domain). For cross-domain production (e.g., `vercel.app` → `api.yoursite.dev`), need `sameSite: 'none'` + `secure: true`, or use subdomain setup (same eTLD+1). | httpOnly cookie auth |
 
 ---
 

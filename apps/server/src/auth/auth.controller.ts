@@ -1,5 +1,5 @@
-import { Body, Controller, Get, Post, Request, UseGuards } from '@nestjs/common';
-import { type Request as ExpressRequest } from 'express';
+import { Body, Controller, Get, Post, Request, Res, UseGuards } from '@nestjs/common';
+import { type Request as ExpressRequest, type Response } from 'express';
 import { CreateUserDto, LoginUserDto } from './auth.dto';
 import { AuthGuard } from './auth.guard';
 import { AuthService } from './auth.service';
@@ -20,7 +20,12 @@ export class AuthController {
   }
 
   @Post('authenticate')
-  async login(@Body() payload: LoginUserDto) {
-    return await this.authService.authenticate(payload);
+  async login(@Body() payload: LoginUserDto, @Res({ passthrough: true }) res: Response) {
+    return await this.authService.authenticate(payload, res);
+  }
+
+  @Post('logout')
+  logout(@Res({ passthrough: true }) res: Response) {
+    return this.authService.logout(res);
   }
 }

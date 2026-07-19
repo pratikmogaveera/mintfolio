@@ -26,10 +26,17 @@ Full-stack portfolio tracking system — users add their mutual fund holdings, s
 - [x] Web Push — server sends, frontend SW receives
 - [x] Frontend — login page, sign-up page, react-query, apiClient
 - [x] Shared types package (@mintfolio/shared)
+- [x] httpOnly cookie auth (secure, sameSite, logout endpoint)
 - [ ] Test end-to-end locally
 - [ ] Deploy Next.js to Vercel
 - [ ] Deploy backend to Oracle Cloud (containerize)
 - [ ] Test for 2–3 days (production)
+
+### Production Deployment Notes
+
+- **Cookie `sameSite`:** If frontend and backend are on different domains (e.g., `mintfolio.vercel.app` → `api.hetzner-ip.com`), change to `sameSite: 'none'` + `secure: true`. Or use same-domain subdomain setup (`mintfolio.dev` + `api.mintfolio.dev`).
+- **CORS origin:** Move from hardcoded `http://localhost:3000` to env variable (`CORS_ORIGIN`).
+- **Cookie `secure`:** Already conditional on `NODE_ENV === 'production'`. Ensure `NODE_ENV=production` is set on the VPS.
 
 ---
 

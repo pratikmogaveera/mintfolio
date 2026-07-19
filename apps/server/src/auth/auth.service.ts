@@ -7,13 +7,14 @@ import {
   NotFoundException,
   UnauthorizedException,
 } from '@nestjs/common';
+import { JwtService } from '@nestjs/jwt';
 import { eq, or } from 'drizzle-orm';
+import { Response } from 'express';
+import { DatabaseError } from 'pg';
 import { compareHash, hash } from '../../lib/utils';
 import { DatabaseService } from '../db/database.service';
 import { users } from '../db/schema';
 import { CreateUserDto, LoginUserDto } from './auth.dto';
-import { JwtService } from '@nestjs/jwt';
-import { DatabaseError } from 'pg';
 
 @Injectable()
 export class AuthService {
@@ -55,7 +56,7 @@ export class AuthService {
     }
   }
 
-  async authenticate(payload: LoginUserDto) {
+  async authenticate(payload: LoginUserDto, res: Response) {
     this.logger.log(`Login attempt: ${payload.identifier}`);
     try {
       const userExists = await this.dbService.db
@@ -74,13 +75,25 @@ export class AuthService {
 
       this.logger.log(`Login successful: ${payload.identifier}`);
 
-      return { id, username, email, accessToken: await this.jwtService.signAsync(tokenPayload) };
+      res.cookie('access-token', await this.jwtService.signAsync(tokenPayload), {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === 'production',
+        maxAge: 24 * 60 * 60 * 1000, // 1 day in milliseconds.
+        sameSite: 'lax',
+      });
+
+      return { id, username, email };
     } catch (error) {
       if (error instanceof HttpException) throw error;
       const errorMessage = error instanceof Error ? error.message : 'Something went wrong while authenticating user.';
       this.logger.warn(errorMessage);
       throw error;
     }
+  }
+
+  logout(res: Response) {
+    res.clearCookie('access-token');
+    return { message: 'Logged out.' };
   }
 
   async me(id: string | undefined) {

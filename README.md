@@ -112,6 +112,7 @@ mintfolio/
 - [x] Web Push — server sends, frontend SW receives
 - [x] Frontend — login page, sign-up page, react-query, apiClient
 - [x] Shared types package (@mintfolio/shared)
+- [x] httpOnly cookie auth (secure, sameSite, logout endpoint)
 - [ ] Test end-to-end locally
 - [ ] Deploy to Vercel + Oracle Cloud
 - [ ] Production validation (2–3 days)
