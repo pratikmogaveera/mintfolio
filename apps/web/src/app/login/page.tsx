@@ -16,10 +16,15 @@ import { LoginUserPayload, loginUserSchema } from '@/lib/schema';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { isAxiosError } from 'axios';
+import { Metadata } from 'next';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { toast } from 'sonner';
+
+export const metadata: Metadata = {
+  title: 'Mintfolio - Login page',
+};
 
 export default function LoginPage() {
   const queryClient = useQueryClient();

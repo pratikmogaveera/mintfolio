@@ -38,10 +38,14 @@ mintfolio/
 │   │   │   ├── app/
 │   │   │   │   ├── login/page.tsx      — login page (react-hook-form + zod)
 │   │   │   │   ├── sign-up/page.tsx    — sign-up page
+│   │   │   │   ├── profile/page.tsx    — user profile page
 │   │   │   │   ├── page.tsx            — homepage (SW registration + push subscribe)
 │   │   │   │   └── layout.tsx          — root layout (fonts, metadata, QCProvider)
+│   │   │   ├── components/
+│   │   │   │   └── Header.tsx          — auth-aware header (dropdown/login)
 │   │   │   └── lib/
 │   │   │       ├── api-client.ts       — axios instance with auth interceptor
+│   │   │       ├── schema.ts           — Zod schemas + payload types
 │   │   │       └── QCProvider.tsx      — react-query provider
 │   │   └── public/
 │   │       └── sw.js               — service worker (push notifications)
