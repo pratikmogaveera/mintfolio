@@ -6,6 +6,8 @@ import { useEffect } from 'react';
 
 export default function Home() {
   useEffect(() => {
+    if (!('serviceWorker' in navigator)) return;
+
     navigator.serviceWorker
       .register('/sw.js')
       .then((reg) => {

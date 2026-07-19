@@ -11,60 +11,37 @@ import {
 } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { apiClient } from '@/lib/api-client';
+import { signUpUser } from '@/lib/api-client';
+import { SignUpUserPayload, signUpUserSchema } from '@/lib/schema';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { type ApiResponse, type User } from '@mintfolio/shared';
 import { useMutation } from '@tanstack/react-query';
 import { isAxiosError } from 'axios';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { toast } from 'sonner';
-import { z } from 'zod';
-
-const schema = z.object({
-  email: z
-    .string()
-    .email('Please enter a valid email.')
-    .min(3, 'Email must be at least 3 characters long.')
-    .max(254, 'Email can be at most 254 characters long.'),
-  username: z
-    .string()
-    .min(3, 'Username must be at least 3 characters long.')
-    .max(40, 'Username can be at most 40 characters long.'),
-  password: z
-    .string()
-    .min(8, 'Password must be at least 8 characters long.')
-    .max(40, 'Password must be at most 40 characters long.'),
-});
-
-type FormValues = z.infer<typeof schema>;
 
 export default function SignUpPage() {
   const router = useRouter();
-  const { mutate: signUpUser, isPending } = useMutation<{ data: ApiResponse<User>; status: number }, Error, FormValues>(
-    {
-      mutationFn: async (payload) => {
-        return await apiClient.post('/auth/register', payload);
-      },
-      onSuccess: async () => {
-        toast.success('Sign up successful. Redirecting to login page.');
-        setTimeout(() => router.push('/login'), 2000);
-      },
-      onError: (error) => {
-        if (isAxiosError(error)) toast.error(error.response?.data.message);
-        else toast.error('Something went wrong while trying to sign up.');
-      },
+  const { mutate, isPending } = useMutation({
+    mutationFn: async (payload: SignUpUserPayload) => signUpUser(payload),
+    onSuccess: async () => {
+      toast.success('Sign up successful. Redirecting to login page.');
+      setTimeout(() => router.push('/login'), 2000);
     },
-  );
+    onError: (error) => {
+      if (isAxiosError(error)) toast.error(error.response?.data.message);
+      else toast.error('Something went wrong while trying to sign up.');
+    },
+  });
 
   const {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm<FormValues>({ resolver: zodResolver(schema), mode: 'onTouched' });
+  } = useForm<SignUpUserPayload>({ resolver: zodResolver(signUpUserSchema), mode: 'onTouched' });
 
-  const submitForm: SubmitHandler<FormValues> = (data: FormValues) => signUpUser(data);
+  const submitForm: SubmitHandler<SignUpUserPayload> = (data: SignUpUserPayload) => mutate(data);
   return (
     <Card className="mx-auto my-10 w-full max-w-sm md:my-20">
       <CardHeader>

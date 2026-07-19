@@ -11,41 +11,23 @@ import {
 } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { apiClient } from '@/lib/api-client';
+import { loginUser } from '@/lib/api-client';
+import { LoginUserPayload, loginUserSchema } from '@/lib/schema';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { type ApiResponse, type AuthResponse } from '@mintfolio/shared';
-import { useMutation } from '@tanstack/react-query';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { isAxiosError } from 'axios';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { toast } from 'sonner';
-import { z } from 'zod';
-
-const schema = z.object({
-  identifier: z
-    .string()
-    .min(3, 'Identifier must be at least 3 characters long.')
-    .max(254, 'Identifier can be at most 254 characters long.'),
-  password: z
-    .string()
-    .min(8, 'Password must be at least 8 characters long.')
-    .max(40, 'Password must be at most 40 characters long.'),
-});
-
-type FormValues = z.infer<typeof schema>;
 
 export default function LoginPage() {
+  const queryClient = useQueryClient();
   const router = useRouter();
-  const { mutate: loginUser, isPending } = useMutation<
-    { data: ApiResponse<AuthResponse>; status: number },
-    Error,
-    FormValues
-  >({
-    mutationFn: async (payload) => {
-      return await apiClient.post('/auth/authenticate', payload);
-    },
+  const { mutate, isPending } = useMutation({
+    mutationFn: async (payload: LoginUserPayload) => loginUser(payload),
     onSuccess: async () => {
+      queryClient.invalidateQueries({ queryKey: ['user-details'] });
       toast.success('Login successful. Redirecting to home page.');
       setTimeout(() => router.push('/'), 2000);
     },
@@ -59,9 +41,9 @@ export default function LoginPage() {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm<FormValues>({ resolver: zodResolver(schema), mode: 'onTouched' });
+  } = useForm<LoginUserPayload>({ resolver: zodResolver(loginUserSchema), mode: 'onTouched' });
 
-  const submitForm: SubmitHandler<FormValues> = (data: FormValues) => loginUser(data);
+  const submitForm: SubmitHandler<LoginUserPayload> = (data: LoginUserPayload) => mutate(data);
   return (
     <Card className="mx-auto my-10 w-full max-w-sm md:my-20">
       <CardHeader>
