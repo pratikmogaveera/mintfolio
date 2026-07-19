@@ -27,7 +27,7 @@ export default function SignUpPage() {
     mutationFn: async (payload: SignUpUserPayload) => signUpUser(payload),
     onSuccess: async () => {
       toast.success('Sign up successful. Redirecting to login page.');
-      setTimeout(() => router.push('/login'), 2000);
+      setTimeout(() => router.push('/login'), 1500);
     },
     onError: (error) => {
       if (isAxiosError(error)) toast.error(error.response?.data.message);
@@ -67,7 +67,7 @@ export default function SignUpPage() {
                 autoFocus
                 {...register('email')}
               />
-              {errors.email && <span className="text-xs text-red-400">{errors.email.message}</span>}
+              {errors.email && <span className="text-xs text-red-600">{errors.email.message}</span>}
             </div>
             <div className="grid gap-2">
               <Label htmlFor="username">Username</Label>
@@ -78,7 +78,7 @@ export default function SignUpPage() {
                 autoComplete="username"
                 {...register('username')}
               />
-              {errors.username && <span className="text-xs text-red-400">{errors.username.message}</span>}
+              {errors.username && <span className="text-xs text-red-600">{errors.username.message}</span>}
             </div>
             <div className="grid gap-2">
               <div className="flex items-center">
@@ -87,11 +87,11 @@ export default function SignUpPage() {
               <Input
                 id="password"
                 type="password"
-                placeholder="********"
+                placeholder="••••••••"
                 autoComplete="new-password"
                 {...register('password')}
               />
-              {errors.password && <span className="text-xs text-red-400">{errors.password.message}</span>}
+              {errors.password && <span className="text-xs text-red-600">{errors.password.message}</span>}
             </div>
           </div>
         </CardContent>

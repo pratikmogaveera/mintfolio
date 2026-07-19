@@ -39,18 +39,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html
-      lang="en"
-      className={cn(
-        'dark h-full',
-        'bg-[#09090b]',
-        'text-zinc-100',
-        'antialiased',
-        'font-sans',
-        inter.variable,
-        spaceGroteskHeading.variable,
-      )}
-    >
+    <html lang="en" className={cn('h-full', 'antialiased', 'font-sans', inter.variable, spaceGroteskHeading.variable)}>
       <body className="flex min-h-full flex-col">
         <QCProvider>
           <Header />

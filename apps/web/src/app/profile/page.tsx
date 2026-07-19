@@ -41,7 +41,7 @@ export default function Page() {
               </CardContent>
             ) : (
               isError && (
-                <CardContent className="text-red-400">
+                <CardContent className="text-red-600">
                   {isAxiosError(error) ? error.response?.data?.message : error?.message}
                 </CardContent>
               )

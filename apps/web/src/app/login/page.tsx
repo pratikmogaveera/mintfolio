@@ -27,9 +27,11 @@ export default function LoginPage() {
   const { mutate, isPending } = useMutation({
     mutationFn: async (payload: LoginUserPayload) => loginUser(payload),
     onSuccess: async () => {
-      queryClient.invalidateQueries({ queryKey: ['user-details'] });
       toast.success('Login successful. Redirecting to home page.');
-      setTimeout(() => router.push('/'), 2000);
+      setTimeout(() => {
+        router.push('/');
+        queryClient.invalidateQueries({ queryKey: ['user-details'] });
+      }, 1500);
     },
     onError: (error) => {
       if (isAxiosError(error)) toast.error(error.response?.data.message);
@@ -69,7 +71,7 @@ export default function LoginPage() {
                 autoFocus
                 {...register('identifier')}
               />
-              {errors.identifier && <span className="text-xs text-red-400">{errors.identifier.message}</span>}
+              {errors.identifier && <span className="text-xs text-red-600">{errors.identifier.message}</span>}
             </div>
             <div className="grid gap-2">
               <div className="flex items-center">
@@ -78,11 +80,11 @@ export default function LoginPage() {
               <Input
                 id="password"
                 type="password"
-                placeholder="********"
+                placeholder="••••••••"
                 autoComplete="current-password"
                 {...register('password')}
               />
-              {errors.password && <span className="text-xs text-red-400">{errors.password.message}</span>}
+              {errors.password && <span className="text-xs text-red-600">{errors.password.message}</span>}
             </div>
           </div>
         </CardContent>

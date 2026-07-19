@@ -26,15 +26,18 @@ const Header = () => {
     mutationFn: logoutUser,
     onSuccess: () => {
       toast.success('Logged out successfully.');
-      queryClient.invalidateQueries({ queryKey: ['user-details'] });
-      setTimeout(() => router.push('/login'), 2000);
+
+      setTimeout(() => {
+        router.push('/login');
+        queryClient.invalidateQueries({ queryKey: ['user-details'] });
+      }, 1500);
     },
   });
 
   return (
-    <header className="border-b border-gray-600 px-4 py-2 md:px-12">
+    <header className="border-border border-b px-4 py-2 md:px-12">
       <div className="flex w-full items-center justify-between">
-        <Link href={'/'} title="Mintfolio - home page" className="text-3xl font-semibold text-[#4ade80]">
+        <Link href={'/'} title="Mintfolio - home page" className="font-heading text-primary text-3xl font-semibold">
           Mintfolio
         </Link>
 

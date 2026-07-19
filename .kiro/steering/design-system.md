@@ -15,40 +15,52 @@ Implementation-ready tokens and specs. Use this when building components.
 
 ## Colors
 
-### Dark Mode (Primary)
+### Dark Mode (Primary) — Implemented via CSS variables in `globals.css`
 
-| Token | Hex | Use |
-|-------|-----|-----|
-| `--bg` | `#09090b` | Page background |
-| `--surface` | `#111114` | Cards, holding rows, stat cards |
-| `--elevated` | `#18181b` | Secondary buttons, chart tabs, elevated surfaces |
-| `--border` | `#1c1c1e` | Subtle dividers (nav bottom border only) |
-| `--accent` | `#4ade80` | Gains, active nav, CTA buttons, brand dot, chart line |
-| `--accent-muted` | `rgba(74,222,128,0.08)` | Change badge bg, chart fill |
-| `--signal` | `#fb923c` | Losses, alerts, notification dot |
-| `--signal-muted` | `rgba(251,146,60,0.04)` | Notification background |
-| `--signal-border` | `rgba(251,146,60,0.12)` | Notification border |
-| `--text` | `#fafafa` | Primary text, headings, values |
-| `--text-secondary` | `#e4e4e7` | Fund names, card content |
-| `--muted` | `#71717a` | Greeting, meta text, inactive nav |
-| `--muted-dim` | `#52525b` | Labels, placeholders, stat labels |
+| CSS Variable | OKLCH | Approx Hex | Use |
+|-------|-------|-----|-----|
+| `--background` | `oklch(0.09 0.005 285)` | `#09090b` | Page background |
+| `--card` / `--popover` | `oklch(0.19 0.005 285)` | ~`#1a1a1d` | Cards, popovers, elevated surfaces |
+| `--secondary` / `--muted` | `oklch(0.21 0.006 285)` | `#18181b` | Secondary buttons, dropdown hover |
+| `--input` | `oklch(0.18 0.005 285)` | ~`#161618` | Input field background |
+| `--border` | `oklch(0.2 0.004 285)` | `#1c1c1e` | Subtle dividers, input borders (at 70% opacity) |
+| `--primary` / `--accent` | `oklch(0.77 0.2 150)` | `#4ade80` | Gains, active nav, CTA buttons, brand, focus ring |
+| `--accent-muted` | `oklch(0.77 0.2 150 / 8%)` | — | Change badge bg, chart fill |
+| `--signal` / `--destructive` | `oklch(0.7 0.19 40)` | `#fb923c` | Losses, alerts, notification dot |
+| `--signal-muted` | `oklch(0.7 0.19 40 / 4%)` | — | Notification background |
+| `--signal-border` | `oklch(0.7 0.19 40 / 12%)` | — | Notification border |
+| `--foreground` | `oklch(0.985 0 0)` | `#fafafa` | Primary text, headings, values |
+| `--muted-foreground` | `oklch(0.55 0.014 285)` | `#71717a` | Meta text, placeholders, inactive nav |
+| `--ring` | `oklch(0.77 0.2 150)` | `#4ade80` | Focus ring color |
 
 ### Light Mode
 
-| Token | Hex | Use |
-|-------|-----|-----|
-| `--bg` | `#fafafa` | Page background |
-| `--surface` | `#ffffff` | Cards (with shadow) |
-| `--elevated` | `#f3f4f6` | Secondary buttons, tab backgrounds |
-| `--shadow` | `0 1px 3px rgba(0,0,0,0.04)` | Card elevation |
-| `--border` | `#f3f4f6` | Nav divider (very subtle) |
-| `--accent` | `#16a34a` | Gains, active states, CTA |
-| `--accent-muted` | `rgba(22,163,74,0.08)` | Change badge bg |
-| `--signal` | `#ea580c` | Losses, alerts |
-| `--text` | `#111827` | Primary text |
-| `--text-secondary` | `#1f2937` | Fund names |
-| `--muted` | `#6b7280` | Meta text, greeting |
-| `--muted-dim` | `#9ca3af` | Labels, placeholders |
+| CSS Variable | OKLCH | Approx Hex | Use |
+|-------|-------|-----|-----|
+| `--background` | `oklch(0.985 0 0)` | `#fafafa` | Page background |
+| `--card` / `--popover` | `oklch(1 0 0)` | `#ffffff` | Cards (with shadow) |
+| `--secondary` / `--muted` | `oklch(0.96 0.003 264)` | `#f3f4f6` | Secondary buttons, tab backgrounds |
+| `--border` | `oklch(0.96 0.003 264)` | `#f3f4f6` | Nav divider (very subtle) |
+| `--primary` / `--accent` | `oklch(0.56 0.2 145)` | `#16a34a` | Gains, active states, CTA |
+| `--accent-muted` | `oklch(0.56 0.2 145 / 8%)` | — | Change badge bg |
+| `--signal` / `--destructive` | `oklch(0.63 0.19 40)` | `#ea580c` | Losses, alerts |
+| `--foreground` | `oklch(0.145 0.014 285.82)` | `#111827` | Primary text |
+| `--muted-foreground` | `oklch(0.505 0.017 285.88)` | `#6b7280` | Meta text |
+
+### Tailwind Usage
+
+| Design intent | Tailwind class |
+|---|---|
+| Page background | `bg-background` |
+| Card/surface background | `bg-card` |
+| Primary text | `text-foreground` |
+| Muted/secondary text | `text-muted-foreground` |
+| Green accent (brand, gains, CTA) | `bg-primary` / `text-primary` |
+| Orange signal (losses, alerts) | `bg-destructive` / `text-destructive` / `text-signal` |
+| Form errors | `text-red-600` (intentionally red, not orange) |
+| Focus ring | `ring-ring` (auto via shadcn) |
+| Input background | `bg-input/50` |
+| Input border (unfocused) | `border-border/70` |
 
 ### Usage Rules
 
@@ -56,6 +68,7 @@ Implementation-ready tokens and specs. Use this when building components.
 - Orange = losses, alerts, warnings. NEVER used for success or progress.
 - No second accent color. Green is the only "brand" color.
 - Notification uses warm-tinted background + border in dark mode; white card with shadow in light mode.
+- Form validation errors use `text-red-600` (intentionally red, distinct from orange signal).
 
 ---
 
@@ -136,11 +149,13 @@ Implementation-ready tokens and specs. Use this when building components.
 | Token | Value | Use |
 |-------|-------|-----|
 | `--radius-sm` | 8px | Tabs, small badges |
-| `--radius-md` | 10px | Buttons |
-| `--radius-lg` | 12px | Chart container, smaller cards |
+| `--radius-md` | 10px | Buttons, inputs |
+| `--radius-lg` | 12px | Chart container, dropdown menus |
 | `--radius-xl` | 14px | Holding cards, stat cards, notifications |
 | `--radius-2xl` | 18px | App shell, outer containers |
 | `--radius-pill` | 9999px | Change badge, avatar |
+
+**Base radius:** `0.625rem` (10px). All radii derive from this via multipliers in `globals.css`.
 
 ### Elevation
 
