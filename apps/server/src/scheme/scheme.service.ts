@@ -1,7 +1,6 @@
 import { BadRequestException, HttpException, Injectable, Logger } from '@nestjs/common';
+import { SEARCH_RESULT_LIMIT } from '../../lib/utils';
 import { RedisService } from '../redis/redis.service';
-
-const SEARCH_RESULT_LIMIT = 20;
 
 @Injectable()
 export class SchemeService {

@@ -11,7 +11,7 @@ import { JwtService } from '@nestjs/jwt';
 import { eq, or } from 'drizzle-orm';
 import { Response } from 'express';
 import { DatabaseError } from 'pg';
-import { compareHash, hash } from '../../lib/utils';
+import { compareHash, COOKIE_MAX_AGE, hash } from '../../lib/utils';
 import { DatabaseService } from '../db/database.service';
 import { users } from '../db/schema';
 import { CreateUserDto, LoginUserDto } from './auth.dto';
@@ -78,7 +78,7 @@ export class AuthService {
       res.cookie('access-token', await this.jwtService.signAsync(tokenPayload), {
         httpOnly: true,
         secure: process.env.NODE_ENV === 'production',
-        maxAge: 24 * 60 * 60 * 1000, // 1 day in milliseconds.
+        maxAge: COOKIE_MAX_AGE,
         sameSite: 'lax',
       });
 

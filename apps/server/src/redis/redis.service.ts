@@ -1,10 +1,9 @@
+import { type MFScheme } from '@mintfolio/shared';
 import { Injectable, Logger, OnModuleInit } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import { type MFScheme } from '@mintfolio/shared';
 import axios from 'axios';
 import Redis from 'ioredis';
-
-const SCHEME_CACHE_TTL = 86400; // 24 hours
+import { SCHEME_CACHE_TTL } from '../../lib/utils';
 
 @Injectable()
 export class RedisService implements OnModuleInit {

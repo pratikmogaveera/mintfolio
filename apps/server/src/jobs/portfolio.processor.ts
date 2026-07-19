@@ -1,13 +1,11 @@
 import { Injectable, Logger } from '@nestjs/common';
 import axios from 'axios';
 import dayjs from 'dayjs';
-import { formatINR } from '../../lib/utils';
+import { formatINR, NAV_CACHE_TTL } from '../../lib/utils';
 import { DatabaseService } from '../db/database.service';
 import { holdings, portfolioLogs } from '../db/schema';
 import { NotificationsService } from '../notifications/notifications.service';
 import { RedisService } from '../redis/redis.service';
-
-const CACHE_TTL = 23.5 * 60 * 60; //23.5 hours.
 
 interface UserDetails {
   amount_invested: number;
@@ -29,7 +27,7 @@ export class PortfolioProcessor {
       const cached = await this.redis.get(code);
       if (cached) return;
       const response = await axios.get<MFLatestNav>(`https://api.mfapi.in/mf/${code}/latest`);
-      await this.redis.setex(code, CACHE_TTL, response.data.data[0].nav);
+      await this.redis.setex(code, NAV_CACHE_TTL, response.data.data[0].nav);
       this.logger.debug(`NAV fetched and cached for ${code}`);
     } catch (error) {
       this.logger.warn(`Failed to fetch NAV for ${code}: ${error instanceof Error ? error.message : 'Unknown error'}`);
