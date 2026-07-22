@@ -27,7 +27,7 @@ export default function SignUpPage() {
     mutationFn: async (payload: SignUpUserPayload) => signUpUser(payload),
     onSuccess: async () => {
       toast.success('Sign up successful. Redirecting to login page.');
-      setTimeout(() => router.push('/login'), 1500);
+      router.push('/login');
     },
     onError: (error) => {
       if (isAxiosError(error)) toast.error(error.response?.data.message);

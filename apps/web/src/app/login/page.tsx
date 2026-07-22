@@ -27,7 +27,7 @@ export default function LoginPage() {
   const { mutate, isPending } = useMutation({
     mutationFn: async (payload: LoginUserPayload) => loginUser(payload),
     onSuccess: async () => {
-      toast.success('Login successful. Redirecting to home page.');
+      toast.success('Login successful.');
       await queryClient.invalidateQueries({ queryKey: ['user-details'] });
       router.push('/');
     },

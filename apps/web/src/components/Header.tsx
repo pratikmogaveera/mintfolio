@@ -28,13 +28,10 @@ const Header = () => {
 
   const { mutate, isPending } = useMutation({
     mutationFn: logoutUser,
-    onSuccess: () => {
+    onSuccess: async () => {
       toast.success('Logged out successfully.');
-
-      setTimeout(() => {
-        router.push('/login');
-        queryClient.invalidateQueries({ queryKey: ['user-details'] });
-      }, 1500);
+      await queryClient.invalidateQueries({ queryKey: ['user-details'] });
+      router.push('/login');
     },
   });
 
