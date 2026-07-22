@@ -28,10 +28,8 @@ export default function LoginPage() {
     mutationFn: async (payload: LoginUserPayload) => loginUser(payload),
     onSuccess: async () => {
       toast.success('Login successful. Redirecting to home page.');
-      setTimeout(() => {
-        router.push('/');
-        queryClient.invalidateQueries({ queryKey: ['user-details'] });
-      }, 1500);
+      await queryClient.invalidateQueries({ queryKey: ['user-details'] });
+      router.push('/');
     },
     onError: (error) => {
       if (isAxiosError(error)) toast.error(error.response?.data.message);

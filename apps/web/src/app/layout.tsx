@@ -1,10 +1,10 @@
+import Header from '@/components/Header';
 import { Toaster } from '@/components/ui/sonner';
-import QCProvider from '@/lib/QCProvider';
+import MainProvider from '@/lib/MainProvider';
 import { cn } from '@/lib/utils';
 import type { Metadata, Viewport } from 'next';
 import { Inter, Space_Grotesk } from 'next/font/google';
 import './globals.css';
-import Header from '@/components/Header';
 
 const spaceGroteskHeading = Space_Grotesk({ subsets: ['latin'], variable: '--font-heading' });
 
@@ -39,13 +39,13 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={cn('h-full', 'antialiased', 'font-sans', inter.variable, spaceGroteskHeading.variable)}>
+    <html lang="en" suppressHydrationWarning className={cn('h-full', 'antialiased', 'font-sans', inter.variable, spaceGroteskHeading.variable)}>
       <body className="flex min-h-full flex-col">
-        <QCProvider>
+        <MainProvider>
           <Header />
           <main className="container mx-auto px-4 py-8">{children}</main>
           <Toaster richColors />
-        </QCProvider>
+        </MainProvider>
       </body>
     </html>
   );
