@@ -1,5 +1,6 @@
 'use client';
 
+import SearchScheme from '@/components/SearchScheme';
 import { apiClient } from '@/lib/api-client';
 import { isAxiosError } from 'axios';
 import { useEffect } from 'react';
@@ -51,6 +52,9 @@ export default function Home() {
     <div className="h-full w-full">
       <main>
         <h1 className="text-xl font-semibold">Home Page</h1>
+        <div className="mt-8 w-full max-w-md">
+          <SearchScheme />
+        </div>
       </main>
     </div>
   );

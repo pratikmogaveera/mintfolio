@@ -1,4 +1,4 @@
-import { ApiResponse, User } from '@mintfolio/shared';
+import { ApiResponse, MFScheme, User } from '@mintfolio/shared';
 import axios from 'axios';
 import { LoginUserPayload, SignUpUserPayload } from './schema';
 
@@ -16,3 +16,6 @@ export const loginUser = (payload: LoginUserPayload) =>
   apiClient.post<ApiResponse<User>>('/auth/authenticate', payload);
 
 export const logoutUser = () => apiClient.post('/auth/logout');
+
+export const searchSchemes = (query: string) =>
+  apiClient.get<ApiResponse<MFScheme[]>>('/scheme/search', { params: { q: query } });
