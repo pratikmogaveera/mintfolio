@@ -5,7 +5,7 @@
 @custom-variant dark (&:is(.dark *));
 
 :root {
-  --background: oklch(0.985 0 0);
+  --background: oklch(0.97 0.001 264);
   --foreground: oklch(0.145 0.014 285.82);
   --card: oklch(1 0 0);
   --card-foreground: oklch(0.145 0.014 285.82);
@@ -13,16 +13,16 @@
   --popover-foreground: oklch(0.145 0.014 285.82);
   --primary: oklch(0.56 0.2 145);
   --primary-foreground: oklch(0.985 0 0);
-  --secondary: oklch(0.96 0.003 264);
+  --secondary: oklch(0.94 0.003 264);
   --secondary-foreground: oklch(0.145 0.014 285.82);
-  --muted: oklch(0.96 0.003 264);
+  --muted: oklch(0.94 0.003 264);
   --muted-foreground: oklch(0.505 0.017 285.88);
   --accent: oklch(0.56 0.2 145);
   --accent-foreground: oklch(0.985 0 0);
   --destructive: oklch(0.63 0.19 40);
   --destructive-foreground: oklch(0.985 0 0);
-  --border: oklch(0.96 0.003 264);
-  --input: oklch(0.92 0.004 264);
+  --border: oklch(0.91 0.003 264);
+  --input: oklch(0.93 0.004 264);
   --ring: oklch(0.56 0.2 145);
   --signal: oklch(0.63 0.19 40);
   --signal-muted: oklch(0.63 0.19 40 / 4%);
@@ -34,9 +34,9 @@
 .dark {
   --background: oklch(0.09 0.005 285);
   --foreground: oklch(0.985 0 0);
-  --card: oklch(0.19 0.005 285);
+  --card: oklch(0.16 0.005 285);
   --card-foreground: oklch(0.985 0 0);
-  --popover: oklch(0.19 0.005 285);
+  --popover: oklch(0.16 0.005 285);
   --popover-foreground: oklch(0.985 0 0);
   --primary: oklch(0.77 0.2 150);
   --primary-foreground: oklch(0.09 0.005 285);
@@ -48,8 +48,8 @@
   --accent-foreground: oklch(0.09 0.005 285);
   --destructive: oklch(0.7 0.19 40);
   --destructive-foreground: oklch(0.985 0 0);
-  --border: oklch(0.2 0.004 285);
-  --input: oklch(0.18 0.005 285);
+  --border: oklch(0.26 0.004 285);
+  --input: oklch(0.21 0.005 285);
   --ring: oklch(0.77 0.2 150);
   --signal: oklch(0.7 0.19 40);
   --signal-muted: oklch(0.7 0.19 40 / 4%);
@@ -61,6 +61,8 @@
 @theme inline {
   --font-sans: var(--font-sans);
   --font-heading: var(--font-heading);
+  --font-mono: var(--font-mono);
+  --font-greeting: var(--font-greeting);
   --color-ring: var(--ring);
   --color-input: var(--input);
   --color-border: var(--border);
@@ -117,7 +119,7 @@
   .dark input:-webkit-autofill:hover,
   .dark input:-webkit-autofill:focus,
   .dark input:-webkit-autofill:active {
-    -webkit-box-shadow: 0 0 0px 1000px oklch(0.18 0.005 285) inset !important;
+    -webkit-box-shadow: 0 0 0px 1000px oklch(0.21 0.005 285) inset !important;
     -webkit-text-fill-color: oklch(0.985 0 0) !important;
     caret-color: oklch(0.985 0 0);
     font-size: inherit !important;

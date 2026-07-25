@@ -20,10 +20,10 @@ Implementation-ready tokens and specs. Use this when building components.
 | CSS Variable | OKLCH | Approx Hex | Use |
 |-------|-------|-----|-----|
 | `--background` | `oklch(0.09 0.005 285)` | `#09090b` | Page background |
-| `--card` / `--popover` | `oklch(0.19 0.005 285)` | ~`#1a1a1d` | Cards, popovers, elevated surfaces |
+| `--card` / `--popover` | `oklch(0.16 0.005 285)` | ~`#1a1a1d` | Cards, popovers, elevated surfaces |
 | `--secondary` / `--muted` | `oklch(0.21 0.006 285)` | `#18181b` | Secondary buttons, dropdown hover |
-| `--input` | `oklch(0.18 0.005 285)` | ~`#161618` | Input field background |
-| `--border` | `oklch(0.2 0.004 285)` | `#1c1c1e` | Subtle dividers, input borders (at 70% opacity) |
+| `--input` | `oklch(0.21 0.005 285)` | ~`#1e1e20` | Input field background |
+| `--border` | `oklch(0.26 0.004 285)` | ~`#2a2a2e` | Subtle dividers, input borders (at 70% opacity) |
 | `--primary` / `--accent` | `oklch(0.77 0.2 150)` | `#4ade80` | Gains, active nav, CTA buttons, brand, focus ring |
 | `--accent-muted` | `oklch(0.77 0.2 150 / 8%)` | — | Change badge bg, chart fill |
 | `--signal` / `--destructive` | `oklch(0.7 0.19 40)` | `#fb923c` | Losses, alerts, notification dot |
@@ -37,10 +37,11 @@ Implementation-ready tokens and specs. Use this when building components.
 
 | CSS Variable | OKLCH | Approx Hex | Use |
 |-------|-------|-----|-----|
-| `--background` | `oklch(0.985 0 0)` | `#fafafa` | Page background |
+| `--background` | `oklch(0.97 0.001 264)` | ~`#f5f5f7` | Page background |
 | `--card` / `--popover` | `oklch(1 0 0)` | `#ffffff` | Cards (with shadow) |
-| `--secondary` / `--muted` | `oklch(0.96 0.003 264)` | `#f3f4f6` | Secondary buttons, tab backgrounds |
-| `--border` | `oklch(0.96 0.003 264)` | `#f3f4f6` | Nav divider (very subtle) |
+| `--secondary` / `--muted` | `oklch(0.94 0.003 264)` | ~`#ededf0` | Secondary buttons, tab backgrounds |
+| `--input` | `oklch(0.93 0.004 264)` | ~`#eaeaed` | Input field background |
+| `--border` | `oklch(0.91 0.003 264)` | ~`#e4e4e7` | Nav divider, input borders |
 | `--primary` / `--accent` | `oklch(0.56 0.2 145)` | `#16a34a` | Gains, active states, CTA |
 | `--accent-muted` | `oklch(0.56 0.2 145 / 8%)` | — | Change badge bg |
 | `--signal` / `--destructive` | `oklch(0.63 0.19 40)` | `#ea580c` | Losses, alerts |
