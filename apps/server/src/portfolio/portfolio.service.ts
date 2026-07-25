@@ -13,6 +13,7 @@ import { holdings } from '../db/schema';
 import { CreateHoldingDto, UpdateHoldingDto } from './portfolio.dto';
 import { RedisService } from '../redis/redis.service';
 import axios from 'axios';
+import dayjs from 'dayjs';
 
 @Injectable()
 export class PortfolioService {
@@ -122,6 +123,26 @@ export class PortfolioService {
       const errorMessage = error instanceof Error ? error.message : 'Something went wrong while updating holding.';
       this.logger.warn(errorMessage);
       throw error;
+    }
+  }
+
+  async getNavHistory(schemeCode: string) {
+    if (!schemeCode) throw new BadRequestException('scheme_code is required.');
+    const endDate = dayjs();
+    const startDate = endDate.subtract(13, 'day');
+
+    try {
+      const response = await axios.get<{ data: { date: string; nav: string }[] }>(
+        `https://api.mfapi.in/mf/${schemeCode}?startDate=${startDate.format('YYYY-MM-DD')}&endDate=${endDate.format('YYYY-MM-DD')}`,
+      );
+
+      // API returns newest first — reverse to chronological, take last 7
+      return response.data.data
+        .reverse()
+        .slice(-7)
+        .map((entry) => Number(entry.nav));
+    } catch {
+      throw new BadRequestException('Could not fetch NAV history for this scheme.');
     }
   }
 

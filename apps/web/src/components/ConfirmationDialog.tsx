@@ -3,7 +3,6 @@
 import { Button } from '@/components/ui/button';
 import {
   Dialog,
-  DialogClose,
   DialogContent,
   DialogDescription,
   DialogFooter,
@@ -79,7 +78,9 @@ export function ConfirmationDialogProvider({ children }: { children: React.React
             {state.description && <DialogDescription>{state.description}</DialogDescription>}
           </DialogHeader>
           <DialogFooter>
-            <Button variant="outline" onClick={handleCancel}>Cancel</Button>
+            <Button variant="outline" onClick={handleCancel}>
+              Cancel
+            </Button>
             <Button variant={state.isDestructive ? 'destructive' : 'default'} onClick={handleConfirm}>
               {state.confirmLabel}
             </Button>

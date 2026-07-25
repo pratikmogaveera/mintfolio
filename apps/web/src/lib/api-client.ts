@@ -30,3 +30,6 @@ export const updateHolding = (holdingId: string, payload: UpdateHoldingPayload) 
 
 export const deleteHolding = (holdingId: string) =>
   apiClient.delete<ApiResponse<Pick<Holding, 'id'>>>(`/portfolio/holdings/${holdingId}`);
+
+export const getNavHistory = (schemeCode: string) =>
+  apiClient.get<ApiResponse<number[]>>('/portfolio/nav-history', { params: { scheme_code: schemeCode } });

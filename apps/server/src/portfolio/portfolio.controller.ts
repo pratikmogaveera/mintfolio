@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, Param, Patch, Post, Request, UseGuards } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Patch, Post, Query, Request, UseGuards } from '@nestjs/common';
 import { type Request as ExpressRequest } from 'express';
 import { AuthGuard } from '../auth/auth.guard';
 import { CreateHoldingDto, UpdateHoldingDto } from './portfolio.dto';
@@ -31,5 +31,10 @@ export class PortfolioController {
   @Delete('holdings/:holdingId')
   async deleteHolding(@Param('holdingId') holdingId: string, @Request() request: ExpressRequest) {
     return await this.portfolioService.deleteHolding(holdingId, request.user?.sub);
+  }
+
+  @Get('nav-history')
+  async getNavHistory(@Query('scheme_code') schemeCode: string) {
+    return await this.portfolioService.getNavHistory(schemeCode);
   }
 }
