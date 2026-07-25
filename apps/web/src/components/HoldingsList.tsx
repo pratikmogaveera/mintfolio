@@ -15,7 +15,7 @@ export default function HoldingsList({
 }) {
   return (
     <div>
-      <h2 className="text-lg font-semibold">Your Holdings</h2>
+      <h2 className="font-heading text-lg font-semibold">Your Holdings</h2>
       <div className="mt-4 flex flex-col gap-3">
         {isHoldingError ? (
           <p className="text-muted-foreground text-sm">Something went wrong while fetching holdings.</p>

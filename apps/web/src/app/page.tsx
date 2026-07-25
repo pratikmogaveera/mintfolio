@@ -49,7 +49,7 @@ export default function Home() {
 
   return (
     <div>
-      <h1 className="text-xl font-semibold">Home</h1>
+      <h1 className="font-heading text-xl font-semibold">Home</h1>
       {/* Portfolio dashboard will go here */}
     </div>
   );

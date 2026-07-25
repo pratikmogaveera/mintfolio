@@ -22,7 +22,7 @@ export default function Page() {
           </Card>
         ) : (
           <Card className="mx-auto flex w-full max-w-xl flex-col">
-            <CardHeader className="text-xl font-semibold">Profile</CardHeader>
+            <CardHeader className="font-heading text-xl font-semibold">Profile</CardHeader>
             <Separator />
             {isSuccess ? (
               <CardContent className="flex flex-col gap-2">
