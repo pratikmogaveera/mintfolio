@@ -1,6 +1,6 @@
-import { ApiResponse, MFScheme, User } from '@mintfolio/shared';
+import { ApiResponse, Holding, MFScheme, User } from '@mintfolio/shared';
 import axios from 'axios';
-import { LoginUserPayload, SignUpUserPayload } from './schema';
+import { CreateHoldingPayload, LoginUserPayload, SignUpUserPayload } from './schema';
 
 export const apiClient = axios.create({
   baseURL: process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001',
@@ -19,3 +19,6 @@ export const logoutUser = () => apiClient.post('/auth/logout');
 
 export const searchSchemes = (query: string) =>
   apiClient.get<ApiResponse<MFScheme[]>>('/scheme/search', { params: { q: query } });
+
+export const createHolding = (payload: CreateHoldingPayload) =>
+  apiClient.post<ApiResponse<Holding>>('/portfolio/holdings', payload);
