@@ -66,7 +66,7 @@ export default function HoldingsList({
           ) : isHoldingLoading ? (
             <>
               {[1, 2, 3].map((item) => (
-                <Skeleton key={item} className="h-[4.625rem] w-full rounded-xl" />
+                <Skeleton key={item} className="h-18.5 w-full rounded-xl" />
               ))}
             </>
           ) : userHoldings.length ? (
@@ -77,7 +77,8 @@ export default function HoldingsList({
                     <span className="truncate">{holding.scheme_name}</span>
                   </ItemTitle>
                   <ItemDescription className="text-sm">
-                    {formatINR(Number(holding.amount_invested))} · {holding.units} units
+                    {formatINR(Number(holding.current_value))} · {formatINR(Number(holding.amount_invested))} ·{' '}
+                    {holding.units} units
                   </ItemDescription>
                 </ItemContent>
                 <ItemActions>

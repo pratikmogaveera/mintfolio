@@ -1,0 +1,1 @@
+ALTER TABLE "holdings" ADD COLUMN "current_value" numeric DEFAULT '0.0' NOT NULL;

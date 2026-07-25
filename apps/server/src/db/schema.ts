@@ -33,6 +33,7 @@ export const holdings = pgTable(
     scheme_code: text().notNull(),
     units: numeric().notNull().default('0.0'),
     amount_invested: numeric().notNull().default('0.0'),
+    current_value: numeric().notNull().default('0.0'),
   },
   (t) => [unique().on(t.user_id, t.scheme_code)],
 );

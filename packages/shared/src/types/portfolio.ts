@@ -4,6 +4,7 @@ export interface Holding {
   scheme_code: string;
   units: string;
   amount_invested: string;
+  current_value: string;
 }
 
 export interface PortfolioLog {

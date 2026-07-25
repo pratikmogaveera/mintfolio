@@ -15,6 +15,13 @@
       "when": 1783527548631,
       "tag": "0001_unusual_cassandra_nova",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1784989543313,
+      "tag": "0002_far_mister_sinister",
+      "breakpoints": true
     }
   ]
 }

@@ -11,12 +11,17 @@ import { DatabaseError } from 'pg';
 import { DatabaseService } from '../db/database.service';
 import { holdings } from '../db/schema';
 import { CreateHoldingDto, UpdateHoldingDto } from './portfolio.dto';
+import { RedisService } from '../redis/redis.service';
+import axios from 'axios';
 
 @Injectable()
 export class PortfolioService {
   private readonly logger = new Logger('PortfolioService');
 
-  constructor(private dbService: DatabaseService) {}
+  constructor(
+    private dbService: DatabaseService,
+    private redis: RedisService,
+  ) {}
 
   async getHoldings(userId: string | undefined) {
     if (!userId) throw new BadRequestException('User ID is missing from request.');
@@ -28,6 +33,7 @@ export class PortfolioService {
           scheme_name: holdings.scheme_name,
           units: holdings.units,
           amount_invested: holdings.amount_invested,
+          current_value: holdings.current_value,
         })
         .from(holdings)
         .where(eq(holdings.user_id, userId));
@@ -43,6 +49,21 @@ export class PortfolioService {
   async createHolding(payload: CreateHoldingDto, userId: string | undefined) {
     if (!userId) throw new BadRequestException('User ID is missing from request.');
     try {
+      let nav: number;
+      const cacheCheck = await this.redis.get(payload.scheme_code);
+      if (cacheCheck?.length) {
+        nav = Number(cacheCheck);
+      } else {
+        try {
+          const response = await axios.get<MFLatestNav>(`https://api.mfapi.in/mf/${payload.scheme_code}/latest`);
+          nav = Number(response.data.data[0].nav);
+        } catch {
+          throw new BadRequestException('Could not fetch NAV for the selected scheme. Please try again.');
+        }
+      }
+
+      const currentValue = payload.units * nav;
+
       const result = await this.dbService.db
         .insert(holdings)
         .values({
@@ -51,6 +72,7 @@ export class PortfolioService {
           scheme_name: payload.scheme_name,
           units: payload.units.toString(),
           amount_invested: payload.amount_invested.toString(),
+          current_value: currentValue.toFixed(2),
         })
         .returning({
           id: holdings.id,
@@ -58,6 +80,7 @@ export class PortfolioService {
           scheme_name: holdings.scheme_name,
           units: holdings.units,
           amount_invested: holdings.amount_invested,
+          current_value: holdings.current_value,
         });
 
       this.logger.log(`Holding created: ${payload.scheme_name} for user ${userId.split('-')[0]}`);

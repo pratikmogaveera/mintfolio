@@ -6,6 +6,7 @@ import { DatabaseService } from '../db/database.service';
 import { holdings, portfolioLogs } from '../db/schema';
 import { NotificationsService } from '../notifications/notifications.service';
 import { RedisService } from '../redis/redis.service';
+import { eq } from 'drizzle-orm';
 
 interface UserDetails {
   amount_invested: number;
@@ -42,6 +43,7 @@ export class PortfolioProcessor {
       this.logger.debug('Holdings fetched.');
 
       const userDetails: Record<string, UserDetails> = {};
+      const holdingUpdates: Promise<unknown>[] = [];
 
       const uniqueSchemeCodes: string[] = [...new Set(result.map((h) => h.scheme_code))];
       await Promise.all(uniqueSchemeCodes.map((code) => this.fetchAndCacheNav(code)));
@@ -62,10 +64,19 @@ export class PortfolioProcessor {
               current_value: Number(units) * nav,
             };
           }
+
+          holdingUpdates.push(
+            this.dbService.db
+              .update(holdings)
+              .set({ current_value: (Number(units) * nav).toFixed(2) })
+              .where(eq(holdings.id, holding.id)),
+          );
         } else {
           this.logger.warn(`Missing cached nav for ${scheme_code}`);
         }
       }
+
+      await Promise.all(holdingUpdates);
 
       this.logger.log(`Processed ${uniqueSchemeCodes.length} schemes for ${Object.keys(userDetails).length} user(s).`);
 
