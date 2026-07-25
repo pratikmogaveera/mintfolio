@@ -74,7 +74,7 @@ export default function AddHoldingForm() {
   };
 
   return (
-    <Card className="h-fit w-full max-w-lg">
+    <Card className="h-fit w-full max-w-lg max-lg:mx-auto">
       <CardHeader>
         <CardTitle>Add Holding</CardTitle>
         <CardDescription>Add a mutual fund scheme to your portfolio</CardDescription>

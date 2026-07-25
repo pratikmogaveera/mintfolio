@@ -20,5 +20,7 @@ export const logoutUser = () => apiClient.post('/auth/logout');
 export const searchSchemes = (query: string) =>
   apiClient.get<ApiResponse<MFScheme[]>>('/scheme/search', { params: { q: query } });
 
+export const getHoldings = () => apiClient.get<ApiResponse<Holding[]>>('/portfolio/holdings');
+
 export const createHolding = (payload: CreateHoldingPayload) =>
   apiClient.post<ApiResponse<Holding>>('/portfolio/holdings', payload);
