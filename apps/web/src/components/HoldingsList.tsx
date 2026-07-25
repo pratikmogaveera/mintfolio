@@ -1,5 +1,6 @@
 import { Button } from '@/components/ui/button';
 import { Item, ItemActions, ItemContent, ItemDescription, ItemTitle } from '@/components/ui/item';
+import { formatINR } from '@/lib/utils';
 import { Holding } from '@mintfolio/shared';
 import { EllipsisVerticalIcon } from 'lucide-react';
 import { Skeleton } from './ui/skeleton';
@@ -22,16 +23,18 @@ export default function HoldingsList({
         ) : isHoldingLoading ? (
           <>
             {[1, 2, 3].map((item) => (
-              <Skeleton key={item} className="h-16.25 w-full rounded-xl" />
+              <Skeleton key={item} className="h-18.5¯ w-full rounded-xl" />
             ))}
           </>
         ) : userHoldings.length ? (
           userHoldings.map((holding) => (
-            <Item key={holding.id}>
+            <Item key={holding.id} className="flex-nowrap">
               <ItemContent>
-                <ItemTitle>{holding.scheme_name}</ItemTitle>
-                <ItemDescription>
-                  ₹{holding.amount_invested} · {holding.units} units
+                <ItemTitle className="text-base" title={holding.scheme_name}>
+                  <span className="truncate">{holding.scheme_name}</span>
+                </ItemTitle>
+                <ItemDescription className="text-sm">
+                  {formatINR(Number(holding.amount_invested))} · {holding.units} units
                 </ItemDescription>
               </ItemContent>
               <ItemActions>

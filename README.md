@@ -36,17 +36,38 @@ mintfolio/
 │   ├── web/                — Next.js frontend (Vercel)
 │   │   ├── src/
 │   │   │   ├── app/
+│   │   │   │   ├── holdings/page.tsx   — holdings page (add form + list)
+│   │   │   │   ├── holdings/layout.tsx — holdings page metadata
 │   │   │   │   ├── login/page.tsx      — login page (react-hook-form + zod)
 │   │   │   │   ├── sign-up/page.tsx    — sign-up page
 │   │   │   │   ├── profile/page.tsx    — user profile page
 │   │   │   │   ├── page.tsx            — homepage (SW registration + push subscribe)
-│   │   │   │   └── layout.tsx          — root layout (fonts, metadata, QCProvider)
+│   │   │   │   └── layout.tsx          — root layout (fonts, metadata, MainProvider)
 │   │   │   ├── components/
+│   │   │   │   ├── ui/
+│   │   │   │   │   ├── button.tsx          — button variants
+│   │   │   │   │   ├── card.tsx            — card primitives
+│   │   │   │   │   ├── combobox.tsx        — searchable combobox (scheme search)
+│   │   │   │   │   ├── dropdown-menu.tsx   — dropdown menu
+│   │   │   │   │   ├── field.tsx           — form field + label wrapper
+│   │   │   │   │   ├── input.tsx           — input primitive
+│   │   │   │   │   ├── input-group.tsx     — input with inline addons
+│   │   │   │   │   ├── item.tsx            — list item (title, description, actions)
+│   │   │   │   │   ├── label.tsx           — label primitive
+│   │   │   │   │   ├── separator.tsx       — separator
+│   │   │   │   │   ├── skeleton.tsx        — loading skeleton
+│   │   │   │   │   ├── sonner.tsx          — toast notifications
+│   │   │   │   │   └── textarea.tsx        — textarea primitive
+│   │   │   │   ├── AddHoldingForm.tsx  — scheme search combobox + create holding form
+│   │   │   │   ├── HoldingsList.tsx    — holdings list with skeleton states
 │   │   │   │   └── Header.tsx          — auth-aware header (dropdown/login)
 │   │   │   └── lib/
-│   │   │       ├── api-client.ts       — axios instance with auth interceptor
+│   │   │       ├── hooks/
+│   │   │       │   └── use-debounce.ts — debounce hook
+│   │   │       ├── api-client.ts       — axios instance + API functions
 │   │   │       ├── schema.ts           — Zod schemas + payload types
-│   │   │       └── QCProvider.tsx      — react-query provider
+│   │   │       ├── utils.ts            — shared constants + helpers
+│   │   │       └── MainProvider.tsx    — react-query + theme provider
 │   │   └── public/
 │   │       └── sw.js               — service worker (push notifications)
 │   └── server/             — NestJS backend (Oracle Cloud)
@@ -99,6 +120,7 @@ mintfolio/
 ├── pnpm-workspace.yaml     — workspace definition
 ├── .prettierrc             — formatter config (tailwindcss plugin)
 ├── PLAN.md                 — implementation roadmap
+├── LEARNINGS.md            — code review learnings and patterns
 └── README.md               — this file
 ```
 
@@ -117,6 +139,7 @@ mintfolio/
 - [x] Frontend — login page, sign-up page, react-query, apiClient
 - [x] Shared types package (@mintfolio/shared)
 - [x] httpOnly cookie auth (secure, sameSite, logout endpoint)
+- [x] Frontend — holdings page (add/view holdings, scheme search)
 - [ ] Test end-to-end locally
 - [ ] Deploy to Vercel + Oracle Cloud
 - [ ] Production validation (2–3 days)
