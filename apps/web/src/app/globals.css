@@ -94,7 +94,6 @@
   --radius-3xl: calc(var(--radius) * 2.2);
   --radius-4xl: calc(var(--radius) * 2.6);
   /* Container: per design system responsive spec */
-  --container-sm: 100%;
   --container-md: 37.5rem; /* 600px - tablet */
   --container-lg: 64rem; /* 1024px - desktop */
   --container-xl: 64rem;

@@ -47,7 +47,7 @@ export default function RootLayout({
       <body className="flex min-h-full flex-col">
         <MainProvider>
           <Header />
-          <main className="container mx-auto px-6 py-8">{children}</main>
+          <main className="container mx-auto w-full px-6 py-8">{children}</main>
           <Toaster richColors />
         </MainProvider>
       </body>

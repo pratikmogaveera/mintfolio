@@ -72,16 +72,14 @@ export function ConfirmationDialogProvider({ children }: { children: React.React
       <Dialog open={state.open} onOpenChange={(open) => !open && handleCancel()}>
         <DialogContent
           showCloseButton={false}
-          className={cn('sm:max-w-sm', state.isDestructive && 'border border-destructive')}
+          className={cn('max-w-[calc(100%-2rem)] sm:max-w-sm', state.isDestructive && 'border-destructive border')}
         >
           <DialogHeader>
             <DialogTitle>{state.title}</DialogTitle>
             {state.description && <DialogDescription>{state.description}</DialogDescription>}
           </DialogHeader>
           <DialogFooter>
-            <DialogClose render={<Button variant="outline" onClick={handleCancel} />}>
-              {state.cancelLabel}
-            </DialogClose>
+            <Button variant="outline" onClick={handleCancel}>Cancel</Button>
             <Button variant={state.isDestructive ? 'destructive' : 'default'} onClick={handleConfirm}>
               {state.confirmLabel}
             </Button>

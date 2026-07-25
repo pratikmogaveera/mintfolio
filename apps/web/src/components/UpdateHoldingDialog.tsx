@@ -62,15 +62,18 @@ export default function UpdateHoldingDialog({ holding, open, onOpenChange, onUpd
         <form onSubmit={handleSubmit(submitForm)}>
           <DialogHeader>
             <DialogTitle>Update Holding</DialogTitle>
-            <DialogDescription className="truncate" title={holding?.scheme_name}>
+            <DialogDescription
+              className="line-clamp-2 text-xs leading-relaxed"
+              title={holding?.scheme_name}
+            >
               {holding?.scheme_name}
             </DialogDescription>
           </DialogHeader>
 
-          <div className="mt-6 flex items-start gap-4">
-            <div className="w-full">
+          <div className="mt-4 flex items-start gap-3">
+            <div className="w-full min-w-0">
               <Field>
-                <FieldLabel>Invested Amount</FieldLabel>
+                <FieldLabel>Invested (₹)</FieldLabel>
                 <InputGroup>
                   <InputGroupInput
                     placeholder="500"
@@ -89,7 +92,7 @@ export default function UpdateHoldingDialog({ holding, open, onOpenChange, onUpd
               <p className="mt-1 min-h-4 text-xs text-red-600">{errors.amount_invested?.message}</p>
             </div>
 
-            <div className="w-full">
+            <div className="w-full min-w-0">
               <Field>
                 <FieldLabel>Units</FieldLabel>
                 <InputGroup>
@@ -108,7 +111,7 @@ export default function UpdateHoldingDialog({ holding, open, onOpenChange, onUpd
             </div>
           </div>
 
-          <DialogFooter className="mt-6">
+          <DialogFooter className="mt-4">
             <Button type="button" variant="outline" onClick={() => onOpenChange(false)}>
               Cancel
             </Button>

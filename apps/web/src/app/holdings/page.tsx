@@ -49,17 +49,21 @@ export default function HoldingsPage() {
   const userHoldings = data?.data?.success ? data?.data?.data || [] : [];
 
   return (
-    <div>
+    <div className="w-full min-w-0">
       <h1 className="font-heading text-xl font-semibold">Holdings</h1>
-      <div className="mt-6 grid gap-8 lg:grid-cols-2">
-        <AddHoldingForm />
-        <HoldingsList
-          userHoldings={userHoldings}
-          isHoldingLoading={isHoldingLoading}
-          isHoldingError={isHoldingError}
-          onUpdate={(holdingId, payload) => mutateUpdate({ holdingId, payload })}
-          onDelete={(holdingId) => mutateDelete(holdingId)}
-        />
+      <div className="mt-6 grid w-full gap-8 lg:grid-cols-2">
+        <div className="min-w-0">
+          <AddHoldingForm />
+        </div>
+        <div className="min-w-0">
+          <HoldingsList
+            userHoldings={userHoldings}
+            isHoldingLoading={isHoldingLoading}
+            isHoldingError={isHoldingError}
+            onUpdate={(holdingId, payload) => mutateUpdate({ holdingId, payload })}
+            onDelete={(holdingId) => mutateDelete(holdingId)}
+          />
+        </div>
       </div>
     </div>
   );

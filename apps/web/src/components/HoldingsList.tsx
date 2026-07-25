@@ -44,16 +44,16 @@ export default function HoldingsList({
     setUpdateDialogOpen(true);
   };
 
-  const handleDelete = async (holdingId: string) => {
+  const handleDelete = async (holding: Holding) => {
     const confirmed = await confirm({
       title: 'Delete holding?',
-      description: 'This cannot be undone.',
+      description: `${holding.scheme_name} will be removed from your portfolio. This cannot be undone.`,
       confirmLabel: 'Delete',
       isDestructive: true,
     });
 
     if (!confirmed) return;
-    await onDelete(holdingId);
+    await onDelete(holding.id);
   };
 
   return (
@@ -96,7 +96,7 @@ export default function HoldingsList({
                         <DropdownMenuItem onClick={() => handleUpdate(holding)}>
                           <PencilIcon /> Update
                         </DropdownMenuItem>
-                        <DropdownMenuItem variant="destructive" onClick={() => handleDelete(holding.id)}>
+                        <DropdownMenuItem variant="destructive" onClick={() => handleDelete(holding)}>
                           <TrashIcon /> Delete
                         </DropdownMenuItem>
                       </DropdownMenuGroup>

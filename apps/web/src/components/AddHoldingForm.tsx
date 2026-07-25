@@ -109,12 +109,12 @@ export default function AddHoldingForm() {
                     <SearchIcon />
                   </InputGroupAddon>
                 </ComboboxInput>
-                <ComboboxContent>
+                <ComboboxContent align="center">
                   <ComboboxEmpty>No schemes found.</ComboboxEmpty>
                   <ComboboxList>
                     {(scheme: MFScheme) => (
                       <ComboboxItem key={scheme.schemeCode} value={String(scheme.schemeCode)}>
-                        {scheme.schemeName}
+                        <span className="truncate">{scheme.schemeName}</span>
                       </ComboboxItem>
                     )}
                   </ComboboxList>
