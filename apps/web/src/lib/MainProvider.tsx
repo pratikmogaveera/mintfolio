@@ -1,4 +1,5 @@
 'use client';
+import { ConfirmationDialogProvider } from '@/components/ConfirmationDialog';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { ThemeProvider as NextThemesProvider } from 'next-themes';
 import React from 'react';
@@ -17,7 +18,7 @@ const MainProvider = ({ children }: { children: React.ReactNode }) => {
   return (
     <QueryClientProvider client={queryClient}>
       <NextThemesProvider attribute="class" defaultTheme="dark" disableTransitionOnChange>
-        {children}
+        <ConfirmationDialogProvider>{children}</ConfirmationDialogProvider>
       </NextThemesProvider>
     </QueryClientProvider>
   );

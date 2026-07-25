@@ -1,6 +1,6 @@
 import { ApiResponse, Holding, MFScheme, User } from '@mintfolio/shared';
 import axios from 'axios';
-import { CreateHoldingPayload, LoginUserPayload, SignUpUserPayload } from './schema';
+import { CreateHoldingPayload, LoginUserPayload, SignUpUserPayload, UpdateHoldingPayload } from './schema';
 
 export const apiClient = axios.create({
   baseURL: process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001',
@@ -24,3 +24,9 @@ export const getHoldings = () => apiClient.get<ApiResponse<Holding[]>>('/portfol
 
 export const createHolding = (payload: CreateHoldingPayload) =>
   apiClient.post<ApiResponse<Holding>>('/portfolio/holdings', payload);
+
+export const updateHolding = (holdingId: string, payload: UpdateHoldingPayload) =>
+  apiClient.patch<ApiResponse<Pick<Holding, 'id'>>>(`/portfolio/holdings/${holdingId}`, payload);
+
+export const deleteHolding = (holdingId: string) =>
+  apiClient.delete<ApiResponse<Pick<Holding, 'id'>>>(`/portfolio/holdings/${holdingId}`);

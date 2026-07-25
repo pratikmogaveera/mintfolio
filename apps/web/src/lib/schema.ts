@@ -34,8 +34,19 @@ export const createHoldingSchema = z.object({
   amount_invested: z.coerce.number().min(10, 'Amount invested must be at least ₹10.'),
 });
 
+export const updateHoldingSchema = z
+  .object({
+    units: z.coerce.number().min(0.01, 'Units must be at least 0.01.').optional(),
+    amount_invested: z.coerce.number().min(10, 'Amount invested must be at least ₹10.').optional(),
+  })
+  .refine((data) => data.units !== undefined || data.amount_invested !== undefined, {
+    message: 'At least one field must be provided.',
+  });
+
 export type LoginUserPayload = z.infer<typeof loginUserSchema>;
 
 export type SignUpUserPayload = z.infer<typeof signUpUserSchema>;
 
 export type CreateHoldingPayload = z.infer<typeof createHoldingSchema>;
+
+export type UpdateHoldingPayload = z.infer<typeof updateHoldingSchema>;

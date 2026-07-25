@@ -133,8 +133,8 @@ export default function AddHoldingForm() {
                     placeholder="500"
                     {...register('amount_invested', {
                       onBlur: (e) => {
-                        const val = e.target.value;
-                        if (val) e.target.value = String(parseFloat(val) || '');
+                        const parsed = parseFloat(e.target.value);
+                        if (!isNaN(parsed)) e.target.value = String(parsed);
                       },
                     })}
                   />
@@ -154,8 +154,8 @@ export default function AddHoldingForm() {
                     placeholder="10"
                     {...register('units', {
                       onBlur: (e) => {
-                        const val = e.target.value;
-                        if (val) e.target.value = String(parseFloat(val) || '');
+                        const parsed = parseFloat(e.target.value);
+                        if (!isNaN(parsed)) e.target.value = String(parsed);
                       },
                     })}
                   />
