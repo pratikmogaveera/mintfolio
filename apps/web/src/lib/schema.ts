@@ -27,6 +27,15 @@ export const signUpUserSchema = z.object({
     .max(40, 'Password must be at most 40 characters long.'),
 });
 
+export const createHoldingSchema = z.object({
+  scheme_code: z.string().min(1, 'Please select a scheme.'),
+  scheme_name: z.string().min(1, 'Please select a scheme.'),
+  units: z.coerce.number().min(0.01, 'Units must be at least 0.01.'),
+  amount_invested: z.coerce.number().min(10, 'Amount invested must be at least ₹10.'),
+});
+
 export type LoginUserPayload = z.infer<typeof loginUserSchema>;
 
 export type SignUpUserPayload = z.infer<typeof signUpUserSchema>;
+
+export type CreateHoldingPayload = z.infer<typeof createHoldingSchema>;
