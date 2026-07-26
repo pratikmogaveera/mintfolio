@@ -59,7 +59,7 @@ export default function HoldingsList({
 
   return (
     <>
-      <div>
+      <div style={{ viewTransitionName: 'holdings-list' }}>
         <h2 className="font-heading text-lg font-semibold">Your Holdings</h2>
         <div className="mt-4 flex flex-col gap-3">
           {isHoldingError ? (

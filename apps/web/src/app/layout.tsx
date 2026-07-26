@@ -4,6 +4,7 @@ import MainProvider from '@/lib/MainProvider';
 import { cn } from '@/lib/utils';
 import type { Metadata, Viewport } from 'next';
 import { Inter, JetBrains_Mono, Playfair_Display, Space_Grotesk } from 'next/font/google';
+import { ViewTransitions } from 'next-view-transitions';
 import './globals.css';
 
 const spaceGroteskHeading = Space_Grotesk({ subsets: ['latin'], variable: '--font-heading' });
@@ -43,14 +44,16 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" suppressHydrationWarning className={cn('h-full', 'antialiased', 'font-sans', inter.variable, spaceGroteskHeading.variable, jetbrainsMono.variable, playfairDisplay.variable)}>
-      <body className="flex min-h-full flex-col">
-        <MainProvider>
-          <Header />
-          <main className="container mx-auto w-full px-6 py-8">{children}</main>
-          <Toaster richColors />
-        </MainProvider>
-      </body>
-    </html>
+    <ViewTransitions>
+      <html lang="en" suppressHydrationWarning className={cn('h-full', 'antialiased', 'font-sans', inter.variable, spaceGroteskHeading.variable, jetbrainsMono.variable, playfairDisplay.variable)}>
+        <body className="flex min-h-full flex-col">
+          <MainProvider>
+            <Header />
+            <main className="container mx-auto w-full px-6 py-8">{children}</main>
+            <Toaster richColors />
+          </MainProvider>
+        </body>
+      </html>
+    </ViewTransitions>
   );
 }

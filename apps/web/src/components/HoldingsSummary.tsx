@@ -63,7 +63,7 @@ export default function HoldingsSummary({
 
   if (isPortfolioLoading || isHoldingLoading) {
     return (
-      <div className="grid w-full grid-cols-1 gap-4 md:grid-cols-2">
+      <div style={{ viewTransitionName: 'holdings-summary' }} className="grid w-full grid-cols-1 gap-4 md:grid-cols-2">
         <SummaryCardSkeleton />
         <SummaryCardSkeleton />
       </div>
@@ -72,7 +72,7 @@ export default function HoldingsSummary({
 
   if (isPortfolioError) {
     return (
-      <div className="grid w-full grid-cols-1 gap-4 md:grid-cols-2">
+      <div style={{ viewTransitionName: 'holdings-summary' }} className="grid w-full grid-cols-1 gap-4 md:grid-cols-2">
         <SummaryCardError label="Current Value" />
         <SummaryCardError label="Amount Invested" />
       </div>
@@ -80,7 +80,7 @@ export default function HoldingsSummary({
   }
 
   return (
-    <div className="grid w-full grid-cols-1 gap-4 md:grid-cols-2">
+    <div style={{ viewTransitionName: 'holdings-summary' }} className="grid w-full grid-cols-1 gap-4 md:grid-cols-2">
       <Card className="w-full gap-4">
         <CardHeader>
           <div className="flex items-center justify-between">

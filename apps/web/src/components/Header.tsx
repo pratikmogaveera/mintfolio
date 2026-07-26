@@ -8,17 +8,24 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { Skeleton } from '@/components/ui/skeleton';
 import { getUserDetails, logoutUser } from '@/lib/api-client';
+import { cn } from '@/lib/utils';
 import { CaretDownIcon, SignInIcon, SignOutIcon, UserCircleIcon } from '@phosphor-icons/react';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { useTheme } from 'next-themes';
+import { Link } from 'next-view-transitions';
 import Image from 'next/image';
-import Link from 'next/link';
-import { useRouter } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 import { toast } from 'sonner';
 import { Button } from './ui/button';
 
+const NAV_LINKS = [
+  { href: '/portfolio', label: 'Portfolio' },
+  { href: '/holdings', label: 'Holdings' },
+];
+
 const Header = () => {
   const router = useRouter();
+  const pathname = usePathname();
   const queryClient = useQueryClient();
   const { setTheme, theme } = useTheme();
   const { data, isSuccess, isLoading } = useQuery({
@@ -42,9 +49,27 @@ const Header = () => {
   return (
     <header className="border-border border-b px-4 py-2 md:px-12">
       <div className="flex w-full items-center justify-between">
-        <Link href={'/'} title="Mintfolio - home page" className="font-heading text-primary text-3xl font-semibold">
-          Mintfolio
-        </Link>
+        <div className="flex items-center gap-6">
+          <Link href="/" title="Mintfolio - home page" className="font-heading text-primary text-3xl font-semibold">
+            Mintfolio
+          </Link>
+          {isSuccess && (
+            <nav className="hidden items-center gap-4 md:flex">
+              {NAV_LINKS.map(({ href, label }) => (
+                <Link
+                  key={href}
+                  href={href}
+                  className={cn(
+                    'text-sm transition-colors',
+                    pathname === href ? 'text-foreground font-medium' : 'text-muted-foreground hover:text-foreground',
+                  )}
+                >
+                  {label}
+                </Link>
+              ))}
+            </nav>
+          )}
+        </div>
 
         <div className="flex items-center gap-2">
           <Button size="icon" variant="ghost" onClick={toggleTheme}>
