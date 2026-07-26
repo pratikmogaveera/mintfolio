@@ -119,3 +119,33 @@ Patterns, conventions, and mistakes caught during code reviews. Reference this b
 | 2 | Deduplicate before fetching: `[...new Set(codes)]` prevents fetching the same NAV twice for different users holding the same scheme. | Portfolio processor |
 | 3 | Use `Promise.all` for independent async operations (parallel NAV fetches). Sequential `await` in a loop is unnecessarily slow. | NAV fetch for 10 schemes |
 | 4 | Skip cache population if cache already exists (check before fetching). Saves a 5MB API call on every restart. | Redis scheme list on startup |
+
+---
+
+## Frontend / React (continued)
+
+| # | Learning | Context |
+|---|----------|---------|
+| 12 | `viewTransitionName` must be unique per page. Assigning it to a repeated element (e.g., each holding card) breaks the transition — only use it on unique containers. | View transitions between portfolio and holdings |
+| 13 | `grid` without explicit column count stretches items to full width. Use `flex flex-col` for content-sized stacking, `grid` only when you need equal column widths. | Dialog content full-width bug |
+| 14 | `min-w-0` on flex/grid children is required for `truncate` to work — without it, content dictates the element's minimum width and overflow never kicks in. | Holdings list item truncation |
+| 15 | Phantom dependencies (packages available via hoisting but not declared) work locally but break on deployment. Always declare dependencies explicitly in the package's own `package.json`. | `dayjs` used in web without being declared |
+| 16 | `--container-sm: 100%` in Tailwind v4 bleeds into `max-w-sm` — `sm` is a shared size token. Don't declare `--container-sm` if you need `max-w-sm` to work correctly. | Dialog width bug |
+| 17 | Base UI `HoverCard` (PreviewCard) is hover-only — it doesn't fire on touch. Use `Popover` for contact/info cards that need to work on mobile too. | Footer contact card |
+| 18 | `setState({ open: true, ...options })` replaces entire state — fields not in `options` revert to their type defaults (`undefined`), not the `useState` initial values. Use functional update `setState(prev => ({ ...prev, ...options }))` to preserve defaults. | ConfirmationDialog cancelLabel going blank |
+
+---
+
+## Drizzle (continued)
+
+| # | Learning | Context |
+|---|----------|---------|
+| 5 | TypeScript doesn't narrow `string | undefined` through `if (!x) throw` when the throw is outside a `try` block in some cases. Use explicit type assertions or move the guard before all usage. | `getPortfolioLogs` Drizzle eq() type error |
+
+---
+
+## API Design (continued)
+
+| # | Learning | Context |
+|---|----------|---------|
+| 7 | Separate "data" endpoints from "enrichment" endpoints. `GET /holdings` returns core holding data immediately; `GET /nav-history` fetches enrichment data independently — keeps the list fast and lets the chart load async. | Per-holding sparkline architecture |

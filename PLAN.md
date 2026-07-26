@@ -134,12 +134,16 @@ All endpoints return a uniform envelope:
 
 **Goal:** Complete frontend + backend polish for multi-user usage.
 
-**Frontend (Next.js):**
-- Login / register UI
-- Scheme search (autocomplete from backend)
-- Add/remove schemes with units to portfolio
-- Portfolio dashboard — current value, daily P&L, holdings list
-- Notification permission + subscription management
+**Frontend (Next.js) — Complete:**
+- ✅ Login / register UI
+- ✅ Scheme search (autocomplete from backend)
+- ✅ Add/remove/edit schemes with units to portfolio
+- ✅ Holdings page — add form, holdings list with sparklines, edit/delete actions
+- ✅ Portfolio dashboard — total value, P&L, growth chart, summary cards, holdings list
+- ✅ View transitions between portfolio and holdings pages
+- ✅ Mobile nav (sheet), footer with contact popover, header polish
+- ✅ Per-holding 7-day NAV sparkline charts
+- Notification permission + subscription management (homepage)
 
 **Backend:**
 - Migrate from @nestjs/schedule to BullMQ (queues, retries, job visibility, Bull Board)
@@ -195,3 +199,5 @@ All endpoints return a uniform envelope:
 | 2026-07-16 | Frontend service worker — sw.js with push event listener, SW registration on homepage, push subscription flow. Minimal login (localStorage token). End-to-end push notification tested successfully on macOS (Safari + Chrome). CORS enabled on server. |
 | 2026-07-18 | Frontend auth pages — login page with react-hook-form + zod + react-query (useMutation, isPending, toast notifications, redirect). Sign-up page with same pattern. Created apiClient (axios instance + auth interceptor). QCProvider for react-query. Shared types package (@mintfolio/shared) — User, AuthResponse, Holding, PortfolioLog, MFScheme, ApiResponse, ApiError. Integrated in both apps. |
 | 2026-07-19 | httpOnly cookie auth — backend sets JWT as httpOnly cookie, AuthGuard reads from cookies, cookie-parser middleware, logout endpoint clears cookie. Frontend withCredentials, removed localStorage/interceptor. Profile page with user details. Header component with auth-conditional UI (dropdown vs login link), invalidate cache on login/logout. Extracted Zod schemas to lib/schema.ts. Centralized constants in lib/utils. |
+| 2026-07-25 | Holdings page — AddHoldingForm (scheme search combobox, Zod validation, debounce), HoldingsList with skeleton/error states. ConfirmationDialog (imperative promise-based), UpdateHoldingDialog. Delete/update actions wired. Item truncation fix (min-w-0). current_value column added to holdings table (migration 0002), computed on create and updated daily by cron. Per-holding sparkline charts (HoldingSparkline) with 7-day NAV from mfapi. |
+| 2026-07-26 | Portfolio dashboard — hero (total value, P&L), area chart from portfolio_logs, HoldingsSummary stat cards with skeleton/error states. Portfolio logs seeded with 20 days of historical data. View transitions between portfolio ↔ holdings pages (next-view-transitions). Header redesign — theme toggle in dropdown, mobile sheet nav. Footer with contact popover. |
