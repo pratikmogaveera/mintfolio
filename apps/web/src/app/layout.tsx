@@ -1,4 +1,5 @@
 import Header from '@/components/Header';
+import Footer from '@/components/Footer';
 import { Toaster } from '@/components/ui/sonner';
 import MainProvider from '@/lib/MainProvider';
 import { cn } from '@/lib/utils';
@@ -50,6 +51,7 @@ export default function RootLayout({
           <MainProvider>
             <Header />
             <main className="container mx-auto w-full px-6 py-8">{children}</main>
+            <Footer />
             <Toaster richColors />
           </MainProvider>
         </body>
