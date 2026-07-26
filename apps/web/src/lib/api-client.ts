@@ -1,4 +1,4 @@
-import { ApiResponse, Holding, MFScheme, User } from '@mintfolio/shared';
+import { ApiResponse, Holding, MFScheme, PortfolioLog, User } from '@mintfolio/shared';
 import axios from 'axios';
 import { CreateHoldingPayload, LoginUserPayload, SignUpUserPayload, UpdateHoldingPayload } from './schema';
 
@@ -8,17 +8,23 @@ export const apiClient = axios.create({
   withCredentials: true,
 });
 
-export const signUpUser = (payload: SignUpUserPayload) => apiClient.post('/auth/register', payload);
+// --- Auth ---
 
-export const getUserDetails = () => apiClient.get<ApiResponse<User>>('/auth/me');
+export const signUpUser = (payload: SignUpUserPayload) => apiClient.post('/auth/register', payload);
 
 export const loginUser = (payload: LoginUserPayload) =>
   apiClient.post<ApiResponse<User>>('/auth/authenticate', payload);
 
 export const logoutUser = () => apiClient.post('/auth/logout');
 
+export const getUserDetails = () => apiClient.get<ApiResponse<User>>('/auth/me');
+
+// --- Scheme ---
+
 export const searchSchemes = (query: string) =>
   apiClient.get<ApiResponse<MFScheme[]>>('/scheme/search', { params: { q: query } });
+
+// --- Portfolio ---
 
 export const getHoldings = () => apiClient.get<ApiResponse<Holding[]>>('/portfolio/holdings');
 
@@ -30,6 +36,8 @@ export const updateHolding = (holdingId: string, payload: UpdateHoldingPayload) 
 
 export const deleteHolding = (holdingId: string) =>
   apiClient.delete<ApiResponse<Pick<Holding, 'id'>>>(`/portfolio/holdings/${holdingId}`);
+
+export const getPortfolioLogs = () => apiClient.get<ApiResponse<PortfolioLog[]>>('/portfolio/logs');
 
 export const getNavHistory = (schemeCode: string) =>
   apiClient.get<ApiResponse<number[]>>('/portfolio/nav-history', { params: { scheme_code: schemeCode } });

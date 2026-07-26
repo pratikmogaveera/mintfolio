@@ -6,14 +6,14 @@ import {
   Logger,
   NotFoundException,
 } from '@nestjs/common';
+import axios from 'axios';
+import dayjs from 'dayjs';
 import { and, eq } from 'drizzle-orm';
 import { DatabaseError } from 'pg';
 import { DatabaseService } from '../db/database.service';
-import { holdings } from '../db/schema';
-import { CreateHoldingDto, UpdateHoldingDto } from './portfolio.dto';
+import { holdings, portfolioLogs } from '../db/schema';
 import { RedisService } from '../redis/redis.service';
-import axios from 'axios';
-import dayjs from 'dayjs';
+import { CreateHoldingDto, UpdateHoldingDto } from './portfolio.dto';
 
 @Injectable()
 export class PortfolioService {
@@ -161,6 +161,28 @@ export class PortfolioService {
     } catch (error) {
       if (error instanceof HttpException) throw error;
       const errorMessage = error instanceof Error ? error.message : 'Something went wrong while deleting holding.';
+      this.logger.warn(errorMessage);
+      throw error;
+    }
+  }
+
+  async getPortfolioLogs(userId: string | undefined) {
+    if (!userId) throw new BadRequestException('User ID is missing from request.');
+    try {
+      const results = await this.dbService.db
+        .select({
+          id: portfolioLogs.id,
+          date: portfolioLogs.date,
+          total_invested: portfolioLogs.total_invested,
+          current_value: portfolioLogs.current_value,
+        })
+        .from(portfolioLogs)
+        .where(eq(portfolioLogs.user_id, userId))
+        .orderBy(portfolioLogs.date);
+      return results;
+    } catch (error) {
+      const errorMessage =
+        error instanceof Error ? error.message : `Something went wrong while fetching user's portfolio logs.`;
       this.logger.warn(errorMessage);
       throw error;
     }

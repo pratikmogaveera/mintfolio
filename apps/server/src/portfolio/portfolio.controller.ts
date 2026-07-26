@@ -37,4 +37,9 @@ export class PortfolioController {
   async getNavHistory(@Query('scheme_code') schemeCode: string) {
     return await this.portfolioService.getNavHistory(schemeCode);
   }
+
+  @Get('logs')
+  async getPortfolioLogs(@Request() request: ExpressRequest) {
+    return await this.portfolioService.getPortfolioLogs(request.user?.sub);
+  }
 }
