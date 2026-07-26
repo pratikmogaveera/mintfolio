@@ -1,7 +1,8 @@
 'use client';
 import AddHoldingForm from '@/components/AddHoldingForm';
 import HoldingsList from '@/components/HoldingsList';
-import { deleteHolding, getHoldings, updateHolding } from '@/lib/api-client';
+import HoldingsSummary from '@/components/HoldingsSummary';
+import { deleteHolding, getHoldings, getPortfolioLogs, updateHolding } from '@/lib/api-client';
 import { UpdateHoldingPayload } from '@/lib/schema';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { isAxiosError } from 'axios';
@@ -11,12 +12,21 @@ export default function HoldingsPage() {
   const queryClient = useQueryClient();
 
   const {
-    data,
+    data: holdingDataRaw,
     isLoading: isHoldingLoading,
     isError: isHoldingError,
   } = useQuery({
     queryKey: ['user-holdings'],
     queryFn: getHoldings,
+  });
+
+  const {
+    data: portfolioDataRaw,
+    isLoading: isPortfolioLoading,
+    isError: isPortfolioError,
+  } = useQuery({
+    queryKey: ['user-portfolio-logs'],
+    queryFn: getPortfolioLogs,
   });
 
   const { mutateAsync: mutateUpdate } = useMutation({
@@ -46,14 +56,22 @@ export default function HoldingsPage() {
     },
   });
 
-  const userHoldings = data?.data?.success ? data?.data?.data || [] : [];
+  const userHoldings = holdingDataRaw?.data?.success ? holdingDataRaw?.data?.data || [] : [];
+  const portfolioData = portfolioDataRaw?.data?.success ? portfolioDataRaw?.data?.data || [] : [];
 
   return (
     <div className="w-full min-w-0">
-      <h1 className="font-heading text-xl font-semibold">Holdings</h1>
       <div className="mt-6 grid w-full gap-8 lg:grid-cols-2">
-        <div className="min-w-0">
+        <div className="flex flex-col items-start gap-8">
           <AddHoldingForm />
+          <HoldingsSummary
+            userHoldings={userHoldings}
+            isHoldingLoading={isHoldingLoading}
+            isHoldingError={isHoldingError}
+            portfolioData={portfolioData}
+            isPortfolioLoading={isPortfolioLoading}
+            isPortfolioError={isPortfolioError}
+          />
         </div>
         <div className="min-w-0">
           <HoldingsList

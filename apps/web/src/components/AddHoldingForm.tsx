@@ -165,7 +165,7 @@ export default function AddHoldingForm() {
             </div>
           </div>
 
-          <Button type="submit" className="w-full items-center gap-2">
+          <Button type="submit" className="w-full items-center gap-2 font-semibold">
             {isPending && <Loader2 className="animate-spin" />}
             {isPending ? 'Adding Holding' : 'Add Holding'}
           </Button>
