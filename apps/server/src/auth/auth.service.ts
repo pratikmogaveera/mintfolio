@@ -79,7 +79,7 @@ export class AuthService {
         httpOnly: true,
         secure: process.env.NODE_ENV === 'production',
         maxAge: COOKIE_MAX_AGE,
-        sameSite: 'lax',
+        sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
       });
 
       return { id, username, email };
