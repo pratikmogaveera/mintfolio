@@ -38,6 +38,8 @@ mintfolio/
 │   │   │   ├── app/
 │   │   │   │   ├── holdings/page.tsx   — holdings page (add form + list)
 │   │   │   │   ├── holdings/layout.tsx — holdings page metadata
+│   │   │   │   ├── portfolio/page.tsx  — portfolio dashboard (chart, summary, holdings)
+│   │   │   │   ├── portfolio/layout.tsx — portfolio page metadata
 │   │   │   │   ├── login/page.tsx      — login page (react-hook-form + zod)
 │   │   │   │   ├── sign-up/page.tsx    — sign-up page
 │   │   │   │   ├── profile/page.tsx    — user profile page
@@ -47,27 +49,36 @@ mintfolio/
 │   │   │   │   ├── ui/
 │   │   │   │   │   ├── button.tsx          — button variants
 │   │   │   │   │   ├── card.tsx            — card primitives
+│   │   │   │   │   ├── chart.tsx           — recharts ChartContainer wrapper
 │   │   │   │   │   ├── combobox.tsx        — searchable combobox (scheme search)
+│   │   │   │   │   ├── dialog.tsx          — modal dialog
 │   │   │   │   │   ├── dropdown-menu.tsx   — dropdown menu
 │   │   │   │   │   ├── field.tsx           — form field + label wrapper
 │   │   │   │   │   ├── input.tsx           — input primitive
 │   │   │   │   │   ├── input-group.tsx     — input with inline addons
 │   │   │   │   │   ├── item.tsx            — list item (title, description, actions)
 │   │   │   │   │   ├── label.tsx           — label primitive
+│   │   │   │   │   ├── popover.tsx         — click-triggered popover
 │   │   │   │   │   ├── separator.tsx       — separator
+│   │   │   │   │   ├── sheet.tsx           — side drawer (mobile nav)
 │   │   │   │   │   ├── skeleton.tsx        — loading skeleton
 │   │   │   │   │   ├── sonner.tsx          — toast notifications
 │   │   │   │   │   └── textarea.tsx        — textarea primitive
-│   │   │   │   ├── AddHoldingForm.tsx  — scheme search combobox + create holding form
-│   │   │   │   ├── HoldingsList.tsx    — holdings list with skeleton states
-│   │   │   │   └── Header.tsx          — auth-aware header (dropdown/login)
+│   │   │   │   ├── AddHoldingForm.tsx      — scheme search combobox + create holding form
+│   │   │   │   ├── ConfirmationDialog.tsx  — imperative confirm dialog (promise-based)
+│   │   │   │   ├── Footer.tsx              — footer with contact popover
+│   │   │   │   ├── Header.tsx              — auth-aware header with mobile sheet nav
+│   │   │   │   ├── HoldingSparkline.tsx    — per-holding 7-day NAV sparkline chart
+│   │   │   │   ├── HoldingsList.tsx        — holdings list with update/delete actions
+│   │   │   │   ├── HoldingsSummary.tsx     — portfolio summary stat cards
+│   │   │   │   └── UpdateHoldingDialog.tsx — update holding form dialog
 │   │   │   └── lib/
 │   │   │       ├── hooks/
 │   │   │       │   └── use-debounce.ts — debounce hook
-│   │   │       ├── api-client.ts       — axios instance + API functions
+│   │   │       ├── api-client.ts       — axios instance + grouped API functions
 │   │   │       ├── schema.ts           — Zod schemas + payload types
-│   │   │       ├── utils.ts            — shared constants + helpers
-│   │   │       └── MainProvider.tsx    — react-query + theme provider
+│   │   │       ├── utils.ts            — shared constants + helpers (formatINR, cn)
+│   │   │       └── MainProvider.tsx    — react-query + theme + confirmation dialog provider
 │   │   └── public/
 │   │       └── sw.js               — service worker (push notifications)
 │   └── server/             — NestJS backend (Oracle Cloud)
@@ -80,7 +91,7 @@ mintfolio/
 │       │   │   └── auth.dto.ts         — request validation DTOs
 │       │   ├── portfolio/
 │       │   │   ├── portfolio.module.ts     — portfolio module wiring
-│       │   │   ├── portfolio.controller.ts — holdings CRUD endpoints
+│       │   │   ├── portfolio.controller.ts — holdings CRUD + logs + NAV history endpoints
 │       │   │   ├── portfolio.service.ts    — holdings business logic
 │       │   │   └── portfolio.dto.ts        — holdings validation DTOs
 │       │   ├── common/
@@ -107,12 +118,12 @@ mintfolio/
 │       │   ├── app.module.ts           — root module (ConfigModule, imports)
 │       │   └── main.ts                 — bootstrap + global pipes
 │       ├── lib/
-│       │   └── utils.ts            — shared utilities (bcrypt hash/compare)
+│       │   └── utils.ts            — shared utilities (bcrypt hash/compare, formatINR)
 │       ├── drizzle/            — generated SQL migration files
 │       ├── .env                — environment variables (not committed)
 │       └── drizzle.config.ts   — Drizzle Kit config
 ├── packages/
-│   └── shared/             — shared types, schemas, constants
+│   └── shared/             — shared types (Holding, PortfolioLog, User, MFScheme, ApiResponse)
 ├── .kiro/
 │   └── steering/           — AI agent config (decisions, design system, nextjs rules)
 ├── docker-compose.yml      — local dev containers (Postgres, Redis)
@@ -139,7 +150,11 @@ mintfolio/
 - [x] Frontend — login page, sign-up page, react-query, apiClient
 - [x] Shared types package (@mintfolio/shared)
 - [x] httpOnly cookie auth (secure, sameSite, logout endpoint)
-- [x] Frontend — holdings page (add/view holdings, scheme search)
+- [x] Frontend — holdings page (add/view/edit/delete holdings, scheme search)
+- [x] Frontend — portfolio dashboard (chart, summary cards, holdings list)
+- [x] Frontend — per-holding sparkline charts (7-day NAV history)
+- [x] Frontend — view transitions between portfolio and holdings pages
+- [x] Frontend — mobile nav (sheet), footer, header polish
 - [ ] Test end-to-end locally
 - [ ] Deploy to Vercel + Oracle Cloud
 - [ ] Production validation (2–3 days)
