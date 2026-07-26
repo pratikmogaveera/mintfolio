@@ -143,7 +143,7 @@ All endpoints return a uniform envelope:
 - ✅ View transitions between portfolio and holdings pages
 - ✅ Mobile nav (sheet), footer with contact popover, header polish
 - ✅ Per-holding 7-day NAV sparkline charts
-- Notification permission + subscription management (homepage)
+- ⬜ Notification permission + subscription management — move SW registration from homepage to portfolio/profile page (homepage is becoming a landing page); add subscription status indicator and manual re-subscribe option in profile; handle denied permission gracefully
 
 **Backend:**
 - Migrate from @nestjs/schedule to BullMQ (queues, retries, job visibility, Bull Board)
