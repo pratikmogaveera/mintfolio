@@ -9,10 +9,11 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { Sheet, SheetClose, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet';
 import { Skeleton } from '@/components/ui/skeleton';
-import { getUserDetails, logoutUser } from '@/lib/api-client';
+import { logoutUser } from '@/lib/api-client';
+import { useAuth } from '@/lib/hooks/use-auth';
 import { cn } from '@/lib/utils';
 import { CaretDownIcon, ListIcon, SignInIcon, SignOutIcon, UserCircleIcon } from '@phosphor-icons/react';
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useTheme } from 'next-themes';
 import { Link } from 'next-view-transitions';
 import Image from 'next/image';
@@ -31,10 +32,7 @@ const Header = () => {
   const queryClient = useQueryClient();
   const { setTheme, theme } = useTheme();
 
-  const { data, isSuccess, isLoading } = useQuery({
-    queryKey: ['user-details'],
-    queryFn: getUserDetails,
-  });
+  const { isLoading, isSuccess, userDetails } = useAuth();
 
   const { mutate, isPending } = useMutation({
     mutationFn: logoutUser,
@@ -82,7 +80,7 @@ const Header = () => {
               {/* Desktop dropdown */}
               <DropdownMenu>
                 <DropdownMenuTrigger className="hidden items-center gap-1 text-sm md:flex">
-                  {`@${data?.data?.data?.username}`}
+                  {`@${userDetails?.username}`}
                   <CaretDownIcon className="size-3.5 transition-transform duration-200 [[aria-expanded=true]>&]:rotate-180" />
                 </DropdownMenuTrigger>
                 <DropdownMenuContent>
@@ -92,7 +90,13 @@ const Header = () => {
                       Profile
                     </DropdownMenuItem>
                     <DropdownMenuItem onClick={toggleTheme}>
-                      <Image src="/theme-toggle.svg" height={16} width={16} alt="Toggle theme" className="dark:invert" />
+                      <Image
+                        src="/theme-toggle.svg"
+                        height={16}
+                        width={16}
+                        alt="Toggle theme"
+                        className="dark:invert"
+                      />
                       {theme === 'dark' ? 'Light mode' : 'Dark mode'}
                     </DropdownMenuItem>
                     <DropdownMenuSeparator />
@@ -139,12 +143,14 @@ const Header = () => {
                     ))}
                   </nav>
                   <div className="mt-auto flex flex-col gap-1">
-                    <Button
-                      variant="ghost"
-                      onClick={toggleTheme}
-                      className="justify-start gap-3 px-3"
-                    >
-                      <Image src="/theme-toggle.svg" height={16} width={16} alt="Toggle theme" className="dark:invert" />
+                    <Button variant="ghost" onClick={toggleTheme} className="justify-start gap-3 px-3">
+                      <Image
+                        src="/theme-toggle.svg"
+                        height={16}
+                        width={16}
+                        alt="Toggle theme"
+                        className="dark:invert"
+                      />
                       {theme === 'dark' ? 'Light mode' : 'Dark mode'}
                     </Button>
                     <Button
