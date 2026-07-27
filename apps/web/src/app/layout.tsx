@@ -1,11 +1,11 @@
-import Header from '@/components/Header';
 import Footer from '@/components/Footer';
+import Header from '@/components/Header';
 import { Toaster } from '@/components/ui/sonner';
 import MainProvider from '@/lib/MainProvider';
 import { cn } from '@/lib/utils';
 import type { Metadata, Viewport } from 'next';
-import { Inter, JetBrains_Mono, Playfair_Display, Space_Grotesk } from 'next/font/google';
 import { ViewTransitions } from 'next-view-transitions';
+import { Inter, JetBrains_Mono, Playfair_Display, Space_Grotesk } from 'next/font/google';
 import './globals.css';
 
 const spaceGroteskHeading = Space_Grotesk({ subsets: ['latin'], variable: '--font-heading' });
@@ -46,7 +46,19 @@ export default function RootLayout({
 }>) {
   return (
     <ViewTransitions>
-      <html lang="en" suppressHydrationWarning className={cn('h-full', 'antialiased', 'font-sans', inter.variable, spaceGroteskHeading.variable, jetbrainsMono.variable, playfairDisplay.variable)}>
+      <html
+        lang="en"
+        suppressHydrationWarning
+        className={cn(
+          'h-full',
+          'antialiased',
+          'font-sans',
+          inter.variable,
+          spaceGroteskHeading.variable,
+          jetbrainsMono.variable,
+          playfairDisplay.variable,
+        )}
+      >
         <body className="flex min-h-full flex-col">
           <MainProvider>
             <Header />
