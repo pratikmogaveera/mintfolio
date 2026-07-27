@@ -6,13 +6,14 @@ import Link from 'next/link';
 
 export default function Footer() {
   return (
-    <footer className="border-border mt-auto border-t px-6 py-2 md:px-12">
+    <footer className="border-border mt-auto border-t px-6 py-2.5 md:px-12">
       <p className="text-muted-foreground mx-auto w-fit text-xs">
         © {new Date().getFullYear()} Mintfolio. Created by{' '}
         <Popover>
-          <PopoverTrigger render={<Button variant="link" className="h-fit p-0 text-xs" />}>
-            Pratik Mogaveera.
+          <PopoverTrigger render={<Button variant="link" className="h-fit p-0 text-xs underline underline-offset-2" />}>
+            Pratik Mogaveera
           </PopoverTrigger>
+          .
           <PopoverContent className="flex w-64 flex-col gap-0.5">
             <div className="font-semibold">Contact me</div>
             <div className="flex items-center gap-2">
