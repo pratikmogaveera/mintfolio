@@ -25,7 +25,7 @@ export class AuthService {
     private jwtService: JwtService,
   ) {}
 
-  async register(payload: CreateUserDto) {
+  async register(payload: CreateUserDto, res: Response) {
     try {
       if ((await this.dbService.db.select().from(users).where(eq(users.email, payload.email))).length)
         throw new ConflictException('User with the provided email already exists.');
@@ -43,6 +43,16 @@ export class AuthService {
         .returning({ id: users.id, username: users.username, email: users.email });
 
       this.logger.log(`New user created: ${createdUser[0].username} ${createdUser[0].email}`);
+
+      const tokenPayload: JwtSign = { sub: createdUser[0].id };
+
+      res.cookie('access-token', await this.jwtService.signAsync(tokenPayload), {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === 'production',
+        maxAge: COOKIE_MAX_AGE,
+        sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
+      });
+
       return createdUser[0];
     } catch (error) {
       if (error instanceof HttpException) throw error;

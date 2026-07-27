@@ -142,3 +142,137 @@ input:-webkit-autofill:focus {
   border-radius: var(--radius-lg);
   transition: background-color 5000s ease-in-out 0s;
 }
+
+/* PromotionModal — spinning conic gradient border + glow */
+@property --spin-angle {
+  syntax: '<angle>';
+  inherits: false;
+  initial-value: 0deg;
+}
+
+@keyframes spin-border {
+  to { --spin-angle: 360deg; }
+}
+
+.notif-prompt-card::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: conic-gradient(
+    from var(--spin-angle),
+    #6366f1,
+    #8b5cf6,
+    #ec4899,
+    #f97316,
+    #eab308,
+    #4ade80,
+    #22d3ee,
+    #6366f1
+  );
+  animation: spin-border 4s linear infinite;
+  z-index: 0;
+}
+
+/* Glow — blurred version of the same gradient behind the card */
+.notif-prompt-card::after {
+  content: '';
+  position: absolute;
+  inset: -6px;
+  border-radius: inherit;
+  background: conic-gradient(
+    from var(--spin-angle),
+    #6366f1,
+    #8b5cf6,
+    #ec4899,
+    #f97316,
+    #eab308,
+    #4ade80,
+    #22d3ee,
+    #6366f1
+  );
+  animation: spin-border 4s linear infinite;
+  filter: blur(14px);
+  opacity: 0.45;
+  z-index: -1;
+}
+
+.dark .notif-prompt-card::after {
+  opacity: 0.6;
+}
+
+/* Sparkle animations */
+@keyframes sparkle-bounce {
+  0%, 100% { transform: translate(-50%, -50%) translateY(0px); }
+  50%       { transform: translate(-50%, -50%) translateY(-8px); }
+}
+
+@keyframes sparkle-pulse {
+  0%, 100% { opacity: 0.9; transform: translate(-50%, -50%) scale(1); }
+  50%       { opacity: 0.3; transform: translate(-50%, -50%) scale(0.6); }
+}
+
+.sparkle {
+  position: absolute;
+  transform: translate(-50%, -50%);
+  filter: drop-shadow(0 1px 3px rgba(0, 0, 0, 0.3));
+}
+
+.dark .sparkle {
+  filter: drop-shadow(0 1px 6px rgba(251, 191, 36, 0.5));
+}
+
+.sparkle-1 {
+  animation:
+    sparkle-bounce 2.4s ease-in-out infinite,
+    sparkle-pulse  3.6s ease-in-out 1.8s infinite;
+}
+
+.sparkle-2 {
+  animation:
+    sparkle-bounce 2.8s ease-in-out 0.9s infinite,
+    sparkle-pulse  3.2s ease-in-out 0.4s infinite;
+}
+
+.sparkle-3 {
+  animation:
+    sparkle-bounce 2.2s ease-in-out 1.4s infinite,
+    sparkle-pulse  4s   ease-in-out 2.2s infinite;
+}
+@keyframes ray-rock {
+  0%   { transform: rotate(0deg); }
+  50%  { transform: rotate(30deg); }
+  100% { transform: rotate(0deg); }
+}
+
+.notif-prompt-rays {
+  animation: ray-rock 4s ease-in-out infinite;
+  transform-origin: center center;
+}
+
+/* Hero background and vignette — light vs dark */
+.notif-prompt-pill {
+  background: rgba(0, 0, 0, 0.45);
+  border: 1.5px solid rgba(0, 0, 0, 0.15);
+}
+
+.dark .notif-prompt-pill {
+  background: rgba(255, 255, 255, 0.12);
+  border: 1.5px solid rgba(255, 255, 255, 0.25);
+}
+.notif-prompt-hero {
+  background-color: #f8f8ff;
+}
+
+.dark .notif-prompt-hero {
+  background-color: #0a0a0f;
+}
+
+.notif-prompt-vignette {
+  background: radial-gradient(ellipse 90% 80% at 50% 55%, transparent 35%, #f8f8ff 78%);
+}
+
+.dark .notif-prompt-vignette {
+  background: radial-gradient(ellipse 90% 80% at 50% 55%, transparent 35%, #0a0a0f 78%);
+}
+

@@ -1,4 +1,4 @@
-import { date, numeric, pgTable, text, timestamp, unique, uuid } from 'drizzle-orm/pg-core';
+import { boolean, date, numeric, pgTable, text, timestamp, unique, uuid } from 'drizzle-orm/pg-core';
 
 export const users = pgTable('users', {
   id: uuid().primaryKey().defaultRandom(),
@@ -47,4 +47,5 @@ export const pushSubscriptions = pgTable('push_subscriptions', {
   keys_p256dh: text().notNull(),
   keys_auth: text().notNull(),
   device_label: text(),
+  is_active: boolean().notNull().default(true),
 });

@@ -15,8 +15,8 @@ export class AuthController {
   }
 
   @Post('register')
-  async register(@Body() payload: CreateUserDto) {
-    return await this.authService.register(payload);
+  async register(@Body() payload: CreateUserDto, @Res({ passthrough: true }) res: Response) {
+    return await this.authService.register(payload, res);
   }
 
   @Post('authenticate')

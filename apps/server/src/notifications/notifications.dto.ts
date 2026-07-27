@@ -12,3 +12,15 @@ export class CreateSubscription {
   @IsNotEmpty({ message: 'Auth key is required.' })
   auth: string;
 }
+
+export class CheckNotificationStatus {
+  @IsString({ message: 'Subscription endpoint is required.' })
+  @IsNotEmpty({ message: 'Subscription endpoint is required.' })
+  endpoint: string;
+}
+
+export class ToggleNotificationStatus {
+  @IsString({ message: 'Subscription endpoint is required.' })
+  @IsNotEmpty({ message: 'Subscription endpoint is required.' })
+  endpoint: string;
+}

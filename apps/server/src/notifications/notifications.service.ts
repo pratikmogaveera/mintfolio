@@ -11,7 +11,7 @@ import { and, eq } from 'drizzle-orm';
 import { sendNotification, setVapidDetails } from 'web-push';
 import { DatabaseService } from '../db/database.service';
 import { pushSubscriptions } from '../db/schema';
-import { CreateSubscription } from './notifications.dto';
+import { CheckNotificationStatus, CreateSubscription, ToggleNotificationStatus } from './notifications.dto';
 
 @Injectable()
 export class NotificationsService implements OnModuleInit {
@@ -40,12 +40,14 @@ export class NotificationsService implements OnModuleInit {
           endpoint: subscription.endpoint,
           keys_auth: subscription.auth,
           keys_p256dh: subscription.p256dh,
+          is_active: true,
         })
         .onConflictDoUpdate({
           target: pushSubscriptions.endpoint,
           set: {
             keys_auth: subscription.auth,
             keys_p256dh: subscription.p256dh,
+            is_active: true,
           },
         })
         .returning({
@@ -89,7 +91,7 @@ export class NotificationsService implements OnModuleInit {
       const subscriptions = await this.dbService.db
         .select()
         .from(pushSubscriptions)
-        .where(eq(pushSubscriptions.user_id, payload.user_id));
+        .where(and(eq(pushSubscriptions.user_id, payload.user_id), eq(pushSubscriptions.is_active, true)));
 
       if (!subscriptions.length) {
         this.logger.warn(`User: ${payload.user_id.split('-')[0]} has no subscriptions.`);
@@ -122,6 +124,56 @@ export class NotificationsService implements OnModuleInit {
     } catch (error) {
       if (error instanceof HttpException) throw error;
       const errorMessage = error instanceof Error ? error.message : 'Something went wrong while pushing notifications.';
+      this.logger.warn(errorMessage);
+      throw error;
+    }
+  }
+
+  async getNotificationStatus(payload: CheckNotificationStatus, userId: string | undefined) {
+    if (!userId) throw new BadRequestException('User ID is missing from request.');
+
+    try {
+      const result = await this.dbService.db
+        .select({ id: pushSubscriptions.id, is_active: pushSubscriptions.is_active })
+        .from(pushSubscriptions)
+        .where(and(eq(pushSubscriptions.user_id, userId), eq(pushSubscriptions.endpoint, payload.endpoint)));
+
+      if (!result.length) throw new NotFoundException('Subscription does not exist.');
+
+      return result[0];
+    } catch (error) {
+      if (error instanceof HttpException) throw error;
+      const errorMessage =
+        error instanceof Error ? error.message : "Something went wrong while checking notification's status.";
+      this.logger.warn(errorMessage);
+      throw error;
+    }
+  }
+
+  async toggleNotificationStatus(payload: ToggleNotificationStatus, userId: string | undefined) {
+    if (!userId) throw new BadRequestException('User ID is missing from request.');
+
+    try {
+      const notificationResult = await this.dbService.db
+        .select()
+        .from(pushSubscriptions)
+        .where(and(eq(pushSubscriptions.user_id, userId), eq(pushSubscriptions.endpoint, payload.endpoint)));
+      if (!notificationResult.length) throw new NotFoundException('Subscription does not exist.');
+
+      const result = await this.dbService.db
+        .update(pushSubscriptions)
+        .set({ is_active: !notificationResult[0].is_active })
+        .where(and(eq(pushSubscriptions.user_id, userId), eq(pushSubscriptions.endpoint, payload.endpoint)))
+        .returning({
+          id: pushSubscriptions.id,
+          is_active: pushSubscriptions.is_active,
+        });
+
+      return result;
+    } catch (error) {
+      if (error instanceof HttpException) throw error;
+      const errorMessage =
+        error instanceof Error ? error.message : "Something went wrong while toggling notification's status.";
       this.logger.warn(errorMessage);
       throw error;
     }

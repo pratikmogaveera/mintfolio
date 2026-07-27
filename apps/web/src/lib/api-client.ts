@@ -41,3 +41,14 @@ export const getPortfolioLogs = () => apiClient.get<ApiResponse<PortfolioLog[]>>
 
 export const getNavHistory = (schemeCode: string) =>
   apiClient.get<ApiResponse<number[]>>('/portfolio/nav-history', { params: { scheme_code: schemeCode } });
+
+// --- Notifications ---
+
+export const subscribeToNotifications = (payload: { endpoint: string; p256dh: string; auth: string }) =>
+  apiClient.post('/notifications/subscribe', payload);
+
+export const getNotificationStatus = (endpoint: string) =>
+  apiClient.post<ApiResponse<{ id: string; is_active: boolean }>>('/notifications/status', { endpoint });
+
+export const toggleNotificationStatus = (endpoint: string) =>
+  apiClient.patch<ApiResponse<{ id: string; is_active: boolean }>>('/notifications/status', { endpoint });

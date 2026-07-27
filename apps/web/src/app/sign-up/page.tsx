@@ -30,8 +30,8 @@ export default function SignUpPage() {
   const { mutate, isPending } = useMutation({
     mutationFn: async (payload: SignUpUserPayload) => signUpUser(payload),
     onSuccess: async () => {
-      toast.success('Sign up successful. Redirecting to login page.');
-      router.push('/login');
+      toast.success('Account created! Setting up your profile.');
+      router.push('/profile?new=true');
     },
     onError: (error) => {
       if (isAxiosError(error)) toast.error(error.response?.data.message);

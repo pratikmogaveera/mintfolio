@@ -22,6 +22,13 @@
       "when": 1784989543313,
       "tag": "0002_far_mister_sinister",
       "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "7",
+      "when": 1785154767556,
+      "tag": "0003_deep_killmonger",
+      "breakpoints": true
     }
   ]
 }
