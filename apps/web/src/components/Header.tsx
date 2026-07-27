@@ -72,7 +72,10 @@ const Header = () => {
         </div>
 
         {/* Right: Desktop user menu + Mobile menu button */}
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-1">
+          <Button variant="ghost" size="icon" onClick={toggleTheme} title="Toggle theme">
+            <Image src="/theme-toggle.svg" height={18} width={18} alt="Toggle theme" className="dark:invert" />
+          </Button>
           {isLoading ? (
             <Skeleton className="h-[1.428571rem] w-30" />
           ) : isSuccess ? (
@@ -88,16 +91,6 @@ const Header = () => {
                     <DropdownMenuItem onClick={() => router.push('/profile')}>
                       <UserCircleIcon />
                       Profile
-                    </DropdownMenuItem>
-                    <DropdownMenuItem onClick={toggleTheme}>
-                      <Image
-                        src="/theme-toggle.svg"
-                        height={16}
-                        width={16}
-                        alt="Toggle theme"
-                        className="dark:invert"
-                      />
-                      {theme === 'dark' ? 'Light mode' : 'Dark mode'}
                     </DropdownMenuItem>
                     <DropdownMenuSeparator />
                     <DropdownMenuItem onClick={() => mutate()} disabled={isPending}>
@@ -143,16 +136,6 @@ const Header = () => {
                     ))}
                   </nav>
                   <div className="mt-auto flex flex-col gap-1">
-                    <Button variant="ghost" onClick={toggleTheme} className="justify-start gap-3 px-3">
-                      <Image
-                        src="/theme-toggle.svg"
-                        height={16}
-                        width={16}
-                        alt="Toggle theme"
-                        className="dark:invert"
-                      />
-                      {theme === 'dark' ? 'Light mode' : 'Dark mode'}
-                    </Button>
                     <Button
                       variant="ghost"
                       onClick={() => router.push('/profile')}
