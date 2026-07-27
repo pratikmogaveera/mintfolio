@@ -11,20 +11,24 @@ import { useNotification } from '@/lib/hooks/use-notification';
 import { isAxiosError } from 'axios';
 import dayjs from 'dayjs';
 import { useRouter, useSearchParams } from 'next/navigation';
+import { useState } from 'react';
 
 export default function Page() {
   const router = useRouter();
   const { userDetails, isSuccess, isLoading, isError, error } = useAuth();
   const { status, subscribe, toggle, isSubscribing, isToggling } = useNotification();
   const searchParams = useSearchParams();
-  const showPrompt = searchParams.get('new') === 'true' && status === 'unsubscribed';
+  const [promptDismissed, setPromptDismissed] = useState(false);
+  const showPrompt = searchParams.get('new') === 'true' && status === 'unsubscribed' && !promptDismissed;
 
   function handleDismiss() {
+    setPromptDismissed(true);
     router.replace('/profile');
   }
 
   async function handleEnable() {
     await subscribe();
+    setPromptDismissed(true);
     router.replace('/profile');
   }
 
