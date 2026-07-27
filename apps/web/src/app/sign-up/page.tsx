@@ -10,19 +10,23 @@ import {
   CardTitle,
 } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
+import { InputGroup, InputGroupAddon, InputGroupInput } from '@/components/ui/input-group';
 import { Label } from '@/components/ui/label';
 import { signUpUser } from '@/lib/api-client';
 import { SignUpUserPayload, signUpUserSchema } from '@/lib/schema';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useMutation } from '@tanstack/react-query';
 import { isAxiosError } from 'axios';
+import { Eye, EyeClosed } from 'lucide-react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
+import { useState } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { toast } from 'sonner';
 
 export default function SignUpPage() {
   const router = useRouter();
+  const [showPassword, setShowPassword] = useState(false);
   const { mutate, isPending } = useMutation({
     mutationFn: async (payload: SignUpUserPayload) => signUpUser(payload),
     onSuccess: async () => {
@@ -84,13 +88,22 @@ export default function SignUpPage() {
               <div className="flex items-center">
                 <Label htmlFor="password">Password</Label>
               </div>
-              <Input
-                id="password"
-                type="password"
-                placeholder="••••••••"
-                autoComplete="new-password"
-                {...register('password')}
-              />
+              <InputGroup>
+                <InputGroupInput
+                  id="password"
+                  type={showPassword ? 'text' : 'password'}
+                  placeholder="••••••••"
+                  autoComplete="new-password"
+                  {...register('password')}
+                />
+                <InputGroupAddon
+                  align="inline-end"
+                  onClick={() => setShowPassword((prev) => !prev)}
+                  className="cursor-pointer pl-3"
+                >
+                  {showPassword ? <EyeClosed /> : <Eye />}
+                </InputGroupAddon>
+              </InputGroup>
               {errors.password && <span className="text-xs text-red-600">{errors.password.message}</span>}
             </div>
           </div>
