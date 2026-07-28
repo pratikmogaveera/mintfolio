@@ -16,7 +16,7 @@ Track your mutual fund holdings in one place. The system fetches latest NAV data
 | Job Queue | BullMQ + Redis |
 | Notifications | Web Push API + Service Worker |
 | Monorepo | Turborepo + pnpm workspaces |
-| Infra | Vercel (frontend), Oracle Cloud Free Tier (backend) |
+| Infra | Vercel (frontend), Railway (backend + PostgreSQL + Redis) |
 
 ## How to Run
 
@@ -155,8 +155,9 @@ mintfolio/
 - [x] Frontend — per-holding sparkline charts (7-day NAV history)
 - [x] Frontend — view transitions between portfolio and holdings pages
 - [x] Frontend — mobile nav (sheet), footer, header polish
-- [ ] Test end-to-end locally
-- [ ] Deploy to Vercel + Oracle Cloud
+- [x] NestJS API — portfolio logs endpoint
+- [x] Backend deployed to Railway (PostgreSQL + Redis + NestJS)
+- [x] Frontend deployed to Vercel
 - [ ] Production validation (2–3 days)
 
 ## Resources
