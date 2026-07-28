@@ -46,7 +46,7 @@ export default function AddHoldingForm() {
     },
   });
 
-  const { data } = useQuery({
+  const { data, isLoading: isSearchLoading } = useQuery({
     queryKey: ['search-scheme', debouncedQuery],
     queryFn: () => searchSchemes(debouncedQuery),
     enabled: debouncedQuery.length >= 3,
@@ -96,6 +96,7 @@ export default function AddHoldingForm() {
                 }}
               >
                 <ComboboxInput
+                  disabled={isSearchLoading}
                   placeholder="Search mutual fund schemes..."
                   value={schemeQuery}
                   showTrigger={false}
@@ -108,6 +109,11 @@ export default function AddHoldingForm() {
                   <InputGroupAddon align="inline-start">
                     <SearchIcon />
                   </InputGroupAddon>
+                  {isSearchLoading && (
+                    <InputGroupAddon align="inline-end">
+                      <Loader2 className="text-accent animate-spin" />
+                    </InputGroupAddon>
+                  )}
                 </ComboboxInput>
                 <ComboboxContent align="center">
                   <ComboboxEmpty>No schemes found.</ComboboxEmpty>

@@ -38,7 +38,7 @@ const Header = () => {
     mutationFn: logoutUser,
     onSuccess: async () => {
       toast.success('Logged out successfully.');
-      await queryClient.invalidateQueries({ queryKey: ['user-details'] });
+      queryClient.clear();
       router.push('/login');
     },
   });
