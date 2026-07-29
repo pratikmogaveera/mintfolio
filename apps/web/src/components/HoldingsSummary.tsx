@@ -1,7 +1,8 @@
-import { cn, formatINR } from '@/lib/utils';
+import { usePrivacy } from '@/lib/PrivacyContext';
+import { cn, formatINR, maskValue } from '@/lib/utils';
 import { Holding, PortfolioLog } from '@mintfolio/shared';
-import { TrendingDown, TrendingUp } from 'lucide-react';
 import dayjs from 'dayjs';
+import { TrendingDown, TrendingUp } from 'lucide-react';
 import { Card, CardContent, CardFooter, CardHeader } from './ui/card';
 import { Skeleton } from './ui/skeleton';
 
@@ -54,6 +55,7 @@ export default function HoldingsSummary({
   isPortfolioError,
   portfolioData,
 }: HoldingsSummaryProps) {
+  const { isPrivate } = usePrivacy();
   const latestPortfolioLog = portfolioData.at(-1);
   const currentValue = Number(latestPortfolioLog?.current_value);
   const amountInvested = Number(latestPortfolioLog?.total_invested);
@@ -87,12 +89,14 @@ export default function HoldingsSummary({
             <p className="text-muted-foreground">Current Value</p>
             <div className={cn('flex items-center gap-2', isProfit ? 'text-primary' : 'text-destructive')}>
               {isProfit ? <TrendingUp size={18} /> : <TrendingDown size={18} />}
-              {pnlPercentage}%
+              {maskValue(pnlPercentage, isPrivate)}%
             </div>
           </div>
         </CardHeader>
         <CardContent>
-          <p className="font-heading text-2xl font-semibold md:text-3xl">{formatINR(currentValue)}</p>
+          <p className="font-heading text-2xl font-semibold md:text-3xl">
+            {maskValue(formatINR(currentValue), isPrivate)}
+          </p>
         </CardContent>
         <CardFooter className="flex-col items-start gap-1.5 text-sm">
           <div className="text-muted-foreground">As on {dayjs(latestPortfolioLog?.date).format('DD MMM YYYY')}</div>
@@ -107,11 +111,14 @@ export default function HoldingsSummary({
           </div>
         </CardHeader>
         <CardContent>
-          <p className="font-heading text-2xl font-semibold md:text-3xl">{formatINR(amountInvested)}</p>
+          <p className="font-heading text-2xl font-semibold md:text-3xl">
+            {maskValue(formatINR(amountInvested), isPrivate)}
+          </p>
         </CardContent>
         <CardFooter className="flex-col items-start gap-1.5 text-sm">
           <div className={cn('flex items-center gap-1.5 font-medium', isProfit ? 'text-primary' : 'text-destructive')}>
-            {isProfit ? '+' : ''}{formatINR(pnlValue)}
+            {isProfit ? '+' : ''}
+            {maskValue(formatINR(pnlValue), true)}
           </div>
         </CardFooter>
       </Card>

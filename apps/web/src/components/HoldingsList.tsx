@@ -14,12 +14,13 @@ import {
 import { Item, ItemDescription } from '@/components/ui/item';
 import { Skeleton } from '@/components/ui/skeleton';
 import { UpdateHoldingPayload } from '@/lib/schema';
-import { formatINR } from '@/lib/utils';
+import { formatINR, maskValue } from '@/lib/utils';
 import { Holding } from '@mintfolio/shared';
 import { PencilIcon, TrashIcon } from '@phosphor-icons/react';
 import { EllipsisVerticalIcon } from 'lucide-react';
 import { useState } from 'react';
 import HoldingSparkline from '@/components/HoldingSparkline';
+import { usePrivacy } from '@/lib/PrivacyContext';
 
 interface HoldingsListProps {
   userHoldings: Holding[];
@@ -39,6 +40,7 @@ export default function HoldingsList({
   const confirm = useConfirm();
   const [selectedHolding, setSelectedHolding] = useState<Holding | null>(null);
   const [updateDialogOpen, setUpdateDialogOpen] = useState(false);
+  const { isPrivate } = usePrivacy();
 
   const handleUpdate = (holding: Holding) => {
     setSelectedHolding(holding);
@@ -75,8 +77,11 @@ export default function HoldingsList({
               <Item key={holding.id} className="flex-wrap gap-y-2">
                 {/* Row 1: Name + Menu */}
                 <div className="flex w-full items-start justify-between gap-2">
-                  <p className="font-heading line-clamp-2 text-sm font-medium" title={holding.scheme_name}>
-                    {holding.scheme_name}
+                  <p
+                    className="font-heading line-clamp-2 text-sm font-medium"
+                    title={maskValue(holding.scheme_name, isPrivate)}
+                  >
+                    {maskValue(holding.scheme_name, isPrivate)}
                   </p>
                   <DropdownMenu>
                     <DropdownMenuTrigger
@@ -109,10 +114,12 @@ export default function HoldingsList({
                         <ItemDescription
                           className={`text-sm font-medium ${isProfit ? 'text-primary' : 'text-destructive'}`}
                         >
-                          {formatINR(Number(holding.current_value))}
+                          {maskValue(formatINR(Number(holding.current_value)), isPrivate)}
                         </ItemDescription>
-                        <ItemDescription>{formatINR(Number(holding.amount_invested))} invested</ItemDescription>
-                        <ItemDescription>{holding.units} units</ItemDescription>
+                        <ItemDescription>
+                          {maskValue(formatINR(Number(holding.amount_invested)), isPrivate)} invested
+                        </ItemDescription>
+                        <ItemDescription>{maskValue(holding.units, isPrivate)} units</ItemDescription>
                       </div>
                       <HoldingSparkline schemeCode={holding.scheme_code} isProfit={isProfit} />
                     </div>

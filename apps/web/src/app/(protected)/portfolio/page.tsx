@@ -5,21 +5,15 @@ import HoldingsSummary from '@/components/HoldingsSummary';
 import { ChartContainer } from '@/components/ui/chart';
 import { Skeleton } from '@/components/ui/skeleton';
 import { deleteHolding, getHoldings, getPortfolioLogs, updateHolding } from '@/lib/api-client';
+import { usePrivacy } from '@/lib/PrivacyContext';
 import { UpdateHoldingPayload } from '@/lib/schema';
-import { cn, formatINR } from '@/lib/utils';
+import { cn, formatINR, maskValue } from '@/lib/utils';
 import { PortfolioLog } from '@mintfolio/shared';
-import dayjs from 'dayjs';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { isAxiosError } from 'axios';
+import dayjs from 'dayjs';
+import { Area, AreaChart, CartesianGrid, Tooltip, XAxis, YAxis } from 'recharts';
 import { toast } from 'sonner';
-import {
-  Area,
-  AreaChart,
-  CartesianGrid,
-  Tooltip,
-  XAxis,
-  YAxis,
-} from 'recharts';
 
 const chartConfig = {
   current_value: { color: 'var(--color-primary)' },
@@ -28,9 +22,13 @@ const chartConfig = {
 function PortfolioChart({
   portfolioLogs,
   isLoading,
+  isProfit,
+  isPrivate,
 }: {
   portfolioLogs: PortfolioLog[];
   isLoading: boolean;
+  isProfit: boolean;
+  isPrivate: boolean;
 }) {
   if (isLoading) return <Skeleton className="h-48 w-full rounded-xl" />;
 
@@ -47,16 +45,11 @@ function PortfolioChart({
     );
   }
 
-  const isProfit =
-    chartData.length >= 2
-      ? (chartData.at(-1)?.value ?? 0) >= (chartData[0]?.value ?? 0)
-      : true;
-
   const color = isProfit ? 'var(--color-primary)' : 'var(--color-destructive)';
 
   return (
     <div className="bg-card rounded-xl p-4 shadow-md dark:shadow-none">
-      <ChartContainer config={chartConfig} className="h-48 w-full">
+      <ChartContainer config={chartConfig} className="h-56 w-full">
         <AreaChart data={chartData} margin={{ top: 4, right: 4, left: 4, bottom: 0 }}>
           <defs>
             <linearGradient id="portfolio-gradient" x1="0" y1="0" x2="0" y2="1">
@@ -72,10 +65,7 @@ function PortfolioChart({
             tick={{ fontSize: 11, fill: 'var(--color-muted-foreground)' }}
             interval="preserveStartEnd"
           />
-          <YAxis
-            domain={['dataMin - 1000', 'dataMax + 1000']}
-            hide
-          />
+          <YAxis domain={['dataMin - 1000', 'dataMax + 1000']} hide />
           <Tooltip
             contentStyle={{
               backgroundColor: 'var(--color-popover)',
@@ -84,7 +74,7 @@ function PortfolioChart({
               fontSize: '12px',
               color: 'var(--color-foreground)',
             }}
-            formatter={(value) => [formatINR(Number(value)), 'Portfolio Value']}
+            formatter={(value) => [maskValue(formatINR(Number(value)), isPrivate), 'Portfolio Value']}
             labelStyle={{ color: 'var(--color-muted-foreground)', marginBottom: '4px' }}
           />
           <Area
@@ -105,6 +95,7 @@ function PortfolioChart({
 
 export default function PortfolioPage() {
   const queryClient = useQueryClient();
+  const { isPrivate } = usePrivacy();
 
   const {
     data: portfolioDataRaw,
@@ -174,11 +165,21 @@ export default function PortfolioPage() {
         ) : (
           <>
             <p className="text-muted-foreground text-sm">Portfolio Value</p>
-            <p className="font-heading text-4xl font-bold tracking-tight">{formatINR(currentValue)}</p>
-            <div className={cn('flex items-center gap-1.5 text-sm font-medium', isProfit ? 'text-primary' : 'text-destructive')}>
-              <span>{isProfit ? '+' : ''}{formatINR(pnlValue)}</span>
+            <p className="font-heading text-4xl font-bold tracking-tight">
+              {maskValue(formatINR(currentValue), isPrivate)}
+            </p>
+            <div
+              className={cn(
+                'flex items-center gap-1.5 text-sm font-medium',
+                isProfit ? 'text-primary' : 'text-destructive',
+              )}
+            >
+              <span>
+                {}
+                {maskValue(`${isProfit ? '+' : ''}${formatINR(pnlValue)}`, isPrivate)}
+              </span>
               <span className="text-muted-foreground">·</span>
-              <span>{isProfit ? '+' : ''}{pnlPercentage}%</span>
+              <span>{maskValue(`${isProfit ? '+' : ''}${pnlPercentage}%`, isPrivate)}</span>
               <span className="text-muted-foreground font-normal">overall</span>
             </div>
           </>
@@ -186,7 +187,12 @@ export default function PortfolioPage() {
       </div>
 
       {/* Chart */}
-      <PortfolioChart portfolioLogs={portfolioLogs} isLoading={isPortfolioLoading} />
+      <PortfolioChart
+        portfolioLogs={portfolioLogs}
+        isLoading={isPortfolioLoading}
+        isProfit={isProfit}
+        isPrivate={isPrivate}
+      />
 
       {/* Summary cards */}
       <HoldingsSummary

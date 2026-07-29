@@ -3,6 +3,7 @@ import { ConfirmationDialogProvider } from '@/components/ConfirmationDialog';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { ThemeProvider as NextThemesProvider } from 'next-themes';
 import React from 'react';
+import PrivacyProvider from './PrivacyContext';
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -18,7 +19,9 @@ const MainProvider = ({ children }: { children: React.ReactNode }) => {
   return (
     <QueryClientProvider client={queryClient}>
       <NextThemesProvider attribute="class" defaultTheme="dark" disableTransitionOnChange>
-        <ConfirmationDialogProvider>{children}</ConfirmationDialogProvider>
+        <PrivacyProvider>
+          <ConfirmationDialogProvider>{children}</ConfirmationDialogProvider>
+        </PrivacyProvider>
       </NextThemesProvider>
     </QueryClientProvider>
   );

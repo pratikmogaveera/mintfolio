@@ -15,3 +15,7 @@ const inrFormatter = new Intl.NumberFormat('en-IN', {
 export function formatINR(amount: number): string {
   return inrFormatter.format(amount);
 }
+
+export function maskValue(value: string, isPrivate: boolean): string {
+  return isPrivate ? '.....' : value;
+}

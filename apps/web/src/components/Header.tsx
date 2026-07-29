@@ -20,6 +20,8 @@ import Image from 'next/image';
 import { usePathname, useRouter } from 'next/navigation';
 import { toast } from 'sonner';
 import { Button } from './ui/button';
+import { usePrivacy } from '@/lib/PrivacyContext';
+import { Eye, EyeClosed } from 'lucide-react';
 
 const NAV_LINKS = [
   { href: '/portfolio', label: 'Portfolio' },
@@ -31,6 +33,7 @@ const Header = () => {
   const pathname = usePathname();
   const queryClient = useQueryClient();
   const { setTheme, theme } = useTheme();
+  const { isPrivate, togglePrivacy } = usePrivacy();
 
   const { isLoading, isSuccess, userDetails } = useAuth();
 
@@ -73,6 +76,9 @@ const Header = () => {
 
         {/* Right: Desktop user menu + Mobile menu button */}
         <div className="flex items-center gap-1">
+          <Button variant="ghost" size="icon" onClick={togglePrivacy} title="Toggle privacy">
+            {isPrivate ? <Eye /> : <EyeClosed />}
+          </Button>
           <Button variant="ghost" size="icon" onClick={toggleTheme} title="Toggle theme">
             <Image src="/theme-toggle.svg" height={18} width={18} alt="Toggle theme" className="dark:invert" />
           </Button>
