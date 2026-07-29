@@ -118,7 +118,7 @@ export default function HoldingsSummary({
         <CardFooter className="flex-col items-start gap-1.5 text-sm">
           <div className={cn('flex items-center gap-1.5 font-medium', isProfit ? 'text-primary' : 'text-destructive')}>
             {isProfit ? '+' : ''}
-            {maskValue(formatINR(pnlValue), true)}
+            {maskValue(formatINR(pnlValue), isPrivate)}
           </div>
         </CardFooter>
       </Card>
