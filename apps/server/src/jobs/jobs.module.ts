@@ -8,5 +8,6 @@ import { PortfolioProcessor } from './portfolio.processor';
 @Module({
   imports: [DatabaseModule, RedisModule, NotificationsModule],
   providers: [JobsService, PortfolioProcessor],
+  exports: [PortfolioProcessor],
 })
 export class JobsModule {}

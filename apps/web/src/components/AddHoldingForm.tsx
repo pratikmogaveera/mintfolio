@@ -60,6 +60,7 @@ export default function AddHoldingForm() {
       reset();
       setSchemeQuery('');
       await queryClient.invalidateQueries({ queryKey: ['user-holdings'] });
+      await queryClient.invalidateQueries({ queryKey: ['user-portfolio-logs'] });
     },
     onError: (error) => {
       if (isAxiosError(error)) toast.error(error.response?.data.message);

@@ -1,7 +1,7 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { Cron, CronExpression } from '@nestjs/schedule';
-import { PortfolioProcessor } from './portfolio.processor';
 import { RedisService } from '../redis/redis.service';
+import { PortfolioProcessor } from './portfolio.processor';
 
 @Injectable()
 export class JobsService {
@@ -19,7 +19,7 @@ export class JobsService {
   }
 
   @Cron(CronExpression.EVERY_DAY_AT_6AM, { name: 'Daily portfolio process', timeZone: 'Asia/Kolkata' })
-  async portfolioProcessTest() {
+  async portfolioProcess() {
     this.logger.log('Cron triggered: portfolio process');
     await this.pfProcessor.processPortfolios();
   }

@@ -1,12 +1,12 @@
 import { Injectable, Logger } from '@nestjs/common';
 import axios from 'axios';
 import dayjs from 'dayjs';
+import { eq } from 'drizzle-orm';
 import { formatINR, NAV_CACHE_TTL } from '../../lib/utils';
 import { DatabaseService } from '../db/database.service';
 import { holdings, portfolioLogs } from '../db/schema';
 import { NotificationsService } from '../notifications/notifications.service';
 import { RedisService } from '../redis/redis.service';
-import { eq } from 'drizzle-orm';
 
 interface UserDetails {
   amount_invested: number;
@@ -35,11 +35,14 @@ export class PortfolioProcessor {
     }
   }
 
-  async processPortfolios() {
+  async processPortfolios(singleUser?: string) {
     try {
       const notificationTitle: string = dayjs().format('DD MMM YYYY');
       this.logger.log('Portfolio Process Running.');
-      const result = await this.dbService.db.select().from(holdings);
+      const result = await this.dbService.db
+        .select()
+        .from(holdings)
+        .where(singleUser ? eq(holdings.user_id, singleUser) : undefined);
       this.logger.debug('Holdings fetched.');
 
       const userDetails: Record<string, UserDetails> = {};
@@ -104,13 +107,15 @@ export class PortfolioProcessor {
         const pnlValue = current_value - amount_invested;
         const pnlPercentage = (pnlValue / amount_invested) * 100;
 
-        await this.notificationService.sendNotification({
-          user_id: userId,
-          message: {
-            title: notificationTitle,
-            body: `${pnlValue >= 0 ? '▲' : '▼'} ${formatINR(current_value)} (${formatINR(pnlValue)} / ${pnlPercentage.toFixed(2)}%)`,
-          },
-        });
+        // Skip notifications if processing portfolio for single users
+        if (!singleUser)
+          await this.notificationService.sendNotification({
+            user_id: userId,
+            message: {
+              title: notificationTitle,
+              body: `${pnlValue >= 0 ? '▲' : '▼'} ${formatINR(current_value)} (${formatINR(pnlValue)} / ${pnlPercentage.toFixed(2)}%)`,
+            },
+          });
       }
     } catch (error) {
       this.logger.error('Portfolio processing failed', error instanceof Error ? error.stack : error);

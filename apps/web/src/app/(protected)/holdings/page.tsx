@@ -36,6 +36,7 @@ export default function HoldingsPage() {
     onSuccess: async () => {
       toast.success('Holding updated successfully.');
       await queryClient.invalidateQueries({ queryKey: ['user-holdings'] });
+      await queryClient.invalidateQueries({ queryKey: ['user-portfolio-logs'] });
     },
     onError: (error) => {
       if (isAxiosError(error)) toast.error(error.response?.data.message);
@@ -49,6 +50,7 @@ export default function HoldingsPage() {
     onSuccess: async () => {
       toast.success('Holding deleted successfully.');
       await queryClient.invalidateQueries({ queryKey: ['user-holdings'] });
+      await queryClient.invalidateQueries({ queryKey: ['user-portfolio-logs'] });
     },
     onError: (error) => {
       if (isAxiosError(error)) toast.error(error.response?.data.message);

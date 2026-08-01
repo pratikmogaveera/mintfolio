@@ -12,6 +12,7 @@ import { and, eq } from 'drizzle-orm';
 import { DatabaseError } from 'pg';
 import { DatabaseService } from '../db/database.service';
 import { holdings, portfolioLogs } from '../db/schema';
+import { PortfolioProcessor } from '../jobs/portfolio.processor';
 import { RedisService } from '../redis/redis.service';
 import { CreateHoldingDto, UpdateHoldingDto } from './portfolio.dto';
 
@@ -21,6 +22,7 @@ export class PortfolioService {
 
   constructor(
     private dbService: DatabaseService,
+    private portfolioProcessor: PortfolioProcessor,
     private redis: RedisService,
   ) {}
 
@@ -84,6 +86,12 @@ export class PortfolioService {
           current_value: holdings.current_value,
         });
 
+      try {
+        await this.portfolioProcessor.processPortfolios(userId);
+      } catch {
+        this.logger.warn(`Portfolio recompute failed for user ${userId.split('-')[0]}`);
+      }
+
       this.logger.log(`Holding created: ${payload.scheme_name} for user ${userId.split('-')[0]}`);
       return result[0];
     } catch (error) {
@@ -116,6 +124,13 @@ export class PortfolioService {
         .returning({ id: holdings.id });
       if (result.length) {
         this.logger.log(`Holding updated: ${holdingId} for user ${userId.split('-')[0]}`);
+
+        try {
+          await this.portfolioProcessor.processPortfolios(userId);
+        } catch {
+          this.logger.warn(`Portfolio recompute failed for user ${userId.split('-')[0]}`);
+        }
+
         return result;
       } else throw new NotFoundException('Holding not found.');
     } catch (error) {
@@ -156,6 +171,13 @@ export class PortfolioService {
         .returning({ id: holdings.id });
       if (result.length) {
         this.logger.log(`Holding deleted: ${holdingId} for user ${userId.split('-')[0]}`);
+
+        try {
+          await this.portfolioProcessor.processPortfolios(userId);
+        } catch {
+          this.logger.warn(`Portfolio recompute failed for user ${userId.split('-')[0]}`);
+        }
+
         return undefined;
       } else throw new NotFoundException('Holding not found.');
     } catch (error) {
