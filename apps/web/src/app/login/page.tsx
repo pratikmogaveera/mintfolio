@@ -33,7 +33,7 @@ export default function LoginPage() {
     onSuccess: async () => {
       toast.success('Login successful.');
       await queryClient.invalidateQueries({ queryKey: ['user-details'] });
-      router.push('/');
+      router.push('/portfolio');
     },
     onError: (error) => {
       if (isAxiosError(error)) toast.error(error.response?.data.message);
