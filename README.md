@@ -36,6 +36,8 @@ mintfolio/
 │   ├── web/                — Next.js frontend (Vercel)
 │   │   ├── src/
 │   │   │   ├── app/
+│   │   │   │   ├── api/
+│   │   │   │   │   └── [...path]/route.ts — catch-all proxy (forwards all API calls to Railway, relays cookies)
 │   │   │   │   ├── holdings/page.tsx   — holdings page (add form + list)
 │   │   │   │   ├── holdings/layout.tsx — holdings page metadata
 │   │   │   │   ├── portfolio/page.tsx  — portfolio dashboard (chart, summary, holdings)
@@ -77,8 +79,9 @@ mintfolio/
 │   │   │       │   └── use-debounce.ts — debounce hook
 │   │   │       ├── api-client.ts       — axios instance + grouped API functions
 │   │   │       ├── schema.ts           — Zod schemas + payload types
-│   │   │       ├── utils.ts            — shared constants + helpers (formatINR, cn)
-│   │   │       └── MainProvider.tsx    — react-query + theme + confirmation dialog provider
+│   │   │       ├── utils.ts            — shared constants + helpers (formatINR, cn, maskValue)
+│   │   │       ├── PrivacyContext.tsx  — privacy mode context + usePrivacy hook
+│   │   │       └── MainProvider.tsx    — react-query + theme + privacy + confirmation dialog provider
 │   │   └── public/
 │   │       └── sw.js               — service worker (push notifications)
 │   └── server/             — NestJS backend (Oracle Cloud)
@@ -158,6 +161,8 @@ mintfolio/
 - [x] NestJS API — portfolio logs endpoint
 - [x] Backend deployed to Railway (PostgreSQL + Redis + NestJS)
 - [x] Frontend deployed to Vercel
+- [x] Next.js API proxy (forwards all calls to Railway, fixes cross-domain cookie on mobile)
+- [x] Privacy mode (mask monetary values + scheme names, persisted to localStorage)
 - [ ] Production validation (2–3 days)
 
 ## Resources

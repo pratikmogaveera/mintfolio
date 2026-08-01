@@ -149,3 +149,36 @@ Patterns, conventions, and mistakes caught during code reviews. Reference this b
 | # | Learning | Context |
 |---|----------|---------|
 | 7 | Separate "data" endpoints from "enrichment" endpoints. `GET /holdings` returns core holding data immediately; `GET /nav-history` fetches enrichment data independently — keeps the list fast and lets the chart load async. | Per-holding sparkline architecture |
+
+---
+
+## Frontend / React (continued)
+
+| # | Learning | Context |
+|---|----------|---------|
+| 19 | `localStorage` access in `useState` initializer crashes SSR — use `useState(false)` + `useEffect` to read localStorage after mount. | PrivacyContext initial state |
+| 20 | Use `setIsPrivate(prev => { localStorage.setItem(...); return !prev; })` to keep React state as the source of truth and localStorage as a derived side effect — avoids reading localStorage in the toggle. | PrivacyContext toggle |
+| 21 | `throw new Error()` in a custom hook (vs `console.error`) narrows the return type — TypeScript knows the function never returns `undefined`, eliminating null checks in consumers. | usePrivacy hook |
+
+---
+
+## Security (continued)
+
+| # | Learning | Context |
+|---|----------|---------|
+| 6 | `httpOnly` is a browser-side restriction — it prevents JS (`document.cookie`) from reading the cookie. It does NOT prevent the browser from sending the cookie automatically in requests, nor does it prevent a server from forwarding the `Set-Cookie` header. | Next.js proxy + httpOnly cookie |
+| 7 | Mobile browsers (Safari, Chrome on iOS) block third-party cookies — cookies set by a domain different from the address bar. A Next.js API proxy fixes this: the browser only talks to your own domain, and the proxy forwards requests to the backend server-to-server. | Cross-domain httpOnly cookie on mobile |
+
+---
+
+## Next.js / API Routes
+
+| # | Learning | Context |
+|---|----------|---------|
+| 1 | App Router route handlers use Web API `Request`/`Response` globals — no imports needed. Export named functions (`GET`, `POST`, etc.) and point them all to a single handler to avoid duplication. | Catch-all proxy route |
+| 2 | `params` in App Router route handlers is a `Promise` in Next.js 15+ — must be `await`ed before accessing properties. | `[...path]/route.ts` |
+| 3 | Use `[...path]/route.ts` as a catch-all proxy — `params.path` is a `string[]` of all segments. Reconstruct with `path.join('/')` or split `request.url` on `/api/` to preserve the query string in one step. | Proxy route path reconstruction |
+| 4 | `fetch()` with a `ReadableStream` body requires `duplex: 'half'` in Node.js runtime. Cast the options as `RequestInit & { duplex: string }` since TypeScript's `RequestInit` type doesn't include it yet. | Streaming request body through proxy |
+| 5 | GET/HEAD requests must not have a body — guard with `method === 'GET' \|\| method === 'HEAD' ? undefined : body` before passing to `fetch()`. | Proxy body forwarding |
+| 6 | Don't forward all incoming headers to upstream — the `host` header will confuse the backend. Forward only `cookie` and `content-type`. Copy only `set-cookie` and `content-type` from the upstream response back to the browser. | Proxy header handling |
+| 7 | `fetch()` throwing (network error, DNS failure) is separate from the upstream returning 4xx/5xx. Only the former needs a try/catch — the latter is a normal resolved response and should be forwarded as-is to preserve NestJS validation messages. | Proxy error handling |
