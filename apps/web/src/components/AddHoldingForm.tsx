@@ -115,16 +115,18 @@ export default function AddHoldingForm() {
                     </InputGroupAddon>
                   )}
                 </ComboboxInput>
-                <ComboboxContent align="center">
-                  <ComboboxEmpty>No schemes found.</ComboboxEmpty>
-                  <ComboboxList>
-                    {(scheme: MFScheme) => (
-                      <ComboboxItem key={scheme.schemeCode} value={String(scheme.schemeCode)}>
-                        <span className="truncate">{scheme.schemeName}</span>
-                      </ComboboxItem>
-                    )}
-                  </ComboboxList>
-                </ComboboxContent>
+                {debouncedQuery.length >= 3 && !isSearchLoading && (
+                  <ComboboxContent align="center">
+                    <ComboboxEmpty>No schemes found.</ComboboxEmpty>
+                    <ComboboxList>
+                      {(scheme: MFScheme) => (
+                        <ComboboxItem key={scheme.schemeCode} value={String(scheme.schemeCode)}>
+                          <span className="truncate">{scheme.schemeName}</span>
+                        </ComboboxItem>
+                      )}
+                    </ComboboxList>
+                  </ComboboxContent>
+                )}
               </Combobox>
             </Field>
             <p className="mt-1 min-h-4 text-xs text-red-600">{errors.scheme_code?.message}</p>

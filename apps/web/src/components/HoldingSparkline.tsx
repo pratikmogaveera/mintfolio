@@ -36,7 +36,7 @@ export default function HoldingSparkline({ schemeCode, isProfit }: { schemeCode:
             type="natural"
             stroke={color}
             strokeWidth={1.5}
-            dot={{ r: 1.5, fill: color, strokeWidth: 0 }}
+            dot={{ r: 1.2, fill: color, strokeWidth: 0 }}
             activeDot={false}
             isAnimationActive={false}
           />
