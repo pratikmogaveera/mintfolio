@@ -142,23 +142,33 @@ const Header = () => {
                     ))}
                   </nav>
                   <div className="mt-auto flex flex-col gap-1">
-                    <Button
-                      variant="ghost"
-                      onClick={() => router.push('/profile')}
-                      className="justify-start gap-3 px-3"
+                    <SheetClose
+                      nativeButton={false}
+                      render={
+                        <Button
+                          variant="ghost"
+                          onClick={() => router.push('/profile')}
+                          className="justify-start gap-3 px-3"
+                        />
+                      }
                     >
                       <UserCircleIcon size={16} />
                       Profile
-                    </Button>
-                    <Button
-                      variant="ghost"
-                      onClick={() => mutate()}
-                      disabled={isPending}
-                      className="justify-start gap-3 px-3"
+                    </SheetClose>
+                    <SheetClose
+                      nativeButton={false}
+                      render={
+                        <Button
+                          variant="ghost"
+                          onClick={() => mutate()}
+                          disabled={isPending}
+                          className="justify-start gap-3 px-3"
+                        />
+                      }
                     >
                       <SignOutIcon size={16} />
                       Logout
-                    </Button>
+                    </SheetClose>
                   </div>
                 </SheetContent>
               </Sheet>
