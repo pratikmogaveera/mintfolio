@@ -76,9 +76,6 @@ const Header = () => {
 
         {/* Right: Desktop user menu + Mobile menu button */}
         <div className="flex items-center gap-1">
-          <Button variant="ghost" size="icon" onClick={togglePrivacy} title="Toggle privacy">
-            {isPrivate ? <Eye /> : <EyeClosed />}
-          </Button>
           <Button variant="ghost" size="icon" onClick={toggleTheme} title="Toggle theme">
             <Image src="/theme-toggle.svg" height={18} width={18} alt="Toggle theme" className="dark:invert" />
           </Button>
@@ -86,6 +83,9 @@ const Header = () => {
             <Skeleton className="h-[1.428571rem] w-30" />
           ) : isSuccess ? (
             <>
+              <Button variant="ghost" size="icon" onClick={togglePrivacy} title="Toggle privacy">
+                {isPrivate ? <Eye /> : <EyeClosed />}
+              </Button>
               {/* Desktop dropdown */}
               <DropdownMenu>
                 <DropdownMenuTrigger className="hidden items-center gap-1 text-sm md:flex">
