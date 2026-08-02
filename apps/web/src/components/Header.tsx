@@ -19,7 +19,7 @@ import { Link } from 'next-view-transitions';
 import Image from 'next/image';
 import { usePathname, useRouter } from 'next/navigation';
 import { toast } from 'sonner';
-import { Button } from './ui/button';
+import { Button, buttonVariants } from './ui/button';
 import { usePrivacy } from '@/lib/PrivacyContext';
 import { Eye, EyeClosed } from 'lucide-react';
 
@@ -48,6 +48,15 @@ const Header = () => {
 
   const toggleTheme = () => setTheme(theme === 'dark' ? 'light' : 'dark');
 
+  // Cancel in-flight nav-history queries before a view transition fires.
+  // If sparkline queries are still pending when startViewTransition() takes
+  // its DOM snapshot, they'll resolve mid-transition and abort it with a
+  // TimeoutError. Cancelling here freezes the DOM (skeletons stay skeletons)
+  // so the snapshot is stable.
+  const cancelSparklineQueries = () => {
+    queryClient.cancelQueries({ queryKey: ['nav-history'] });
+  };
+
   return (
     <header className="border-border border-b px-4 py-2 md:px-12">
       <div className="flex w-full items-center justify-between">
@@ -62,6 +71,7 @@ const Header = () => {
                 <Link
                   key={href}
                   href={href}
+                  onClick={cancelSparklineQueries}
                   className={cn(
                     'text-sm transition-colors',
                     pathname === href ? 'text-foreground font-medium' : 'text-muted-foreground hover:text-foreground',
@@ -128,6 +138,7 @@ const Header = () => {
                         render={
                           <Link
                             href={href}
+                            onClick={cancelSparklineQueries}
                             className={cn(
                               'rounded-lg px-3 py-2.5 text-sm transition-colors',
                               pathname === href
@@ -143,28 +154,16 @@ const Header = () => {
                   </nav>
                   <div className="mt-auto flex flex-col gap-1">
                     <SheetClose
-                      nativeButton={false}
-                      render={
-                        <Button
-                          variant="ghost"
-                          onClick={() => router.push('/profile')}
-                          className="justify-start gap-3 px-3"
-                        />
-                      }
+                      className={cn(buttonVariants({ variant: 'ghost' }), 'justify-start gap-3 px-3 w-full')}
+                      onClick={() => router.push('/profile')}
                     >
                       <UserCircleIcon size={16} />
                       Profile
                     </SheetClose>
                     <SheetClose
-                      nativeButton={false}
-                      render={
-                        <Button
-                          variant="ghost"
-                          onClick={() => mutate()}
-                          disabled={isPending}
-                          className="justify-start gap-3 px-3"
-                        />
-                      }
+                      className={cn(buttonVariants({ variant: 'ghost' }), 'justify-start gap-3 px-3 w-full')}
+                      onClick={() => mutate()}
+                      disabled={isPending}
                     >
                       <SignOutIcon size={16} />
                       Logout

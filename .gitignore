@@ -12,6 +12,9 @@ build/
 .next/
 out/
 
+# Next.js auto-generated (environment-specific, should not be committed)
+apps/web/next-env.d.ts
+
 # Turborepo
 .turbo/
 

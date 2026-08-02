@@ -87,9 +87,9 @@ export default function HoldingsSummary({
         <CardHeader>
           <div className="flex items-center justify-between">
             <p className="text-muted-foreground">Current Value</p>
-            <div className={cn('flex items-center gap-2', isProfit ? 'text-primary' : 'text-destructive')}>
+            <div className={cn('flex items-center gap-1', isProfit ? 'text-primary' : 'text-destructive')}>
               {isProfit ? <TrendingUp size={18} /> : <TrendingDown size={18} />}
-              {maskValue(pnlPercentage, isPrivate)}%
+              {pnlPercentage}%
             </div>
           </div>
         </CardHeader>

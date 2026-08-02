@@ -181,7 +181,7 @@ export default function PortfolioPage() {
                 {maskValue(`${isProfit ? '+' : ''}${formatINR(pnlValue)}`, isPrivate)}
               </span>
               <span className="text-muted-foreground">·</span>
-              <span>{maskValue(`${isProfit ? '+' : ''}${pnlPercentage}%`, isPrivate)}</span>
+              <span>{`${isProfit ? '+' : ''}${pnlPercentage}%`}</span>
               <span className="text-muted-foreground font-normal">overall</span>
             </div>
           </>
