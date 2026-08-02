@@ -143,7 +143,7 @@ All endpoints return a uniform envelope:
 - ✅ View transitions between portfolio and holdings pages
 - ✅ Mobile nav (sheet), footer with contact popover, header polish
 - ✅ Per-holding 7-day NAV sparkline charts
-- ⬜ Notification permission + subscription management — move SW registration from homepage to portfolio/profile page (homepage is becoming a landing page); add subscription status indicator and manual re-subscribe option in profile; handle denied permission gracefully
+- ✅ Notification permission + subscription management — profile page: subscribe, enable/disable toggle, denied state message, onboarding prompt (NotificationPrompt bottom sheet/modal on first registration via ?new=true)
 
 **Backend:**
 - Migrate from @nestjs/schedule to BullMQ (queues, retries, job visibility, Bull Board)
@@ -202,3 +202,5 @@ All endpoints return a uniform envelope:
 | 2026-07-25 | Holdings page — AddHoldingForm (scheme search combobox, Zod validation, debounce), HoldingsList with skeleton/error states. ConfirmationDialog (imperative promise-based), UpdateHoldingDialog. Delete/update actions wired. Item truncation fix (min-w-0). current_value column added to holdings table (migration 0002), computed on create and updated daily by cron. Per-holding sparkline charts (HoldingSparkline) with 7-day NAV from mfapi. |
 | 2026-07-26 | Portfolio dashboard — hero (total value, P&L), area chart from portfolio_logs, HoldingsSummary stat cards with skeleton/error states. Portfolio logs seeded with 20 days of historical data. View transitions between portfolio ↔ holdings pages (next-view-transitions). Header redesign — theme toggle in dropdown, mobile sheet nav. Footer with contact popover. |
 | 2026-07-26 | Deployment — NestJS backend deployed to Railway (Dockerfile, Node 22, pnpm 11). PostgreSQL + Redis provisioned on Railway. Migrations run against production DB. Holdings and portfolio_logs seeded via temporary seed endpoint. CORS fixed for cross-domain, sameSite:none for production cookies. Frontend deployment to Vercel pending (NEXT_PUBLIC_API_URL to be set). |
+| 2026-07-28 | Frontend fully deployed to Vercel. Next.js catch-all API proxy (/api/[...path]) forwards all requests to Railway and relays cookies — fixes cross-domain httpOnly cookie on mobile. Privacy mode (mask monetary values + scheme names, toggle persisted to localStorage). Push notification subscription management on profile page — subscribe, enable/disable toggle (Switch), denied permission message, onboarding NotificationPrompt (bottom sheet on mobile, centered modal on desktop, shown via ?new=true on first registration). useNotification hook derives status from browser permission + push subscription endpoint + backend is_active state. |
+| 2026-08-01 | Portfolio logs recomputed on holding create, update, and delete (not just at 6 AM cron) so the portfolio chart reflects changes immediately. |

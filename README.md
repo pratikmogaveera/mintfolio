@@ -38,14 +38,19 @@ mintfolio/
 │   │   │   ├── app/
 │   │   │   │   ├── api/
 │   │   │   │   │   └── [...path]/route.ts — catch-all proxy (forwards all API calls to Railway, relays cookies)
-│   │   │   │   ├── holdings/page.tsx   — holdings page (add form + list)
-│   │   │   │   ├── holdings/layout.tsx — holdings page metadata
-│   │   │   │   ├── portfolio/page.tsx  — portfolio dashboard (chart, summary, holdings)
-│   │   │   │   ├── portfolio/layout.tsx — portfolio page metadata
+│   │   │   │   ├── (protected)/
+│   │   │   │   │   ├── layout.tsx          — route guard (redirects unauthenticated users)
+│   │   │   │   │   ├── holdings/page.tsx   — holdings page (add form + list)
+│   │   │   │   │   ├── holdings/layout.tsx — holdings page metadata
+│   │   │   │   │   ├── portfolio/page.tsx  — portfolio dashboard (chart, summary, holdings)
+│   │   │   │   │   ├── portfolio/layout.tsx — portfolio page metadata
+│   │   │   │   │   └── profile/page.tsx    — user profile + notification subscription management
+│   │   │   │   │   └── profile/layout.tsx  — profile page metadata
+│   │   │   │   ├── api/
+│   │   │   │   │   └── [...path]/route.ts — catch-all proxy (forwards all API calls to Railway, relays cookies)
 │   │   │   │   ├── login/page.tsx      — login page (react-hook-form + zod)
 │   │   │   │   ├── sign-up/page.tsx    — sign-up page
-│   │   │   │   ├── profile/page.tsx    — user profile page
-│   │   │   │   ├── page.tsx            — homepage (SW registration + push subscribe)
+│   │   │   │   ├── page.tsx            — homepage (SW registration)
 │   │   │   │   └── layout.tsx          — root layout (fonts, metadata, MainProvider)
 │   │   │   ├── components/
 │   │   │   │   ├── ui/
@@ -65,6 +70,7 @@ mintfolio/
 │   │   │   │   │   ├── sheet.tsx           — side drawer (mobile nav)
 │   │   │   │   │   ├── skeleton.tsx        — loading skeleton
 │   │   │   │   │   ├── sonner.tsx          — toast notifications
+│   │   │   │   │   ├── switch.tsx          — toggle switch
 │   │   │   │   │   └── textarea.tsx        — textarea primitive
 │   │   │   │   ├── AddHoldingForm.tsx      — scheme search combobox + create holding form
 │   │   │   │   ├── ConfirmationDialog.tsx  — imperative confirm dialog (promise-based)
@@ -73,10 +79,14 @@ mintfolio/
 │   │   │   │   ├── HoldingSparkline.tsx    — per-holding 7-day NAV sparkline chart
 │   │   │   │   ├── HoldingsList.tsx        — holdings list with update/delete actions
 │   │   │   │   ├── HoldingsSummary.tsx     — portfolio summary stat cards
+│   │   │   │   ├── NotificationPrompt.tsx  — onboarding modal/sheet for enabling push notifications
 │   │   │   │   └── UpdateHoldingDialog.tsx — update holding form dialog
 │   │   │   └── lib/
 │   │   │       ├── hooks/
-│   │   │       │   └── use-debounce.ts — debounce hook
+│   │   │       │   ├── route-guard.tsx     — client-side auth redirect hook
+│   │   │       │   ├── use-auth.ts         — current user query hook
+│   │   │       │   ├── use-debounce.ts     — debounce hook
+│   │   │       │   └── use-notification.ts — push notification status + subscribe/toggle logic
 │   │   │       ├── api-client.ts       — axios instance + grouped API functions
 │   │   │       ├── schema.ts           — Zod schemas + payload types
 │   │   │       ├── utils.ts            — shared constants + helpers (formatINR, cn, maskValue)
@@ -111,6 +121,11 @@ mintfolio/
 │       │   │   ├── jobs.module.ts          — jobs module (schedule registration)
 │       │   │   ├── jobs.service.ts         — cron scheduler (daily portfolio process)
 │       │   │   └── portfolio.processor.ts  — NAV fetch, compute, write to portfolio_logs
+│       │   ├── notifications/
+│       │   │   ├── notifications.module.ts     — notifications module wiring
+│       │   │   ├── notifications.controller.ts — subscribe/status/toggle endpoints
+│       │   │   ├── notifications.service.ts    — push subscription storage + delivery
+│       │   │   └── notifications.dto.ts        — subscription validation DTOs
 │       │   ├── db/
 │       │   │   ├── schema.ts           — Drizzle table definitions
 │       │   │   ├── migrate.ts          — programmatic migration runner
@@ -163,6 +178,7 @@ mintfolio/
 - [x] Frontend deployed to Vercel
 - [x] Next.js API proxy (forwards all calls to Railway, fixes cross-domain cookie on mobile)
 - [x] Privacy mode (mask monetary values + scheme names, persisted to localStorage)
+- [x] Frontend — push notification subscription management (profile page: subscribe, toggle, denied state, onboarding prompt)
 - [ ] Production validation (2–3 days)
 
 ## Resources
