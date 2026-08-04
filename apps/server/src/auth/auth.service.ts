@@ -14,6 +14,7 @@ import { DatabaseError } from 'pg';
 import { compareHash, COOKIE_MAX_AGE, hash } from '../../lib/utils';
 import { DatabaseService } from '../db/database.service';
 import { users } from '../db/schema';
+import { EmailService } from '../email/email.service';
 import { CreateUserDto, LoginUserDto } from './auth.dto';
 
 @Injectable()
@@ -22,6 +23,7 @@ export class AuthService {
 
   constructor(
     private dbService: DatabaseService,
+    private emailService: EmailService,
     private jwtService: JwtService,
   ) {}
 
@@ -52,6 +54,9 @@ export class AuthService {
         maxAge: COOKIE_MAX_AGE,
         sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
       });
+
+      // eslint-disable-next-line @typescript-eslint/no-floating-promises
+      this.emailService.sendWelcomeEmail(createdUser[0].email, createdUser[0].username);
 
       return createdUser[0];
     } catch (error) {

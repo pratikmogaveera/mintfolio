@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <title>Welcome to Mintfolio</title>
+  <!--[if mso]>
+  <noscript>
+    <xml>
+      <o:OfficeDocumentSettings>
+        <o:PixelsPerInch>96</o:PixelsPerInch>
+      </o:OfficeDocumentSettings>
+    </xml>
+  </noscript>
+  <![endif]-->
+  <style>
+    /* Reset */
+    body, table, td, a { -webkit-text-size-adjust: 100%; -ms-text-size-adjust: 100%; }
+    table, td { mso-table-lspace: 0pt; mso-table-rspace: 0pt; }
+    img { -ms-interpolation-mode: bicubic; border: 0; outline: none; text-decoration: none; }
+    body { margin: 0; padding: 0; background-color: #09090b; }
+
+    /* Mobile */
+    @media screen and (max-width: 600px) {
+      .email-wrapper { width: 100% !important; }
+      .email-card { padding: 32px 24px !important; }
+      .value-display { font-size: 32px !important; }
+    }
+
+    /* Dark mode override for clients that force light mode */
+    @media (prefers-color-scheme: dark) {
+      body { background-color: #09090b !important; }
+    }
+  </style>
+</head>
+<body style="margin:0;padding:0;background-color:#09090b;font-family:Arial,Helvetica,sans-serif;">
+
+  <!-- Outer wrapper -->
+  <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="background-color:#09090b;">
+    <tr>
+      <td align="center" style="padding:40px 16px;">
+
+        <!-- Email card -->
+        <table role="presentation" class="email-wrapper" width="560" cellspacing="0" cellpadding="0" border="0" style="max-width:560px;width:100%;">
+          <tr>
+            <td class="email-card" style="background-color:#111114;border-radius:18px;padding:48px 44px;">
+
+              <!-- Brand mark -->
+              <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0">
+                <tr>
+                  <td style="padding-bottom:36px;">
+                    <span style="font-family:Arial,Helvetica,sans-serif;font-size:18px;font-weight:700;color:#fafafa;letter-spacing:-0.5px;">
+                      <span style="color:#4ade80;">●</span> mintfolio
+                    </span>
+                  </td>
+                </tr>
+
+                <!-- Greeting -->
+                <tr>
+                  <td style="padding-bottom:8px;">
+                    <p style="margin:0;font-family:Georgia,'Times New Roman',serif;font-size:15px;font-style:italic;color:#71717a;line-height:1.5;">
+                      Good to have you here
+                    </p>
+                  </td>
+                </tr>
+
+                <!-- Headline -->
+                <tr>
+                  <td style="padding-bottom:28px;">
+                    <h1 style="margin:0;font-family:Arial,Helvetica,sans-serif;font-size:28px;font-weight:700;color:#fafafa;letter-spacing:-0.8px;line-height:1.2;">
+                      Welcome, {{username}}
+                    </h1>
+                  </td>
+                </tr>
+
+                <!-- Divider -->
+                <tr>
+                  <td style="padding-bottom:28px;">
+                    <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0">
+                      <tr>
+                        <td style="height:1px;background-color:#2a2a2e;font-size:0;line-height:0;">&nbsp;</td>
+                      </tr>
+                    </table>
+                  </td>
+                </tr>
+
+                <!-- Body text -->
+                <tr>
+                  <td style="padding-bottom:20px;">
+                    <p style="margin:0;font-family:Arial,Helvetica,sans-serif;font-size:15px;color:#a1a1aa;line-height:1.7;">
+                      Your Mintfolio account is ready. You can now track your mutual fund holdings, monitor daily NAV changes, and get a morning summary of your portfolio — all in one place.
+                    </p>
+                  </td>
+                </tr>
+
+                <!-- Feature list -->
+                <tr>
+                  <td style="padding-bottom:32px;">
+                    <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0">
+
+                      <tr>
+                        <td style="padding:10px 0;border-bottom:1px solid #1e1e20;">
+                          <table role="presentation" cellspacing="0" cellpadding="0" border="0">
+                            <tr>
+                              <td style="width:28px;vertical-align:top;padding-top:1px;">
+                                <span style="font-size:13px;color:#4ade80;">✦</span>
+                              </td>
+                              <td>
+                                <span style="font-family:Arial,Helvetica,sans-serif;font-size:13px;color:#d4d4d8;line-height:1.5;">
+                                  <strong style="color:#fafafa;font-weight:600;">Daily NAV updates</strong> — portfolio value computed every morning
+                                </span>
+                              </td>
+                            </tr>
+                          </table>
+                        </td>
+                      </tr>
+
+                      <tr>
+                        <td style="padding:10px 0;border-bottom:1px solid #1e1e20;">
+                          <table role="presentation" cellspacing="0" cellpadding="0" border="0">
+                            <tr>
+                              <td style="width:28px;vertical-align:top;padding-top:1px;">
+                                <span style="font-size:13px;color:#4ade80;">✦</span>
+                              </td>
+                              <td>
+                                <span style="font-family:Arial,Helvetica,sans-serif;font-size:13px;color:#d4d4d8;line-height:1.5;">
+                                  <strong style="color:#fafafa;font-weight:600;">Push notifications</strong> — morning P&amp;L summary delivered to you
+                                </span>
+                              </td>
+                            </tr>
+                          </table>
+                        </td>
+                      </tr>
+
+                      <tr>
+                        <td style="padding:10px 0;">
+                          <table role="presentation" cellspacing="0" cellpadding="0" border="0">
+                            <tr>
+                              <td style="width:28px;vertical-align:top;padding-top:1px;">
+                                <span style="font-size:13px;color:#4ade80;">✦</span>
+                              </td>
+                              <td>
+                                <span style="font-family:Arial,Helvetica,sans-serif;font-size:13px;color:#d4d4d8;line-height:1.5;">
+                                  <strong style="color:#fafafa;font-weight:600;">Portfolio analytics</strong> — charts, sparklines, and holding-level P&amp;L
+                                </span>
+                              </td>
+                            </tr>
+                          </table>
+                        </td>
+                      </tr>
+
+                    </table>
+                  </td>
+                </tr>
+
+                <!-- CTA Button -->
+                <tr>
+                  <td style="padding-bottom:36px;">
+                    <table role="presentation" cellspacing="0" cellpadding="0" border="0">
+                      <tr>
+                        <td style="border-radius:10px;background-color:#4ade80;">
+                          <a href="https://mintfolio-web.vercel.app/portfolio"
+                             target="_blank"
+                             style="display:inline-block;padding:12px 28px;font-family:Arial,Helvetica,sans-serif;font-size:14px;font-weight:700;color:#09090b;text-decoration:none;border-radius:10px;letter-spacing:-0.1px;">
+                            View your portfolio →
+                          </a>
+                        </td>
+                      </tr>
+                    </table>
+                  </td>
+                </tr>
+
+                <!-- Divider -->
+                <tr>
+                  <td style="padding-bottom:24px;">
+                    <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0">
+                      <tr>
+                        <td style="height:1px;background-color:#2a2a2e;font-size:0;line-height:0;">&nbsp;</td>
+                      </tr>
+                    </table>
+                  </td>
+                </tr>
+
+                <!-- Footer -->
+                <tr>
+                  <td>
+                    <p style="margin:0;font-family:Arial,Helvetica,sans-serif;font-size:11px;color:#52525b;line-height:1.6;">
+                      You're receiving this because you created a Mintfolio account.<br />
+                      This is a personal project — not a financial advisory service.
+                    </p>
+                  </td>
+                </tr>
+
+              </table>
+            </td>
+          </tr>
+        </table>
+        <!-- /Email card -->
+
+      </td>
+    </tr>
+  </table>
+  <!-- /Outer wrapper -->
+
+</body>
+</html>

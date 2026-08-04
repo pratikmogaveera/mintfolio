@@ -11,17 +11,17 @@ import { Sheet, SheetClose, SheetContent, SheetHeader, SheetTitle, SheetTrigger 
 import { Skeleton } from '@/components/ui/skeleton';
 import { logoutUser } from '@/lib/api-client';
 import { useAuth } from '@/lib/hooks/use-auth';
+import { usePrivacy } from '@/lib/PrivacyContext';
 import { cn } from '@/lib/utils';
 import { CaretDownIcon, ListIcon, SignInIcon, SignOutIcon, UserCircleIcon } from '@phosphor-icons/react';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { Eye, EyeClosed } from 'lucide-react';
 import { useTheme } from 'next-themes';
 import { Link } from 'next-view-transitions';
 import Image from 'next/image';
 import { usePathname, useRouter } from 'next/navigation';
 import { toast } from 'sonner';
 import { Button, buttonVariants } from './ui/button';
-import { usePrivacy } from '@/lib/PrivacyContext';
-import { Eye, EyeClosed } from 'lucide-react';
 
 const NAV_LINKS = [
   { href: '/portfolio', label: 'Portfolio' },
@@ -62,8 +62,12 @@ const Header = () => {
       <div className="flex w-full items-center justify-between">
         {/* Left: Logo + Desktop Nav */}
         <div className="flex items-center gap-6">
-          <Link href="/" title="Mintfolio - home page" className="font-heading text-primary text-3xl font-semibold">
-            Mintfolio
+          <Link
+            href="/"
+            title="Mintfolio - home page"
+            className="font-heading text-foreground text-2xl font-bold tracking-tight"
+          >
+            <span className="text-primary">●</span> mintfolio
           </Link>
           {isSuccess && (
             <nav className="hidden items-center gap-4 md:flex">
@@ -154,14 +158,14 @@ const Header = () => {
                   </nav>
                   <div className="mt-auto flex flex-col gap-1">
                     <SheetClose
-                      className={cn(buttonVariants({ variant: 'ghost' }), 'justify-start gap-3 px-3 w-full')}
+                      className={cn(buttonVariants({ variant: 'ghost' }), 'w-full justify-start gap-3 px-3')}
                       onClick={() => router.push('/profile')}
                     >
                       <UserCircleIcon size={16} />
                       Profile
                     </SheetClose>
                     <SheetClose
-                      className={cn(buttonVariants({ variant: 'ghost' }), 'justify-start gap-3 px-3 w-full')}
+                      className={cn(buttonVariants({ variant: 'ghost' }), 'w-full justify-start gap-3 px-3')}
                       onClick={() => mutate()}
                       disabled={isPending}
                     >
