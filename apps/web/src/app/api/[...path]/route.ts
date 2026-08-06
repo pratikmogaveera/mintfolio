@@ -1,13 +1,13 @@
 const handler = async (request: Request): Promise<Response> => {
-  const { method, headers, body } = request;
+  const { method, headers } = request;
   const endpoint = request.url.split('/api/')[1];
   const cookie = headers.get('cookie') || '';
   const contentType = headers.get('content-type') || 'application/json';
-  const requestInit: RequestInit & { duplex: string } = {
+  const body = method === 'GET' || method === 'HEAD' ? undefined : await request.arrayBuffer();
+  const requestInit: RequestInit = {
     method,
     headers: { cookie, 'content-type': contentType },
-    body: method === 'GET' || method === 'HEAD' ? undefined : body,
-    duplex: 'half',
+    body,
   };
 
   try {
