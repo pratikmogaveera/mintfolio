@@ -59,6 +59,8 @@ export default function HoldingsList({
     await onDelete(holding.id);
   };
 
+  if (!isHoldingLoading && !isHoldingError && userHoldings.length === 0) return null;
+
   return (
     <>
       <div style={{ viewTransitionName: 'holdings-list' }}>
@@ -136,9 +138,7 @@ export default function HoldingsList({
                 })()}
               </Item>
             ))
-          ) : (
-            <p className="text-muted-foreground text-sm">No holdings yet.</p>
-          )}
+          ) : null}
         </div>
       </div>
 
