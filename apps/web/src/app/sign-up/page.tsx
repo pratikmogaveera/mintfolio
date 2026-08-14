@@ -13,6 +13,7 @@ import { Input } from '@/components/ui/input';
 import { InputGroup, InputGroupAddon, InputGroupInput } from '@/components/ui/input-group';
 import { Label } from '@/components/ui/label';
 import { signUpUser } from '@/lib/api-client';
+import { useAuth } from '@/lib/hooks/use-auth';
 import { SignUpUserPayload, signUpUserSchema } from '@/lib/schema';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useMutation } from '@tanstack/react-query';
@@ -20,12 +21,13 @@ import { isAxiosError } from 'axios';
 import { Eye, EyeClosed } from 'lucide-react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { toast } from 'sonner';
 
 export default function SignUpPage() {
   const router = useRouter();
+  const { isSuccess, isLoading } = useAuth();
   const [showPassword, setShowPassword] = useState(false);
   const { mutate, isPending } = useMutation({
     mutationFn: async (payload: SignUpUserPayload) => signUpUser(payload),
@@ -46,6 +48,12 @@ export default function SignUpPage() {
   } = useForm<SignUpUserPayload>({ resolver: zodResolver(signUpUserSchema), mode: 'onTouched' });
 
   const submitForm: SubmitHandler<SignUpUserPayload> = (data: SignUpUserPayload) => mutate(data);
+
+  useEffect(() => {
+    if (isSuccess) router.replace('/portfolio');
+  }, [isSuccess, router]);
+
+  if (isLoading || isSuccess) return null;
 
   return (
     <Card className="mx-auto my-10 w-full max-w-sm md:my-20">

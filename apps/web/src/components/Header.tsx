@@ -58,7 +58,7 @@ const Header = () => {
   };
 
   return (
-    <header className="border-border border-b px-4 py-2 md:px-12">
+    <header className="border-border bg-background/30 sticky top-0 z-50 border-b px-4 py-2 backdrop-blur-lg md:px-12">
       <div className="flex w-full items-center justify-between">
         {/* Left: Logo + Desktop Nav */}
         <div className="flex items-center gap-6">
