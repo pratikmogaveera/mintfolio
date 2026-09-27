@@ -1,9 +1,14 @@
+'use client';
+
 import { ChartContainer } from '@/components/ui/chart';
 import { Skeleton } from '@/components/ui/skeleton';
-import { formatINR, maskValue } from '@/lib/utils';
+import { cn, formatINR, maskValue } from '@/lib/utils';
 import { PortfolioLog } from '@mintfolio/shared';
 import dayjs from 'dayjs';
+import { useState } from 'react';
 import { Area, AreaChart, CartesianGrid, Tooltip, XAxis, YAxis } from 'recharts';
+
+type ChartMode = 'value' | 'returns';
 
 const chartConfig = {
   current_value: { color: 'var(--color-primary)' },
@@ -22,12 +27,18 @@ export default function PortfolioValueChart({
   isProfit,
   isPrivate,
 }: PortfolioValueChartProps) {
+  const [mode, setMode] = useState<ChartMode>('value');
+
   if (isLoading) return <Skeleton className="h-48 w-full rounded-xl" />;
 
-  const chartData = portfolioLogs.map((log) => ({
-    date: dayjs(log.date).format('DD MMM'),
-    value: Number(log.current_value),
-  }));
+  const chartData = portfolioLogs.map((log) => {
+    const invested = Number(log.total_invested);
+    const current = Number(log.current_value);
+    return {
+      date: dayjs(log.date).format('DD MMM'),
+      value: mode === 'value' ? current : current - invested,
+    };
+  });
 
   if (!chartData.length) {
     return (
@@ -41,6 +52,24 @@ export default function PortfolioValueChart({
 
   return (
     <div className="bg-card rounded-xl p-4 shadow-md dark:shadow-none">
+      {/* Toggle */}
+      <div className="mb-3 flex justify-end">
+        <div className="bg-muted flex gap-1 rounded-lg p-1">
+          {(['value', 'returns'] as ChartMode[]).map((m) => (
+            <button
+              key={m}
+              onClick={() => setMode(m)}
+              className={cn(
+                'rounded-md px-3 py-1 text-xs font-medium transition-colors',
+                mode === m ? 'bg-background text-foreground shadow-sm' : 'text-muted-foreground hover:text-foreground',
+              )}
+            >
+              {m === 'value' ? 'Portfolio Value' : 'Returns'}
+            </button>
+          ))}
+        </div>
+      </div>
+
       <ChartContainer config={chartConfig} className="h-56 w-full">
         <AreaChart data={chartData} margin={{ top: 4, right: 4, left: 4, bottom: 0 }}>
           <defs>
@@ -57,7 +86,10 @@ export default function PortfolioValueChart({
             tick={{ fontSize: 11, fill: 'var(--color-muted-foreground)' }}
             interval="preserveStartEnd"
           />
-          <YAxis domain={['dataMin - 1000', 'dataMax + 1000']} hide />
+          <YAxis
+            domain={mode === 'value' ? ['dataMin - 1000', 'dataMax + 1000'] : ['dataMin - 500', 'dataMax + 500']}
+            hide
+          />
           <Tooltip
             contentStyle={{
               backgroundColor: 'var(--color-popover)',
@@ -66,7 +98,10 @@ export default function PortfolioValueChart({
               fontSize: '12px',
               color: 'var(--color-foreground)',
             }}
-            formatter={(value) => [maskValue(formatINR(Number(value)), isPrivate), 'Portfolio Value']}
+            formatter={(value) => [
+              maskValue(formatINR(Number(value)), isPrivate),
+              mode === 'value' ? 'Portfolio Value' : 'Returns',
+            ]}
             labelStyle={{ color: 'var(--color-muted-foreground)', marginBottom: '4px' }}
           />
           <Area

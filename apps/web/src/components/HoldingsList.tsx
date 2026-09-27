@@ -129,8 +129,9 @@ export default function HoldingsList({
                         </ItemDescription>
                         <ItemDescription>
                           {maskValue(formatINR(Number(amount_invested)), isPrivate)} invested
+                          <span className="text-muted-foreground mx-1.5">·</span>
+                          {maskValue(holding.units, isPrivate)} units
                         </ItemDescription>
-                        <ItemDescription>{maskValue(holding.units, isPrivate)} units</ItemDescription>
                       </div>
                       <HoldingSparkline schemeCode={holding.scheme_code} isProfit={isProfit} />
                     </div>
