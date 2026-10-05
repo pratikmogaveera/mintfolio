@@ -12,15 +12,7 @@ export class SchemeService {
       if (!q) throw new BadRequestException('Search query is required.');
       if (q.length < 3) throw new BadRequestException('Search query needs to be at least 3 characters long.');
 
-      let schemeData: MFScheme[] = [];
-      const cachedResponse = await this.redis.get('scheme-list');
-      if (cachedResponse) {
-        schemeData = JSON.parse(cachedResponse) as MFScheme[];
-      } else {
-        await this.redis.populateCachedScheme();
-        const raw = await this.redis.get('scheme-list');
-        schemeData = raw ? (JSON.parse(raw) as MFScheme[]) : [];
-      }
+      const schemeData = await this.redis.getSchemeList();
       const query = q.toLowerCase();
       const matches = schemeData
         .filter((item) => item.schemeName.toLowerCase().includes(query))
