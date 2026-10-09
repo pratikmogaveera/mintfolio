@@ -179,7 +179,7 @@ mintfolio/
 - [x] Next.js API proxy (forwards all calls to Railway, fixes cross-domain cookie on mobile)
 - [x] Privacy mode (mask monetary values + scheme names, persisted to localStorage)
 - [x] Frontend — push notification subscription management (profile page: subscribe, toggle, denied state, onboarding prompt)
-- [ ] Production validation (2–3 days)
+- [x] Production validation (2–3 days)
 
 ## Resources
 

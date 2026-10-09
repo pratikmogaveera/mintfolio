@@ -27,10 +27,10 @@ Full-stack portfolio tracking system — users add their mutual fund holdings, s
 - [x] Frontend — login page, sign-up page, react-query, apiClient
 - [x] Shared types package (@mintfolio/shared)
 - [x] httpOnly cookie auth (secure, sameSite, logout endpoint)
-- [ ] Test end-to-end locally
-- [ ] Deploy Next.js to Vercel
-- [ ] Deploy backend to Oracle Cloud (containerize)
-- [ ] Test for 2–3 days (production)
+- [x] Test end-to-end locally
+- [x] Deploy Next.js to Vercel
+- [x] Deploy backend to Railway (containerize) — switched from Oracle Cloud to Railway
+- [x] Test for 2–3 days (production) — live since 2026-07-28, production-validated
 
 ### Production Deployment Notes
 
