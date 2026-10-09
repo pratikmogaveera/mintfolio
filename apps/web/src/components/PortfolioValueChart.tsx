@@ -9,6 +9,20 @@ import { useState } from 'react';
 import { Area, AreaChart, CartesianGrid, Tooltip, XAxis, YAxis } from 'recharts';
 
 type ChartMode = 'value' | 'returns';
+type TimeFrame = '7d' | '1m' | '3m' | '6m' | '1y';
+
+const TIME_FRAMES: {
+  key: TimeFrame;
+  label: string;
+  amount: number;
+  unit: dayjs.ManipulateType;
+}[] = [
+  { key: '7d', label: '7D', amount: 7, unit: 'day' },
+  { key: '1m', label: '1M', amount: 1, unit: 'month' },
+  { key: '3m', label: '3M', amount: 3, unit: 'month' },
+  { key: '6m', label: '6M', amount: 6, unit: 'month' },
+  { key: '1y', label: '1Y', amount: 1, unit: 'year' },
+];
 
 const chartConfig = {
   current_value: { color: 'var(--color-primary)' },
@@ -28,10 +42,18 @@ export default function PortfolioValueChart({
   isPrivate,
 }: PortfolioValueChartProps) {
   const [mode, setMode] = useState<ChartMode>('value');
+  const [timeFrame, setTimeFrame] = useState<TimeFrame>('1m');
 
   if (isLoading) return <Skeleton className="h-48 w-full rounded-xl" />;
 
-  const chartData = portfolioLogs.map((log) => {
+  const selectedFrame = TIME_FRAMES.find((tf) => tf.key === timeFrame)!;
+  const cutoff = dayjs().subtract(selectedFrame.amount, selectedFrame.unit).valueOf();
+
+  // Filter to the selected window; if no data falls within it, show all available data
+  const filteredLogs = portfolioLogs.filter((log) => dayjs(log.date).valueOf() >= cutoff);
+  const logsToRender = filteredLogs.length > 0 ? filteredLogs : portfolioLogs;
+
+  const chartData = logsToRender.map((log) => {
     const invested = Number(log.total_invested);
     const current = Number(log.current_value);
     return {
@@ -52,8 +74,27 @@ export default function PortfolioValueChart({
 
   return (
     <div className="bg-card rounded-xl p-4 shadow-md dark:shadow-none">
-      {/* Toggle */}
-      <div className="mb-3 flex justify-end">
+      {/* Controls row */}
+      <div className="mb-3 flex flex-wrap items-center justify-between gap-2">
+        {/* Time frame selector */}
+        <div className="bg-muted flex gap-1 rounded-lg p-1">
+          {TIME_FRAMES.map((tf) => (
+            <button
+              key={tf.key}
+              onClick={() => setTimeFrame(tf.key)}
+              className={cn(
+                'rounded-md px-2.5 py-1 text-xs font-medium transition-colors',
+                timeFrame === tf.key
+                  ? 'bg-background text-foreground shadow-sm'
+                  : 'text-muted-foreground hover:text-foreground',
+              )}
+            >
+              {tf.label}
+            </button>
+          ))}
+        </div>
+
+        {/* Mode toggle */}
         <div className="bg-muted flex gap-1 rounded-lg p-1">
           {(['value', 'returns'] as ChartMode[]).map((m) => (
             <button
@@ -61,7 +102,9 @@ export default function PortfolioValueChart({
               onClick={() => setMode(m)}
               className={cn(
                 'rounded-md px-3 py-1 text-xs font-medium transition-colors',
-                mode === m ? 'bg-background text-foreground shadow-sm' : 'text-muted-foreground hover:text-foreground',
+                mode === m
+                  ? 'bg-background text-foreground shadow-sm'
+                  : 'text-muted-foreground hover:text-foreground',
               )}
             >
               {m === 'value' ? 'Portfolio Value' : 'Returns'}
@@ -87,7 +130,11 @@ export default function PortfolioValueChart({
             interval="preserveStartEnd"
           />
           <YAxis
-            domain={mode === 'value' ? ['dataMin - 1000', 'dataMax + 1000'] : ['dataMin - 500', 'dataMax + 500']}
+            domain={
+              mode === 'value'
+                ? ['dataMin - 1000', 'dataMax + 1000']
+                : ['dataMin - 500', 'dataMax + 500']
+            }
             hide
           />
           <Tooltip
@@ -112,7 +159,8 @@ export default function PortfolioValueChart({
             fill="url(#portfolio-value-gradient)"
             dot={false}
             activeDot={{ r: 4, fill: color, strokeWidth: 0 }}
-            isAnimationActive={false}
+            isAnimationActive={true}
+            animationDuration={400}
           />
         </AreaChart>
       </ChartContainer>
