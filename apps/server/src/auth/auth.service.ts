@@ -11,7 +11,14 @@ import { JwtService } from '@nestjs/jwt';
 import { eq, or } from 'drizzle-orm';
 import { Response } from 'express';
 import { DatabaseError } from 'pg';
-import { compareHash, COOKIE_MAX_AGE, hash } from '../../lib/utils';
+import {
+  compareHash,
+  COOKIE_MAX_AGE_LONG,
+  COOKIE_MAX_AGE_SHORT,
+  hash,
+  JWT_EXPIRY_LONG,
+  JWT_EXPIRY_SHORT,
+} from '../../lib/utils';
 import { DatabaseService } from '../db/database.service';
 import { users } from '../db/schema';
 import { EmailService } from '../email/email.service';
@@ -51,7 +58,7 @@ export class AuthService {
       res.cookie('access-token', await this.jwtService.signAsync(tokenPayload), {
         httpOnly: true,
         secure: process.env.NODE_ENV === 'production',
-        maxAge: COOKIE_MAX_AGE,
+        maxAge: COOKIE_MAX_AGE_SHORT,
         sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
       });
 
@@ -90,12 +97,18 @@ export class AuthService {
 
       this.logger.log(`Login successful: ${payload.identifier}`);
 
-      res.cookie('access-token', await this.jwtService.signAsync(tokenPayload), {
-        httpOnly: true,
-        secure: process.env.NODE_ENV === 'production',
-        maxAge: COOKIE_MAX_AGE,
-        sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
-      });
+      res.cookie(
+        'access-token',
+        await this.jwtService.signAsync(tokenPayload, {
+          expiresIn: payload.remember ? JWT_EXPIRY_LONG : JWT_EXPIRY_SHORT,
+        }),
+        {
+          httpOnly: true,
+          secure: process.env.NODE_ENV === 'production',
+          maxAge: payload.remember ? COOKIE_MAX_AGE_LONG : COOKIE_MAX_AGE_SHORT,
+          sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
+        },
+      );
 
       return { id, username, email };
     } catch (error) {

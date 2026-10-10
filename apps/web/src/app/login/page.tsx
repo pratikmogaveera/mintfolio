@@ -9,6 +9,8 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card';
+import { Checkbox } from '@/components/ui/checkbox';
+import { Field, FieldGroup, FieldLabel } from '@/components/ui/field';
 import { Input } from '@/components/ui/input';
 import { InputGroup, InputGroupAddon, InputGroupInput } from '@/components/ui/input-group';
 import { Label } from '@/components/ui/label';
@@ -22,7 +24,7 @@ import { Eye, EyeClosed } from 'lucide-react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
-import { SubmitHandler, useForm } from 'react-hook-form';
+import { Controller, SubmitHandler, useForm } from 'react-hook-form';
 import { toast } from 'sonner';
 
 export default function LoginPage() {
@@ -45,6 +47,7 @@ export default function LoginPage() {
 
   const {
     register,
+    control,
     handleSubmit,
     formState: { errors },
   } = useForm<LoginUserPayload>({ resolver: zodResolver(loginUserSchema), mode: 'onTouched' });
@@ -104,6 +107,20 @@ export default function LoginPage() {
                 </InputGroupAddon>
               </InputGroup>
               {errors.password && <span className="text-xs text-red-600">{errors.password.message}</span>}
+            </div>
+            <div>
+              <FieldGroup>
+                <Field orientation="horizontal">
+                  <Controller
+                    name="remember"
+                    control={control}
+                    render={({ field }) => (
+                      <Checkbox id="remember" checked={field.value} onCheckedChange={field.onChange} />
+                    )}
+                  />
+                  <FieldLabel htmlFor="remember">Remember me</FieldLabel>
+                </Field>
+              </FieldGroup>
             </div>
           </div>
         </CardContent>

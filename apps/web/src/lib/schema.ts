@@ -9,6 +9,7 @@ export const loginUserSchema = z.object({
     .string()
     .min(8, 'Password must be at least 8 characters long.')
     .max(40, 'Password must be at most 40 characters long.'),
+  remember: z.boolean().default(false),
 });
 
 export const signUpUserSchema = z.object({
