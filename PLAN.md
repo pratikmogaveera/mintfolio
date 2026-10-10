@@ -49,7 +49,7 @@ Full-stack portfolio tracking system — users add their mutual fund holdings, s
 | Database | PostgreSQL (Drizzle ORM) |
 | Job Queue | BullMQ + Redis |
 | Notifications | Web Push API + Service Worker |
-| Infra | Oracle Cloud Free Tier (Redis, NestJS, PostgreSQL containers) |
+| Infra | Railway (NestJS + PostgreSQL + Redis), Vercel (Next.js) |
 
 ## Architecture
 
@@ -152,7 +152,6 @@ All endpoints return a uniform envelope:
 
 ### Phase 3 — Polish & Analytics (Optional)
 
-- Portfolio growth chart (time-series from daily logs)
 - Threshold alerts (notify if portfolio drops > X%)
 - Offline portfolio view (Workbox runtime caching)
 - Install prompt (PWA manifest, mobile installable)
