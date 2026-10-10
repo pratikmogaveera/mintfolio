@@ -206,3 +206,12 @@ Patterns, conventions, and mistakes caught during code reviews. Reference this b
 | # | Learning | Context |
 |---|----------|---------|
 | 7 | `@IsOptional()` on a class-validator field means the field can be absent from the request body. The TypeScript type must reflect this — use `field?: boolean`, not `field: boolean`. Mismatching the type allows incorrect assumptions about presence downstream. | `LoginUserDto.remember` |
+
+---
+
+## Database / Drizzle (continued)
+
+| # | Learning | Context |
+|---|----------|---------|
+| 6 | "Most recent row before today" pattern: `where(and(eq(t.user_id, id), lt(t.date, today))).orderBy(desc(t.date)).limit(1)`. Combine `lt` + `desc` + `limit(1)` — no subquery needed. | Daily P&L: fetching yesterday's portfolio snapshot |
+| 7 | Query the previous snapshot **before** upserting today's row. `onConflictDoUpdate` is safe either way (it won't affect `date < today`), but reading before writing is cleaner and avoids any ambiguity about what the query returns. | Daily P&L ordering |

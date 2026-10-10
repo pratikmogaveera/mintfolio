@@ -152,11 +152,24 @@ All endpoints return a uniform envelope:
 
 ### Phase 3 — Polish & Analytics (Optional)
 
+**UX / Frontend**
+- Holdings list sort options (by current value, P&L %, P&L absolute, name)
+- Optimistic updates on holding create, update, delete (react-query `onMutate` + rollback on error)
 - Threshold alerts (notify if portfolio drops > X%)
 - Offline portfolio view (Workbox runtime caching)
 - Install prompt (PWA manifest, mobile installable)
 - Graceful SW update flow (show "update available" toast)
 - SEO: robots.txt, sitemap, Twitter card meta, OG image, OG url, structured data
+
+**Auth**
+- Refresh token — short-lived access token (15min) + long-lived refresh token (30d) stored in a second httpOnly cookie; `/auth/refresh` endpoint issues a new access token silently
+
+**SIP Tracking**
+- `sip_entries` table — `holding_id`, `amount`, `sip_date` (day of month), `is_active`
+- Holdings get an `has_active_sip` flag; holdings list shows a chip/badge on cards where SIP is active
+- Add/edit SIP dialog on each holding — amount, SIP date (1–28)
+- Monthly cron (runs on each calendar day, checks if any SIP is due): increments `units` and `amount_invested` on the holding using latest NAV, logs to `sip_entries` as an audit trail
+- Push notification on SIP execution ("SIP of ₹5,000 executed for Parag Parikh Flexi Cap")
 
 ## Data Source
 
@@ -204,3 +217,4 @@ All endpoints return a uniform envelope:
 | 2026-07-28 | Frontend fully deployed to Vercel. Next.js catch-all API proxy (/api/[...path]) forwards all requests to Railway and relays cookies — fixes cross-domain httpOnly cookie on mobile. Privacy mode (mask monetary values + scheme names, toggle persisted to localStorage). Push notification subscription management on profile page — subscribe, enable/disable toggle (Switch), denied permission message, onboarding NotificationPrompt (bottom sheet on mobile, centered modal on desktop, shown via ?new=true on first registration). useNotification hook derives status from browser permission + push subscription endpoint + backend is_active state. |
 | 2026-08-01 | Portfolio logs recomputed on holding create, update, and delete (not just at 6 AM cron) so the portfolio chart reflects changes immediately. |
 | 2026-10-10 | "Remember me" login — `LoginUserDto` gets optional `remember?: boolean`. Cookie `maxAge` switches between 1d/30d. `jwtService.signAsync` options override module-level `signOptions` so JWT `expiresIn` also switches (1d/30d). Frontend: Base UI Checkbox requires `Controller` (not `register`) — `checked={field.value}` + `onCheckedChange={field.onChange}`. |
+| 2026-10-10 | Push notification reformatted — body now shows portfolio value + overall % on line 1, daily P&L on line 2 (`\n` separator). Daily P&L computed by querying the most recent `portfolio_log` where `date < today` before upserting today's snapshot. |

@@ -1,7 +1,7 @@
 import { Injectable, Logger } from '@nestjs/common';
 import axios from 'axios';
 import dayjs from 'dayjs';
-import { eq } from 'drizzle-orm';
+import { and, desc, eq, lt } from 'drizzle-orm';
 import { formatINR, NAV_CACHE_TTL } from '../../lib/utils';
 import { DatabaseService } from '../db/database.service';
 import { holdings, portfolioLogs } from '../db/schema';
@@ -38,6 +38,7 @@ export class PortfolioProcessor {
   async processPortfolios(singleUser?: string) {
     try {
       const notificationTitle: string = dayjs().format('DD MMM YYYY');
+      const today = dayjs().format('YYYY-MM-DD');
       this.logger.log('Portfolio Process Running.');
       const result = await this.dbService.db
         .select()
@@ -85,6 +86,16 @@ export class PortfolioProcessor {
 
       for (const [userId, details] of Object.entries(userDetails)) {
         const { amount_invested, current_value } = details;
+
+        const prevLog = (
+          await this.dbService.db
+            .select({ current_value: portfolioLogs.current_value })
+            .from(portfolioLogs)
+            .where(and(eq(portfolioLogs.user_id, userId), lt(portfolioLogs.date, today)))
+            .orderBy(desc(portfolioLogs.date))
+            .limit(1)
+        )[0];
+
         await this.dbService.db
           .insert(portfolioLogs)
           .values({
@@ -107,13 +118,23 @@ export class PortfolioProcessor {
         const pnlValue = current_value - amount_invested;
         const pnlPercentage = (pnlValue / amount_invested) * 100;
 
-        // Skip notifications if processing portfolio for single users
+        const overallLine = `${formatINR(current_value)}  ${pnlValue >= 0 ? '▲' : '▼'}${Math.abs(pnlPercentage).toFixed(2)}%`;
+        const dailyLine = prevLog
+          ? (() => {
+              const dailyPnl = current_value - Number(prevLog.current_value);
+              return `Day ${dailyPnl >= 0 ? '▲' : '▼'}${formatINR(Math.abs(dailyPnl))}`;
+            })()
+          : null;
+
+        const notificationBody = dailyLine ? `${overallLine}\n${dailyLine}` : overallLine;
+
+        // Skip notifications if processing portfolio for a single user (on-demand recompute)
         if (!singleUser)
           await this.notificationService.sendNotification({
             user_id: userId,
             message: {
               title: notificationTitle,
-              body: `${pnlValue >= 0 ? '▲' : '▼'} ${formatINR(current_value)} (${formatINR(pnlValue)} / ${pnlPercentage.toFixed(2)}%)`,
+              body: notificationBody,
             },
           });
       }
