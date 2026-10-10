@@ -180,6 +180,7 @@ mintfolio/
 - [x] Privacy mode (mask monetary values + scheme names, persisted to localStorage)
 - [x] Frontend — push notification subscription management (profile page: subscribe, toggle, denied state, onboarding prompt)
 - [x] Production validation (2–3 days)
+- [x] Frontend + Backend — "Remember me" login (30-day cookie + JWT)
 
 ## Resources
 

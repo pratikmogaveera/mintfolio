@@ -182,3 +182,27 @@ Patterns, conventions, and mistakes caught during code reviews. Reference this b
 | 5 | GET/HEAD requests must not have a body — guard with `method === 'GET' \|\| method === 'HEAD' ? undefined : body` before passing to `fetch()`. | Proxy body forwarding |
 | 6 | Don't forward all incoming headers to upstream — the `host` header will confuse the backend. Forward only `cookie` and `content-type`. Copy only `set-cookie` and `content-type` from the upstream response back to the browser. | Proxy header handling |
 | 7 | `fetch()` throwing (network error, DNS failure) is separate from the upstream returning 4xx/5xx. Only the former needs a try/catch — the latter is a normal resolved response and should be forwarded as-is to preserve NestJS validation messages. | Proxy error handling |
+
+---
+
+## NestJS / JWT (continued)
+
+| # | Learning | Context |
+|---|----------|---------|
+| 9 | `jwtService.signAsync(payload, { expiresIn })` overrides the module-level `signOptions.expiresIn`. The module config is a default, not a ceiling — per-call options take precedence. | Remember me — JWT expiry mismatch |
+
+---
+
+## Frontend / React (continued)
+
+| # | Learning | Context |
+|---|----------|---------|
+| 22 | Base UI components (Checkbox, Switch, etc.) use `onCheckedChange` / `onValueChange`, not `onChange`. Spreading `register()` from react-hook-form won't capture the value. Use `Controller` with `checked={field.value}` and `onCheckedChange={field.onChange}`. | Remember me checkbox |
+
+---
+
+## TypeScript / General (continued)
+
+| # | Learning | Context |
+|---|----------|---------|
+| 7 | `@IsOptional()` on a class-validator field means the field can be absent from the request body. The TypeScript type must reflect this — use `field?: boolean`, not `field: boolean`. Mismatching the type allows incorrect assumptions about presence downstream. | `LoginUserDto.remember` |
