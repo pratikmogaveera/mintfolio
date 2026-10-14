@@ -14,7 +14,7 @@ const NavItem = ({ href, label, icon: Icon, isActive }: NavItemProps) => (
   <Link
     href={href}
     title={label}
-    className="border-muted-foreground/50 data-active:border-accent bg-background/70 data-active:text-accent relative flex flex-1 flex-col items-center rounded-full border border-solid px-2 py-2 text-xs transition-all duration-200"
+    className="border-muted-foreground/50 data-active:border-accent bg-background/70 data-active:text-accent relative flex flex-1 flex-col items-center rounded-full border border-solid px-2 py-2.5 text-xs transition-all duration-200"
     data-active={isActive && 'active'}
   >
     <div
