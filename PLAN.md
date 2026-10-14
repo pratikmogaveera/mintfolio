@@ -62,7 +62,7 @@ Next.js (Vercel)
 NestJS (Oracle Cloud)
 ├── Auth (username + password, JWT)
 ├── REST API (portfolio CRUD, scheme search)
-├── BullMQ scheduler (daily 6 AM cron)
+├── BullMQ scheduler (daily 9 AM cron)
 │     → Fan-out: fetch NAV for all users' holdings
 │     → Aggregate: compute portfolio value per user
 │     → Write daily valuation to PostgreSQL
@@ -122,7 +122,7 @@ All endpoints return a uniform envelope:
 4. Test for 2–3 days (production validation)
 
 **Pipeline:**
-- Cron at 6:00 AM IST:
+- Cron at 9:00 AM IST:
   - Fetch latest NAV for all unique scheme codes (deduplicated across users)
   - Compute per-user portfolio value (units × NAV)
   - Upsert daily snapshot to portfolio_logs
@@ -207,7 +207,7 @@ All endpoints return a uniform envelope:
 | 2026-07-12 | PATCH holdings endpoint (update units/amount_invested). @Min validation, Postgres 23505 unique violation handling via DrizzleQueryError.cause. Global HttpExceptionFilter (@Catch() for all exceptions — HttpException formatted, unknown returns generic 500). ResponseInterceptor wraps all success in { success, data }. Stripped manual wrappers from services. Polished DTO validation messages. Consistent error handling: re-throw HttpExceptions, log + throw unexpected errors. |
 | 2026-07-13 | Scheme search — RedisModule (ioredis, ConfigService for URL), cache scheme list from mfapi on startup with 24h TTL. SchemeModule with GET /scheme/search?q= endpoint, filters cached list, returns top 20 matches. Made ConfigModule global. Response interceptor returns data: null for undefined payloads. |
 | 2026-07-14 | Daily portfolio pipeline — JobsModule with @nestjs/schedule cron. PortfolioProcessor fetches NAV per unique scheme (parallel, cached 5min), computes per-user portfolio value, upserts to portfolio_logs (handles duplicate daily runs). Improved logs and exception messages across all services. Standardized logger context names. |
-| 2026-07-15 | Web Push notifications — NotificationsModule with subscribe/unsubscribe endpoints, VAPID config, web-push integration. Portfolio processor sends push after compute (▲/▼ indicator, INR formatting, P&L %). Auto-remove expired subscriptions (410/404). Production cron schedule (6 AM IST) + daily scheme refresh (5 AM). |
+| 2026-07-15 | Web Push notifications — NotificationsModule with subscribe/unsubscribe endpoints, VAPID config, web-push integration. Portfolio processor sends push after compute (▲/▼ indicator, INR formatting, P&L %). Auto-remove expired subscriptions (410/404). Production cron schedule (9 AM IST) + daily scheme refresh (5 AM). |
 | 2026-07-16 | Frontend service worker — sw.js with push event listener, SW registration on homepage, push subscription flow. Minimal login (localStorage token). End-to-end push notification tested successfully on macOS (Safari + Chrome). CORS enabled on server. |
 | 2026-07-18 | Frontend auth pages — login page with react-hook-form + zod + react-query (useMutation, isPending, toast notifications, redirect). Sign-up page with same pattern. Created apiClient (axios instance + auth interceptor). QCProvider for react-query. Shared types package (@mintfolio/shared) — User, AuthResponse, Holding, PortfolioLog, MFScheme, ApiResponse, ApiError. Integrated in both apps. |
 | 2026-07-19 | httpOnly cookie auth — backend sets JWT as httpOnly cookie, AuthGuard reads from cookies, cookie-parser middleware, logout endpoint clears cookie. Frontend withCredentials, removed localStorage/interceptor. Profile page with user details. Header component with auth-conditional UI (dropdown vs login link), invalidate cache on login/logout. Extracted Zod schemas to lib/schema.ts. Centralized constants in lib/utils. |
@@ -215,6 +215,6 @@ All endpoints return a uniform envelope:
 | 2026-07-26 | Portfolio dashboard — hero (total value, P&L), area chart from portfolio_logs, HoldingsSummary stat cards with skeleton/error states. Portfolio logs seeded with 20 days of historical data. View transitions between portfolio ↔ holdings pages (next-view-transitions). Header redesign — theme toggle in dropdown, mobile sheet nav. Footer with contact popover. |
 | 2026-07-26 | Deployment — NestJS backend deployed to Railway (Dockerfile, Node 22, pnpm 11). PostgreSQL + Redis provisioned on Railway. Migrations run against production DB. Holdings and portfolio_logs seeded via temporary seed endpoint. CORS fixed for cross-domain, sameSite:none for production cookies. Frontend deployment to Vercel pending (NEXT_PUBLIC_API_URL to be set). |
 | 2026-07-28 | Frontend fully deployed to Vercel. Next.js catch-all API proxy (/api/[...path]) forwards all requests to Railway and relays cookies — fixes cross-domain httpOnly cookie on mobile. Privacy mode (mask monetary values + scheme names, toggle persisted to localStorage). Push notification subscription management on profile page — subscribe, enable/disable toggle (Switch), denied permission message, onboarding NotificationPrompt (bottom sheet on mobile, centered modal on desktop, shown via ?new=true on first registration). useNotification hook derives status from browser permission + push subscription endpoint + backend is_active state. |
-| 2026-08-01 | Portfolio logs recomputed on holding create, update, and delete (not just at 6 AM cron) so the portfolio chart reflects changes immediately. |
+| 2026-08-01 | Portfolio logs recomputed on holding create, update, and delete (not just at 9 AM cron) so the portfolio chart reflects changes immediately. |
 | 2026-10-10 | "Remember me" login — `LoginUserDto` gets optional `remember?: boolean`. Cookie `maxAge` switches between 1d/30d. `jwtService.signAsync` options override module-level `signOptions` so JWT `expiresIn` also switches (1d/30d). Frontend: Base UI Checkbox requires `Controller` (not `register`) — `checked={field.value}` + `onCheckedChange={field.onChange}`. |
 | 2026-10-10 | Push notification reformatted — body now shows portfolio value + overall % on line 1, daily P&L on line 2 (`\n` separator). Daily P&L computed by querying the most recent `portfolio_log` where `date < today` before upserting today's snapshot. |

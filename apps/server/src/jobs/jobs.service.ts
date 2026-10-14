@@ -18,7 +18,7 @@ export class JobsService {
     await this.redis.populateCachedScheme(true);
   }
 
-  @Cron(CronExpression.EVERY_DAY_AT_6AM, { name: 'Daily portfolio process', timeZone: 'Asia/Kolkata' })
+  @Cron(CronExpression.EVERY_DAY_AT_9AM, { name: 'Daily portfolio process', timeZone: 'Asia/Kolkata' })
   async portfolioProcess() {
     this.logger.log('Cron triggered: portfolio process');
     await this.pfProcessor.processPortfolios();

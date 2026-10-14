@@ -114,7 +114,7 @@ export default function PortfolioValueChart({
       </div>
 
       <ChartContainer config={chartConfig} className="h-56 w-full">
-        <AreaChart data={chartData} margin={{ top: 4, right: 4, left: 4, bottom: 0 }}>
+        <AreaChart data={chartData} margin={{ top: 12, right: 4, left: 4, bottom: 0 }}>
           <defs>
             <linearGradient id="portfolio-value-gradient" x1="0" y1="0" x2="0" y2="1">
               <stop offset="5%" stopColor={color} stopOpacity={0.15} />

@@ -131,7 +131,7 @@ const NotificationPrompt = ({ onEnable, onDismiss, isLoading }: NotificationProm
         <div className="space-y-1.5">
           <h3 className="font-heading text-lg font-semibold">Get your morning briefing</h3>
           <p className="text-muted-foreground text-sm leading-relaxed">
-            Wake up to your portfolio value and P&L every morning at 6 AM.
+            Wake up to your portfolio value and P&L every morning at 9 AM.
             <br />
             <span className="text-xs">You can toggle this on or off anytime from your profile.</span>
           </p>
