@@ -39,7 +39,7 @@ mintfolio/
 │   │   │   │   ├── api/
 │   │   │   │   │   └── [...path]/route.ts — catch-all proxy (forwards all API calls to Railway, relays cookies)
 │   │   │   │   ├── (protected)/
-│   │   │   │   │   ├── layout.tsx          — route guard (redirects unauthenticated users)
+│   │   │   │   │   ├── layout.tsx          — route guard + mobile nav mount
 │   │   │   │   │   ├── holdings/page.tsx   — holdings page (add form + list)
 │   │   │   │   │   ├── holdings/layout.tsx — holdings page metadata
 │   │   │   │   │   ├── portfolio/page.tsx  — portfolio dashboard (chart, summary, holdings)
@@ -50,7 +50,7 @@ mintfolio/
 │   │   │   │   │   └── [...path]/route.ts — catch-all proxy (forwards all API calls to Railway, relays cookies)
 │   │   │   │   ├── login/page.tsx      — login page (react-hook-form + zod)
 │   │   │   │   ├── sign-up/page.tsx    — sign-up page
-│   │   │   │   ├── page.tsx            — homepage (SW registration)
+│   │   │   │   ├── page.tsx            — homepage (SW registration, auth redirect)
 │   │   │   │   └── layout.tsx          — root layout (fonts, metadata, MainProvider)
 │   │   │   ├── components/
 │   │   │   │   ├── ui/
@@ -67,7 +67,7 @@ mintfolio/
 │   │   │   │   │   ├── label.tsx           — label primitive
 │   │   │   │   │   ├── popover.tsx         — click-triggered popover
 │   │   │   │   │   ├── separator.tsx       — separator
-│   │   │   │   │   ├── sheet.tsx           — side drawer (mobile nav)
+│   │   │   │   │   ├── sheet.tsx           — side drawer primitive
 │   │   │   │   │   ├── skeleton.tsx        — loading skeleton
 │   │   │   │   │   ├── sonner.tsx          — toast notifications
 │   │   │   │   │   ├── switch.tsx          — toggle switch
@@ -75,10 +75,11 @@ mintfolio/
 │   │   │   │   ├── AddHoldingForm.tsx      — scheme search combobox + create holding form
 │   │   │   │   ├── ConfirmationDialog.tsx  — imperative confirm dialog (promise-based)
 │   │   │   │   ├── Footer.tsx              — footer with contact popover
-│   │   │   │   ├── Header.tsx              — auth-aware header with mobile sheet nav
+│   │   │   │   ├── Header.tsx              — auth-aware header (desktop dropdown, mobile logout button)
 │   │   │   │   ├── HoldingSparkline.tsx    — per-holding 7-day NAV sparkline chart
-│   │   │   │   ├── HoldingsList.tsx        — holdings list with update/delete actions
+│   │   │   │   ├── HoldingsList.tsx        — holdings list with sort, update/delete actions
 │   │   │   │   ├── HoldingsSummary.tsx     — portfolio summary stat cards
+│   │   │   │   ├── MobileNavigation.tsx    — fixed bottom nav (portfolio/holdings/profile, mobile only)
 │   │   │   │   ├── NotificationPrompt.tsx  — onboarding modal/sheet for enabling push notifications
 │   │   │   │   └── UpdateHoldingDialog.tsx — update holding form dialog
 │   │   │   └── lib/
@@ -172,7 +173,7 @@ mintfolio/
 - [x] Frontend — portfolio dashboard (chart, summary cards, holdings list)
 - [x] Frontend — per-holding sparkline charts (7-day NAV history)
 - [x] Frontend — view transitions between portfolio and holdings pages
-- [x] Frontend — mobile nav (sheet), footer, header polish
+- [x] Frontend — mobile bottom nav (portfolio/holdings/profile tabs), footer, header polish
 - [x] NestJS API — portfolio logs endpoint
 - [x] Backend deployed to Railway (PostgreSQL + Redis + NestJS)
 - [x] Frontend deployed to Vercel
