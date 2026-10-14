@@ -1,4 +1,5 @@
 'use client';
+import { useConfirm } from '@/components/ConfirmationDialog';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -7,13 +8,12 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-import { Sheet, SheetClose, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet';
 import { Skeleton } from '@/components/ui/skeleton';
 import { logoutUser } from '@/lib/api-client';
 import { useAuth } from '@/lib/hooks/use-auth';
 import { usePrivacy } from '@/lib/PrivacyContext';
 import { cn } from '@/lib/utils';
-import { CaretDownIcon, ListIcon, SignInIcon, SignOutIcon, UserCircleIcon } from '@phosphor-icons/react';
+import { CaretDownIcon, SignInIcon, SignOutIcon, UserCircleIcon } from '@phosphor-icons/react';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { Eye, EyeClosed } from 'lucide-react';
 import { useTheme } from 'next-themes';
@@ -21,7 +21,7 @@ import { Link } from 'next-view-transitions';
 import Image from 'next/image';
 import { usePathname, useRouter } from 'next/navigation';
 import { toast } from 'sonner';
-import { Button, buttonVariants } from './ui/button';
+import { Button } from './ui/button';
 
 const NAV_LINKS = [
   { href: '/portfolio', label: 'Portfolio' },
@@ -34,6 +34,7 @@ const Header = () => {
   const queryClient = useQueryClient();
   const { setTheme, theme } = useTheme();
   const { isPrivate, togglePrivacy } = usePrivacy();
+  const confirm = useConfirm();
 
   const { isLoading, isSuccess, userDetails } = useAuth();
 
@@ -47,6 +48,15 @@ const Header = () => {
   });
 
   const toggleTheme = () => setTheme(theme === 'dark' ? 'light' : 'dark');
+
+  const handleLogout = async () => {
+    const confirmed = await confirm({
+      title: 'Log out?',
+      description: 'You will be redirected to the login page.',
+      confirmLabel: 'Log out',
+    });
+    if (confirmed) mutate();
+  };
 
   // Cancel in-flight nav-history queries before a view transition fires.
   // If sparkline queries are still pending when startViewTransition() takes
@@ -113,7 +123,7 @@ const Header = () => {
                       Profile
                     </DropdownMenuItem>
                     <DropdownMenuSeparator />
-                    <DropdownMenuItem onClick={() => mutate()} disabled={isPending}>
+                    <DropdownMenuItem onClick={handleLogout} disabled={isPending}>
                       <SignOutIcon />
                       Logout
                     </DropdownMenuItem>
@@ -121,60 +131,17 @@ const Header = () => {
                 </DropdownMenuContent>
               </DropdownMenu>
 
-              {/* Mobile menu */}
-              <Sheet>
-                <SheetTrigger
-                  render={
-                    <Button variant="ghost" size="icon" className="md:hidden">
-                      <ListIcon />
-                    </Button>
-                  }
-                />
-                <SheetContent side="right">
-                  <SheetHeader>
-                    <SheetTitle>Menu</SheetTitle>
-                  </SheetHeader>
-                  <nav className="flex flex-col gap-1">
-                    {NAV_LINKS.map(({ href, label }) => (
-                      <SheetClose
-                        key={href}
-                        nativeButton={false}
-                        render={
-                          <Link
-                            href={href}
-                            onClick={cancelSparklineQueries}
-                            className={cn(
-                              'rounded-lg px-3 py-2.5 text-sm transition-colors',
-                              pathname === href
-                                ? 'bg-muted text-foreground font-medium'
-                                : 'text-muted-foreground hover:bg-muted hover:text-foreground',
-                            )}
-                          />
-                        }
-                      >
-                        {label}
-                      </SheetClose>
-                    ))}
-                  </nav>
-                  <div className="mt-auto flex flex-col gap-1">
-                    <SheetClose
-                      className={cn(buttonVariants({ variant: 'ghost' }), 'w-full justify-start gap-3 px-3')}
-                      onClick={() => router.push('/profile')}
-                    >
-                      <UserCircleIcon size={16} />
-                      Profile
-                    </SheetClose>
-                    <SheetClose
-                      className={cn(buttonVariants({ variant: 'ghost' }), 'w-full justify-start gap-3 px-3')}
-                      onClick={() => mutate()}
-                      disabled={isPending}
-                    >
-                      <SignOutIcon size={16} />
-                      Logout
-                    </SheetClose>
-                  </div>
-                </SheetContent>
-              </Sheet>
+              {/* Mobile logout */}
+              <Button
+                variant="ghost"
+                size="icon"
+                className="md:hidden"
+                onClick={handleLogout}
+                disabled={isPending}
+                title="Logout"
+              >
+                <SignOutIcon />
+              </Button>
             </>
           ) : (
             <Link href="/login" title="Login" className="flex items-center gap-1 px-2 text-base font-medium">

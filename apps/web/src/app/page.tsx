@@ -2,9 +2,11 @@
 
 import { buttonVariants } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
+import { useAuth } from '@/lib/hooks/use-auth';
 import { ArrowRightIcon, BellRingingIcon, ChartLineUpIcon, ShieldCheckIcon } from '@phosphor-icons/react';
 import { Link } from 'next-view-transitions';
 import { useEffect } from 'react';
+import { useRouter } from 'next/navigation';
 
 // ─── Feature card data ────────────────────────────────────────────────────────
 
@@ -41,13 +43,19 @@ const MOCK_HOLDINGS = [
 // ─── Page ─────────────────────────────────────────────────────────────────────
 
 export default function Home() {
-  // Register service worker
+  const router = useRouter();
+  const { isSuccess } = useAuth();
+
   useEffect(() => {
     if (!('serviceWorker' in navigator)) return;
     navigator.serviceWorker.register('/sw.js').catch((err) => {
       console.error('SW registration failed:', err);
     });
   }, []);
+
+  useEffect(() => {
+    if (isSuccess) router.replace('/portfolio');
+  }, [isSuccess, router]);
 
   return (
     <div className="flex w-full flex-col items-center gap-12 pb-20 md:gap-16">
