@@ -276,3 +276,8 @@ input:-webkit-autofill:focus {
   background: radial-gradient(ellipse 90% 80% at 50% 55%, transparent 35%, #0a0a0f 78%);
 }
 
+
+/* Ensure mobile nav stays above all other named view-transition layers */
+::view-transition-group(mobile-nav) {
+  z-index: 9999;
+}

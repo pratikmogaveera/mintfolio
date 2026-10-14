@@ -62,7 +62,7 @@ export default function RootLayout({
         <body className="flex min-h-full flex-col">
           <MainProvider>
             <Header />
-            <main className="container mx-auto w-full px-6 py-8">{children}</main>
+            <main className="container mx-auto mb-16 w-full px-6 py-8 md:mb-0">{children}</main>
             <Footer />
             <Toaster richColors />
           </MainProvider>
