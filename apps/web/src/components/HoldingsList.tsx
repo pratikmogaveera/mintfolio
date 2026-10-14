@@ -16,10 +16,18 @@ import { Item, ItemDescription } from '@/components/ui/item';
 import { Skeleton } from '@/components/ui/skeleton';
 import { usePrivacy } from '@/lib/PrivacyContext';
 import { UpdateHoldingPayload } from '@/lib/schema';
-import { formatINR, maskValue } from '@/lib/utils';
+import { calculatePercentage, formatINR, maskValue } from '@/lib/utils';
 import { Holding } from '@mintfolio/shared';
 import { PencilIcon, TrashIcon } from '@phosphor-icons/react';
-import { EllipsisVerticalIcon, TrendingDown, TrendingUp } from 'lucide-react';
+import {
+  ArrowDown01,
+  ArrowDownAZ,
+  ArrowUp01,
+  ArrowUpAZ,
+  EllipsisVerticalIcon,
+  TrendingDown,
+  TrendingUp,
+} from 'lucide-react';
 import { useState } from 'react';
 
 interface HoldingsListProps {
@@ -29,6 +37,9 @@ interface HoldingsListProps {
   onUpdate: (holdingId: string, payload: UpdateHoldingPayload) => Promise<unknown>;
   onDelete: (holdingId: string) => Promise<unknown>;
 }
+
+type SortType = 'alphabetic' | 'numeric';
+type SortValue = 'ascending' | 'descending';
 
 export default function HoldingsList({
   userHoldings,
@@ -40,7 +51,21 @@ export default function HoldingsList({
   const confirm = useConfirm();
   const [selectedHolding, setSelectedHolding] = useState<Holding | null>(null);
   const [updateDialogOpen, setUpdateDialogOpen] = useState(false);
+  const [sortName, setSortName] = useState<SortValue>('ascending');
+  const [sortReturns, setSortReturns] = useState<SortValue>('ascending');
+  const [sortActive, setSortActive] = useState<SortType>('alphabetic');
   const { isPrivate } = usePrivacy();
+
+  const sortedUserHoldings = [...userHoldings].sort((a, b) => {
+    if (sortActive === 'alphabetic')
+      return sortName === 'ascending'
+        ? a.scheme_name.localeCompare(b.scheme_name)
+        : b.scheme_name.localeCompare(a.scheme_name);
+
+    const returnsA = Number(calculatePercentage(a.current_value, a.amount_invested));
+    const returnsB = Number(calculatePercentage(b.current_value, b.amount_invested));
+    return sortReturns === 'ascending' ? returnsA - returnsB : returnsB - returnsA;
+  });
 
   const handleUpdate = (holding: Holding) => {
     setSelectedHolding(holding);
@@ -59,12 +84,40 @@ export default function HoldingsList({
     await onDelete(holding.id);
   };
 
+  const handleSort = (sortType: 'alphabetic' | 'numeric') => {
+    if (sortType === 'alphabetic') {
+      setSortActive('alphabetic');
+      setSortName((prev) => (prev === 'ascending' ? 'descending' : 'ascending'));
+    } else {
+      setSortActive('numeric');
+      setSortReturns((prev) => (prev === 'ascending' ? 'descending' : 'ascending'));
+    }
+  };
+
   if (!isHoldingLoading && !isHoldingError && userHoldings.length === 0) return null;
 
   return (
     <>
       <div style={{ viewTransitionName: 'holdings-list' }}>
-        <h2 className="font-heading text-lg font-semibold">Your Holdings</h2>
+        <div className="flex items-center justify-between">
+          <h2 className="font-heading text-lg font-semibold">Your Holdings</h2>
+          <div className="flex items-center gap-2">
+            <Button
+              onClick={() => handleSort('alphabetic')}
+              variant={sortActive === 'alphabetic' ? 'outline' : 'ghost'}
+              title={`Sort ${sortName === 'ascending' ? 'descending' : 'ascending'} scheme name`}
+            >
+              {sortName === 'ascending' ? <ArrowUpAZ /> : <ArrowDownAZ />}
+            </Button>
+            <Button
+              onClick={() => handleSort('numeric')}
+              variant={sortActive === 'numeric' ? 'outline' : 'ghost'}
+              title={`Sort ${sortReturns === 'ascending' ? 'descending' : 'ascending'} returns amount`}
+            >
+              {sortReturns === 'ascending' ? <ArrowUp01 /> : <ArrowDown01 />}
+            </Button>
+          </div>
+        </div>
         <div className="mt-4 flex flex-col gap-3">
           {isHoldingError ? (
             <p className="text-muted-foreground text-sm">Something went wrong while fetching holdings.</p>
@@ -75,7 +128,7 @@ export default function HoldingsList({
               ))}
             </>
           ) : userHoldings.length ? (
-            userHoldings.map((holding) => (
+            sortedUserHoldings.map((holding) => (
               <Item key={holding.id} className="flex-wrap gap-y-2">
                 {/* Row 1: Name + Menu */}
                 <div className="flex w-full items-start justify-between gap-2">
@@ -109,9 +162,7 @@ export default function HoldingsList({
                   const { current_value, amount_invested } = holding;
                   const isProfit = Number(current_value) >= Number(amount_invested);
                   const pnlValue = Number(current_value) - Number(amount_invested);
-                  const pnlPercentage = Number(amount_invested)
-                    ? ((pnlValue / Number(amount_invested)) * 100).toFixed(2)
-                    : '0.00';
+                  const pnlPercentage = calculatePercentage(pnlValue, amount_invested);
 
                   return (
                     <div className="flex w-full items-center gap-3">

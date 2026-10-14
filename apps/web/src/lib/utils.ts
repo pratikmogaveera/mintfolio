@@ -19,3 +19,9 @@ export function formatINR(amount: number): string {
 export function maskValue(value: string, isPrivate: boolean): string {
   return isPrivate ? '.....' : value;
 }
+
+export function calculatePercentage(value: number | string, total: number | string): string {
+  const t = Number(total);
+  if (!t) return '0.00';
+  return ((Number(value) / t) * 100).toFixed(2);
+}

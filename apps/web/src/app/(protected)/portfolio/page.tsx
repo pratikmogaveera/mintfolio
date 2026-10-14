@@ -7,7 +7,7 @@ import { Skeleton } from '@/components/ui/skeleton';
 import { deleteHolding, getHoldings, getPortfolioLogs, updateHolding } from '@/lib/api-client';
 import { usePrivacy } from '@/lib/PrivacyContext';
 import { UpdateHoldingPayload } from '@/lib/schema';
-import { cn, formatINR, maskValue } from '@/lib/utils';
+import { calculatePercentage, cn, formatINR, maskValue } from '@/lib/utils';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { isAxiosError } from 'axios';
 import { toast } from 'sonner';
@@ -70,7 +70,7 @@ export default function PortfolioPage() {
   const currentValue = Number(latestLog?.current_value ?? 0);
   const amountInvested = Number(latestLog?.total_invested ?? 0);
   const pnlValue = currentValue - amountInvested;
-  const pnlPercentage = amountInvested ? ((pnlValue / amountInvested) * 100).toFixed(2) : '0.00';
+  const pnlPercentage = calculatePercentage(pnlValue, amountInvested);
   const isProfit = pnlValue >= 0;
 
   return (
@@ -95,9 +95,7 @@ export default function PortfolioPage() {
                 isProfit ? 'text-primary' : 'text-destructive',
               )}
             >
-              <span>
-                {maskValue(`${isProfit ? '+' : ''}${formatINR(pnlValue)}`, isPrivate)}
-              </span>
+              <span>{maskValue(`${isProfit ? '+' : ''}${formatINR(pnlValue)}`, isPrivate)}</span>
               <span className="text-muted-foreground">·</span>
               <span>{`${isProfit ? '+' : ''}${pnlPercentage}%`}</span>
               <span className="text-muted-foreground font-normal">overall</span>

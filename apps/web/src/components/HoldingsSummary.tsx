@@ -1,5 +1,5 @@
 import { usePrivacy } from '@/lib/PrivacyContext';
-import { cn, formatINR, maskValue } from '@/lib/utils';
+import { calculatePercentage, cn, formatINR, maskValue } from '@/lib/utils';
 import { Holding, PortfolioLog } from '@mintfolio/shared';
 import dayjs from 'dayjs';
 import { PlusCircle, TrendingDown, TrendingUp } from 'lucide-react';
@@ -62,7 +62,7 @@ export default function HoldingsSummary({
   const currentValue = Number(latestPortfolioLog?.current_value ?? 0);
   const amountInvested = Number(latestPortfolioLog?.total_invested ?? 0);
   const pnlValue = currentValue - amountInvested;
-  const pnlPercentage = amountInvested ? ((pnlValue / amountInvested) * 100).toFixed(2) : '0.00';
+  const pnlPercentage = calculatePercentage(pnlValue, amountInvested);
   const isProfit = pnlValue >= 0;
   const isEmpty =
     !isHoldingLoading && !isHoldingError && !isPortfolioLoading && !isPortfolioError && userHoldings.length === 0;
