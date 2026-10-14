@@ -94,8 +94,10 @@
   --radius-3xl: calc(var(--radius) * 2.2);
   --radius-4xl: calc(var(--radius) * 2.6);
   /* Container: per design system responsive spec */
-  --container-md: 37.5rem; /* 600px - tablet */
-  --container-lg: 64rem; /* 1024px - desktop */
+  --container-md: 37.5rem;
+  /* 600px - tablet */
+  --container-lg: 64rem;
+  /* 1024px - desktop */
   --container-xl: 64rem;
   --container-2xl: 64rem;
 }
@@ -151,7 +153,9 @@ input:-webkit-autofill:focus {
 }
 
 @keyframes spin-border {
-  to { --spin-angle: 360deg; }
+  to {
+    --spin-angle: 360deg;
+  }
 }
 
 .notif-prompt-card::before {
@@ -159,17 +163,15 @@ input:-webkit-autofill:focus {
   position: absolute;
   inset: 0;
   border-radius: inherit;
-  background: conic-gradient(
-    from var(--spin-angle),
-    #6366f1,
-    #8b5cf6,
-    #ec4899,
-    #f97316,
-    #eab308,
-    #4ade80,
-    #22d3ee,
-    #6366f1
-  );
+  background: conic-gradient(from var(--spin-angle),
+      #6366f1,
+      #8b5cf6,
+      #ec4899,
+      #f97316,
+      #eab308,
+      #4ade80,
+      #22d3ee,
+      #6366f1);
   animation: spin-border 4s linear infinite;
   z-index: 0;
 }
@@ -180,17 +182,15 @@ input:-webkit-autofill:focus {
   position: absolute;
   inset: -6px;
   border-radius: inherit;
-  background: conic-gradient(
-    from var(--spin-angle),
-    #6366f1,
-    #8b5cf6,
-    #ec4899,
-    #f97316,
-    #eab308,
-    #4ade80,
-    #22d3ee,
-    #6366f1
-  );
+  background: conic-gradient(from var(--spin-angle),
+      #6366f1,
+      #8b5cf6,
+      #ec4899,
+      #f97316,
+      #eab308,
+      #4ade80,
+      #22d3ee,
+      #6366f1);
   animation: spin-border 4s linear infinite;
   filter: blur(14px);
   opacity: 0.45;
@@ -203,13 +203,29 @@ input:-webkit-autofill:focus {
 
 /* Sparkle animations */
 @keyframes sparkle-bounce {
-  0%, 100% { transform: translate(-50%, -50%) translateY(0px); }
-  50%       { transform: translate(-50%, -50%) translateY(-8px); }
+
+  0%,
+  100% {
+    transform: translate(-50%, -50%) translateY(0px);
+  }
+
+  50% {
+    transform: translate(-50%, -50%) translateY(-8px);
+  }
 }
 
 @keyframes sparkle-pulse {
-  0%, 100% { opacity: 0.9; transform: translate(-50%, -50%) scale(1); }
-  50%       { opacity: 0.3; transform: translate(-50%, -50%) scale(0.6); }
+
+  0%,
+  100% {
+    opacity: 0.9;
+    transform: translate(-50%, -50%) scale(1);
+  }
+
+  50% {
+    opacity: 0.3;
+    transform: translate(-50%, -50%) scale(0.6);
+  }
 }
 
 .sparkle {
@@ -225,24 +241,33 @@ input:-webkit-autofill:focus {
 .sparkle-1 {
   animation:
     sparkle-bounce 2.4s ease-in-out infinite,
-    sparkle-pulse  3.6s ease-in-out 1.8s infinite;
+    sparkle-pulse 3.6s ease-in-out 1.8s infinite;
 }
 
 .sparkle-2 {
   animation:
     sparkle-bounce 2.8s ease-in-out 0.9s infinite,
-    sparkle-pulse  3.2s ease-in-out 0.4s infinite;
+    sparkle-pulse 3.2s ease-in-out 0.4s infinite;
 }
 
 .sparkle-3 {
   animation:
     sparkle-bounce 2.2s ease-in-out 1.4s infinite,
-    sparkle-pulse  4s   ease-in-out 2.2s infinite;
+    sparkle-pulse 4s ease-in-out 2.2s infinite;
 }
+
 @keyframes ray-rock {
-  0%   { transform: rotate(0deg); }
-  50%  { transform: rotate(30deg); }
-  100% { transform: rotate(0deg); }
+  0% {
+    transform: rotate(0deg);
+  }
+
+  50% {
+    transform: rotate(30deg);
+  }
+
+  100% {
+    transform: rotate(0deg);
+  }
 }
 
 .notif-prompt-rays {
@@ -260,6 +285,7 @@ input:-webkit-autofill:focus {
   background: rgba(255, 255, 255, 0.12);
   border: 1.5px solid rgba(255, 255, 255, 0.25);
 }
+
 .notif-prompt-hero {
   background-color: #f8f8ff;
 }
