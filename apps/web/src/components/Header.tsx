@@ -101,14 +101,14 @@ const Header = () => {
         {/* Right: Desktop user menu + Mobile menu button */}
         <div className="flex items-center gap-1">
           <Button variant="ghost" size="icon" onClick={toggleTheme} title="Toggle theme">
-            <Image src="/theme-toggle.svg" height={18} width={18} alt="Toggle theme" className="dark:invert" />
+            <Image src="/theme-toggle.svg" height={20} width={20} alt="Toggle theme" className="dark:invert" />
           </Button>
           {isLoading ? (
             <Skeleton className="h-[1.428571rem] w-30" />
           ) : isSuccess ? (
             <>
               <Button variant="ghost" size="icon" onClick={togglePrivacy} title="Toggle privacy">
-                {isPrivate ? <Eye /> : <EyeClosed />}
+                {isPrivate ? <Eye className="size-5" /> : <EyeClosed className="size-5" />}
               </Button>
               {/* Desktop dropdown */}
               <DropdownMenu>
@@ -119,12 +119,12 @@ const Header = () => {
                 <DropdownMenuContent>
                   <DropdownMenuGroup>
                     <DropdownMenuItem onClick={() => router.push('/profile')}>
-                      <UserCircleIcon />
+                      <UserCircleIcon className="size-5" />
                       Profile
                     </DropdownMenuItem>
                     <DropdownMenuSeparator />
                     <DropdownMenuItem onClick={handleLogout} disabled={isPending}>
-                      <SignOutIcon />
+                      <SignOutIcon className="size-5" />
                       Logout
                     </DropdownMenuItem>
                   </DropdownMenuGroup>
@@ -140,12 +140,12 @@ const Header = () => {
                 disabled={isPending}
                 title="Logout"
               >
-                <SignOutIcon />
+                <SignOutIcon className="size-5" />
               </Button>
             </>
           ) : (
             <Link href="/login" title="Login" className="flex items-center gap-1 px-2 text-base font-medium">
-              <SignInIcon />
+              <SignInIcon className="size-5" />
               Login
             </Link>
           )}
