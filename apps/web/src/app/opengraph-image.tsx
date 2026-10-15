@@ -81,6 +81,7 @@ export default async function Image() {
               borderRadius: '50%',
               background: '#4ade80',
               flexShrink: 0,
+              marginTop: '11px',
             }}
           />
           <span>mintfolio</span>
@@ -106,7 +107,7 @@ export default async function Image() {
             fontWeight: 400,
             color: '#a1a1aa',
             letterSpacing: '0.01em',
-            fontFamily: 'sans-serif',
+            fontFamily: fontData ? 'Space Grotesk' : 'sans-serif',
           }}
         >
           <span>Track your mutual funds.&nbsp;</span>
