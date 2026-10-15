@@ -73,7 +73,15 @@ export default async function Image() {
             fontFamily: fontData ? 'Space Grotesk' : 'sans-serif',
           }}
         >
-          <span style={{ color: '#4ade80' }}>●</span>
+          <div
+            style={{
+              width: '28px',
+              height: '28px',
+              borderRadius: '50%',
+              background: '#4ade80',
+              flexShrink: 0,
+            }}
+          />
           <span>mintfolio</span>
         </div>
 
