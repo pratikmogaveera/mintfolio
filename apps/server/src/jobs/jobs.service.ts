@@ -12,7 +12,10 @@ export class JobsService {
     private redis: RedisService,
   ) {}
 
-  @Cron(CronExpression.EVERY_DAY_AT_5AM, { name: 'Daily scheme-list refresh', timeZone: 'Asia/Kolkata' })
+  // mfapi.in NAV update schedule (IST): 3:09 AM, 5:05 AM, 10:05 AM, 2:05 PM, 6:05 PM, 9:05 PM.
+  // We refresh at 6 AM to pick up the 5:05 AM update — the freshest data available
+  // before the 9 AM portfolio process runs.
+  @Cron(CronExpression.EVERY_DAY_AT_6AM, { name: 'Daily scheme-list refresh', timeZone: 'Asia/Kolkata' })
   async populateSchemeList() {
     this.logger.log('Cron triggered: scheme-list refresh');
     await this.redis.populateCachedScheme(true);

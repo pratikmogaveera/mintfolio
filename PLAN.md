@@ -122,7 +122,10 @@ All endpoints return a uniform envelope:
 4. Test for 2–3 days (production validation)
 
 **Pipeline:**
-- Cron at 9:00 AM IST:
+- Cron at 6:00 AM IST — scheme-list refresh:
+  - mfapi.in updates NAV data at: 3:09 AM, 5:05 AM, 10:05 AM, 2:05 PM, 6:05 PM, 9:05 PM (IST)
+  - 6 AM catches the 5:05 AM update — freshest data before the portfolio run
+- Cron at 9:00 AM IST — portfolio process:
   - Fetch latest NAV for all unique scheme codes (deduplicated across users)
   - Compute per-user portfolio value (units × NAV)
   - Upsert daily snapshot to portfolio_logs
@@ -216,6 +219,7 @@ All endpoints return a uniform envelope:
 | 2026-07-26 | Deployment — NestJS backend deployed to Railway (Dockerfile, Node 22, pnpm 11). PostgreSQL + Redis provisioned on Railway. Migrations run against production DB. Holdings and portfolio_logs seeded via temporary seed endpoint. CORS fixed for cross-domain, sameSite:none for production cookies. Frontend deployment to Vercel pending (NEXT_PUBLIC_API_URL to be set). |
 | 2026-07-28 | Frontend fully deployed to Vercel. Next.js catch-all API proxy (/api/[...path]) forwards all requests to Railway and relays cookies — fixes cross-domain httpOnly cookie on mobile. Privacy mode (mask monetary values + scheme names, toggle persisted to localStorage). Push notification subscription management on profile page — subscribe, enable/disable toggle (Switch), denied permission message, onboarding NotificationPrompt (bottom sheet on mobile, centered modal on desktop, shown via ?new=true on first registration). useNotification hook derives status from browser permission + push subscription endpoint + backend is_active state. |
 | 2026-08-01 | Portfolio logs recomputed on holding create, update, and delete (not just at 9 AM cron) so the portfolio chart reflects changes immediately. |
+| 2026-10-15 | Scheme-list refresh cron rescheduled from 5 AM to 6 AM IST — runs 3 hours before portfolio process to ensure cache is warm. |
 | 2026-10-10 | "Remember me" login — `LoginUserDto` gets optional `remember?: boolean`. Cookie `maxAge` switches between 1d/30d. `jwtService.signAsync` options override module-level `signOptions` so JWT `expiresIn` also switches (1d/30d). Frontend: Base UI Checkbox requires `Controller` (not `register`) — `checked={field.value}` + `onCheckedChange={field.onChange}`. |
 | 2026-10-10 | Push notification reformatted — body now shows portfolio value + overall % on line 1, daily P&L on line 2 (`\n` separator). Daily P&L computed by querying the most recent `portfolio_log` where `date < today` before upserting today's snapshot. |
 | 2026-10-14 | Daily portfolio cron rescheduled from 6 AM to 9 AM IST. Updated all references in jobs.service.ts, NotificationPrompt copy, and docs. |

@@ -69,14 +69,15 @@ export default async function Image() {
             fontWeight: 700,
             color: '#fafafa',
             letterSpacing: '-3px',
+            lineHeight: 1,
             marginBottom: '28px',
             fontFamily: fontData ? 'Space Grotesk' : 'sans-serif',
           }}
         >
           <div
             style={{
-              width: '28px',
-              height: '28px',
+              width: '22px',
+              height: '22px',
               borderRadius: '50%',
               background: '#4ade80',
               flexShrink: 0,
