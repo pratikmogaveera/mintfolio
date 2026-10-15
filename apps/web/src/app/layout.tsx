@@ -21,7 +21,11 @@ export const viewport: Viewport = {
 };
 
 export const metadata: Metadata = {
-  title: 'Mintfolio',
+  metadataBase: new URL(process.env.NEXT_PUBLIC_BASE_URL ?? 'https://mintfolio-web.vercel.app'),
+  title: {
+    default: 'Mintfolio',
+    template: '%s | Mintfolio',
+  },
   description: 'Personal mutual fund portfolio tracker with daily NAV updates and push notifications.',
   icons: {
     icon: [
@@ -35,7 +39,14 @@ export const metadata: Metadata = {
   openGraph: {
     title: 'Mintfolio',
     description: 'Personal mutual fund portfolio tracker with daily NAV updates and push notifications.',
+    siteName: 'Mintfolio',
     type: 'website',
+    url: '/',
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Mintfolio',
+    description: 'Personal mutual fund portfolio tracker with daily NAV updates and push notifications.',
   },
 };
 
